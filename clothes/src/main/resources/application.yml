@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: clothes
+  data:
+    mongodb:
+      database: clothes
+      host: localhost
+      port: 27017
+  security:
+    user:
+      name: admin
+      password: admin
