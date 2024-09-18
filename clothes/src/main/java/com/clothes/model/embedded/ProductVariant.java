@@ -1,11 +1,11 @@
 package com.clothes.model.embedded;
 
-import com.clothes.model.base.AuditableEntity;
 import org.springframework.data.annotation.Id;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class ProductVariant extends AuditableEntity {
+public class ProductVariant implements Serializable {
     @Id
     private String id;
     private int compareAtPrice;

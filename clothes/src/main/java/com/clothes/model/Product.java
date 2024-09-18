@@ -23,7 +23,6 @@ public class Product implements Serializable {
     private LocalDateTime publishedDate;
     private String groupId;
     private String categoryId;
-    private String code;
 
     public String getTitle() {
         return title;
@@ -79,14 +78,6 @@ public class Product implements Serializable {
 
     public void setPublishedDate(LocalDateTime publishedDate) {
         this.publishedDate = publishedDate;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public List<ProductVariant> getVariants() {
