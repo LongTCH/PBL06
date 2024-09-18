@@ -9,10 +9,6 @@ public enum AccountRolesEnum {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
-    }
-
     public static AccountRolesEnum fromValue(int value) {
         for (AccountRolesEnum role : AccountRolesEnum.values()) {
             if (role.getValue() == value) {
@@ -20,5 +16,9 @@ public enum AccountRolesEnum {
             }
         }
         throw new IllegalArgumentException("No enum constant for value " + value);
+    }
+
+    public int getValue() {
+        return value;
     }
 }

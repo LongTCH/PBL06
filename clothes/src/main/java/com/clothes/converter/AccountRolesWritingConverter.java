@@ -1,8 +1,7 @@
 package com.clothes.converter;
 
-import org.springframework.core.convert.converter.Converter;
-
 import com.clothes.constant.AccountRolesEnum;
+import org.springframework.core.convert.converter.Converter;
 
 public class AccountRolesWritingConverter implements Converter<AccountRolesEnum, Integer> {
     @Override

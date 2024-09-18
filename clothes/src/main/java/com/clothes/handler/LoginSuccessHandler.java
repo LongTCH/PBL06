@@ -1,19 +1,17 @@
 package com.clothes.handler;
 
+import com.clothes.constant.AccountRolesEnum;
+import com.clothes.repository.AccountsRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.clothes.constant.AccountRolesEnum;
-import com.clothes.repository.AccountsRepository;
+import java.io.IOException;
 
 @Component
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -22,7 +20,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException, ServletException {
         var account = accountsRepository.findByEmail(authentication.getName());
         HttpSession session = request.getSession();
         session.setAttribute("account", account.get());

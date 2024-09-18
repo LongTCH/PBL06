@@ -1,12 +1,11 @@
 package com.clothes.security;
 
+import com.clothes.repository.AccountsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import com.clothes.repository.AccountsRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

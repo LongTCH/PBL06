@@ -1,18 +1,18 @@
 package com.clothes.security;
 
-import java.util.Collection;
-import java.util.List;
-
+import com.clothes.constant.AccountRolesEnum;
+import com.clothes.model.Account;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.clothes.constant.AccountRolesEnum;
-import com.clothes.model.Account;
+
+import java.util.Collection;
+import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
-    private String username;
-    private String password;
-    private AccountRolesEnum role;
+    private final String username;
+    private final String password;
+    private final AccountRolesEnum role;
 
     public CustomUserDetails(Account account) {
         this.username = account.getEmail();
