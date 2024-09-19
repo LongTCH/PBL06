@@ -19,4 +19,11 @@ public class ProductsServiceImpl implements ProductsService {
         var products = pageProduct.getContent();
         return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
     }
+
+    @Override
+    public PaginationResultDto<Product> getAllProducts(int page, int size) {
+        var pageProduct = productsRepository.findAll(PageRequest.of(page, size));
+        var products = pageProduct.getContent();
+        return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
+    }
 }
