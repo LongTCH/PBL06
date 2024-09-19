@@ -21,11 +21,12 @@ public class AccountsServiceImpl implements AccountsService {
         }
         return account.get();
     }
-
     @Override
-    public Account createAccount(String username, String password) {
+    public Account createAccount(String firstName, String lastName, String email, String password) {
         var account = new Account();
-        account.setEmail(username);
+        account.setFirstName(firstName);
+        account.setLastName(lastName);
+        account.setEmail(email);
         account.setPassword(password);
         return accountsRepository.save(account);
     }
