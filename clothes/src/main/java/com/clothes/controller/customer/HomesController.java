@@ -14,6 +14,6 @@ public class HomesController {
     public String home(Model model, HttpSession session) {
         var account = (Account) session.getAttribute("account");
         model.addAttribute("name", account != null ? account.getEmail() : "Guest");
-        return "home";
+        return "customer/homepage";
     }
 }
