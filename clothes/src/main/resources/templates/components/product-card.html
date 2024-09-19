@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="product-card(product)">
+  <div class="card border-light shadow-sm mb-3">
+    <div class="card-body p-0">
+
+      <div class="position-relative">
+        <img th:src="${product.images[0].url}" class="card-img-top" alt="Product Image" >
+      </div>
+
+      <div class="card-body">
+        <h5 class="card-title" th:text="${product.title}">Product Title</h5>
+        <p class="card-text" th:text="${product.variants[0].price} + 'đ'">Price</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
