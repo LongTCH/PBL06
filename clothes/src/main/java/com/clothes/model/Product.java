@@ -3,6 +3,7 @@ package com.clothes.model;
 import com.clothes.model.embedded.Image;
 import com.clothes.model.embedded.Option;
 import com.clothes.model.embedded.ProductVariant;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class Product implements Serializable {
     private String description;
     private String sku;
     private LocalDateTime publishedDate;
-    private String groupId;
+    private ObjectId groupId;
     private String categoryId;
 
     public String getTitle() {
@@ -88,11 +89,11 @@ public class Product implements Serializable {
         this.variants = variants;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public ObjectId getGroupId() {
+        return (ObjectId) groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(ObjectId groupId) {
         this.groupId = groupId;
     }
 
