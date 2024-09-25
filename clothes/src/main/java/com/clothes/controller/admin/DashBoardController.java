@@ -12,6 +12,6 @@ public class DashBoardController {
     @GetMapping
     public String getMethodName(Model model, HttpSession session) {
         model.addAttribute("name", "Admin");
-        return "home";
+        return "admin/home";
     }
 }
