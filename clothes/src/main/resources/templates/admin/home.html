@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Home</title>
+</head>
+<body>
+<div>
+    <div class="wrapper">
+        <div th:replace="~{layouts/admin/header}"></div>
+        <div th:replace="~{layouts/admin/sidebar}"></div>
+    </div>
+    <div layout:fragment="body">
+    </div>
+</div>
+</body>
+</html>
