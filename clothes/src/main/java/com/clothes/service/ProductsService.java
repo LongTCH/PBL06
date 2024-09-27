@@ -8,9 +8,10 @@ import java.util.List;
 
 public interface ProductsService {
     PaginationResultDto<Product> findProductsByTitle(String title, int page, int size);
-
     PaginationResultDto<Product> getAllProducts(int page,int size);
+
     Product findProductById(String id);
     List<Product> findRelatedProductsByGroupId(ObjectId groupId) ;
-
+    PaginationResultDto<Product> getAllProductsWithSearch(int page,int size, String keyword);
+    PaginationResultDto<Product> getProductsByCategoryWithSearch(int page, int size, String categoryId,String keyword);
 }

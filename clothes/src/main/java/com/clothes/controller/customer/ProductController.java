@@ -47,7 +47,6 @@ public class ProductController {
         model.addAttribute("product", product);
         List<Product> relatedProducts = productsService.findRelatedProductsByGroupId(product.getGroupId());
         model.addAttribute("relatedProducts", relatedProducts);
-        System.out.println(relatedProducts);
         return "customer/products/ProductDetail";
     }
 }
