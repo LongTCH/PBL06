@@ -1,33 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" lang="vn">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="vn"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Header</title>
-    <script th:src="@{/js/plugin/webfont/webfont.min.js}"></script>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/plugins.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/admin.min.css}"/>
-    <script>
-        WebFont.load({
-            google: {families: ["Public Sans:300,400,500,600,700"]},
-            custom: {
-                families: [
-                    "Font Awesome 5 Solid",
-                    "Font Awesome 5 Regular",
-                    "Font Awesome 5 Brands",
-                    "simple-line-icons",
-                ],
-                urls: ["/css/fonts.min.css"],
-            },
-            active: function () {
-                sessionStorage.fonts = true;
-            },
-        });
-    </script>
+
 </head>
 <body>
-<div class="main-panel">
     <div class="main-header">
         <div class="main-header-logo">
             <div class="logo-header" data-background-color="dark">
@@ -213,8 +192,5 @@
             </div>
         </nav>
     </div>
-    <div class="container">
-    </div>
-</div>
 </body>
 </html>

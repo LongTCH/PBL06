@@ -136,7 +136,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div id="variant-swatch-2" class="swatch">
+                                                <div th:if="${product.options.size() > 2 && product.options[2].values != null && !product.options[2].values.isEmpty()}" id="variant-swatch-2" class="swatch">
                                                     <div class="pro-title">Chất liệu:</div>
                                                     <div class="select-swap">
                                                         <div th:each="material : ${product.options[2].values}"

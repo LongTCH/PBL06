@@ -4250,7 +4250,7 @@ label.error {
 }
 
 .table > tbody > tr > td, .table > tbody > tr > th {
-    padding: 16px 24px !important
+    padding: 8px 12px !important
 }
 
 .table > tfoot > tr > td, .table > tfoot > tr > th {
@@ -5587,9 +5587,9 @@ label.error {
 }
 
 .btn-success:disabled, .btn-success:focus, .btn-success:hover {
-    color: #fff !important;
-    background: #31ce36 !important;
-    border-color: #31ce36 !important
+    color: #dcc1c1 !important;
+    background: #040a04 !important;
+    border-color: #040a04 !important
 }
 
 .btn-warning {
