@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="">
+<html lang=""
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Admin Layout</title>
     <script th:src="@{/js/plugin/webfont/webfont.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/plugins.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/admin.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/admin/toast.css}">
     <script>
         WebFont.load({
             google: {families: ["Public Sans:300,400,500,600,700"]},
@@ -26,18 +27,25 @@
             },
         });
     </script>
+    <script th:src="@{/js/toast.js}"></script>
 </head>
 <body>
 <div class="wrapper">
+    <div th:if="${toastMessages != null}">
+        <script th:inline="javascript">
+            var toastMessages = /*[[${toastMessages}]]*/ [];
+            showToast(toastMessages.type, toastMessages.content);
+        </script>
+    </div>
     <aside th:replace="~{layouts/admin/sidebar}"></aside>
     <div class="main-panel">
-      <header th:replace="~{layouts/admin/header}"></header>
-      <div class="container">
-        <div class="page-inner">
-          <section layout:fragment="body">
-          </section>
+        <header th:replace="~{layouts/admin/header}"></header>
+        <div class="container">
+            <div class="page-inner">
+                <section layout:fragment="body">
+                </section>
+            </div>
         </div>
-      </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
