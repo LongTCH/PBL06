@@ -1,14 +1,19 @@
 package com.clothes.controller.admin;
 
+import com.clothes.dto.ToastMessage;
 import com.clothes.model.Product;
 import com.clothes.service.CategoriesService;
 import com.clothes.service.ProductsService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +38,7 @@ public class ProductsController {
                 ? productsService.getAllProductsWithSearch(page - 1, size, keyword)
                 : productsService.getProductsByCategoryWithSearch(page - 1, size, categoryId, keyword);
 
-        Map<String, String> categoryNames = new HashMap<>();
+        Map<ObjectId, String> categoryNames = new HashMap<>();
         for (Product product : paginationResult.getData()) {
             if (product.getCategoryId() != null) {
                 String categoryName = categoriesService.getCategoryNameById(product.getCategoryId());
@@ -50,5 +55,32 @@ public class ProductsController {
         model.addAttribute("categories", categories);
         model.addAttribute("keyword", keyword);
         return "/admin/products/index";
+    }
+
+    @PostMapping
+    public String importProducts(@RequestParam("file") MultipartFile file,
+                                 @RequestParam(name = "page", defaultValue = "1") int page,
+                                 @RequestParam(name = "size", defaultValue = "48") int size,
+                                 @RequestParam(name = "categoryId", defaultValue = "all") String categoryId,
+                                 @RequestParam(name = "keyword", defaultValue = "") String keyword,
+                                 Model model,
+                                 RedirectAttributes redirectAttrs) {
+        if (file.isEmpty()) {
+            model.addAttribute("toastMessages", new ToastMessage("error", "Bạn chưa chọn file."));
+            return showProductsPage(page, size, categoryId, keyword, model);
+        }
+        String contentType = file.getContentType();
+        if (!"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(contentType)
+                && !"application/vnd.ms-excel".equals(contentType)) {
+            model.addAttribute("toastMessages", new ToastMessage("error", "File tải lên không phải là định dạng Excel."));
+            return showProductsPage(page, size, categoryId, keyword, model);
+        }
+        try {
+            productsService.importProducts(file);
+            redirectAttrs.addFlashAttribute("toastMessages", new ToastMessage("success", "Nhập sản phẩm thành công!"));
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("toastMessages", new ToastMessage("error", "Lỗi khi nhập sản phẩm: " + e.getMessage()));
+        }
+        return "redirect:/admin/products";
     }
 }

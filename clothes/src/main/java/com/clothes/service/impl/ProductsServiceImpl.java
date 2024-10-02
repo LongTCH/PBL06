@@ -1,9 +1,10 @@
 package com.clothes.service.impl;
 
 import com.clothes.dto.PaginationResultDto;
+import com.clothes.dto.ProductExcel;
 import com.clothes.model.Product;
-import com.clothes.repository.CategoriesRepository;
 import com.clothes.repository.ProductsRepository;
+import com.clothes.service.ExcelService;
 import com.clothes.service.ProductsService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +12,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
     @Autowired
+    private ExcelService excelService;
+    @Autowired
     private ProductsRepository productsRepository;
     @Autowired
-    private CategoriesRepository categoriesRepository;
+    private ProductsRepository productRepository;
 
     @Override
     public PaginationResultDto<Product> findProductsByTitle(String title, int page, int size) {
@@ -41,8 +47,8 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public List<Product> findRelatedProductsByGroupId(ObjectId groupId) {
-        return productsRepository.findByGroupId(groupId);
+    public List<Product> findRelatedProductsByCategoryId(ObjectId categoryId) {
+        return productsRepository.findByCategoryId(categoryId);
     }
 
     @Override
@@ -70,5 +76,27 @@ public class ProductsServiceImpl implements ProductsService {
         }
         var products = pageProduct.getContent();
         return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
+    }
+
+
+    @Override
+    @Transactional
+    public void importProducts(MultipartFile file) throws Exception {
+        List<ProductExcel> productExcels = excelService.readerExcelFile(file, ProductExcel.class);
+        for (ProductExcel productExcel : productExcels) {
+            Product product = new Product();
+            product.setTitle(productExcel.getTitle());
+            product.setDescription(productExcel.getDescription());
+            product.setSku(productExcel.getSku());
+            product.setAvailable(productExcel.isAvailable());
+            product.setImages(productExcel.getImages());
+            product.setVariants(productExcel.getVariants());
+            product.setOptions(productExcel.getOptions());
+            product.setPublishedDate(LocalDateTime.parse(productExcel.getPublishedDate()));
+            product.setGroupId(new ObjectId(productExcel.getGroupId()));
+            product.setCategoryId(new ObjectId(productExcel.getCategoryId()));
+            productRepository.save(product);
+        }
+
     }
 }

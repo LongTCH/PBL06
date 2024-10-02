@@ -3,6 +3,7 @@ package com.clothes.service.impl;
 import com.clothes.model.Category;
 import com.clothes.repository.CategoriesRepository;
 import com.clothes.service.CategoriesService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     private CategoriesRepository categoriesRepository;
 
     @Override
-    public String getCategoryNameById(String categoryId) {
+    public String getCategoryNameById(ObjectId categoryId) {
         return categoriesRepository.findById(categoryId)
                 .map(Category::getName)
                 .orElse("Unknown Category");
