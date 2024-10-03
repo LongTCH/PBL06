@@ -70,4 +70,3 @@ public class ProductController {
         return "customer/products :: productsFragment";
     }
 }
-

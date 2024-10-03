@@ -129,4 +129,3 @@ function removeFromCart(button) {
     const totalPrice = calculateTotalPrice();
     document.getElementById('totalPrice').textContent = totalPrice;
 }
-
