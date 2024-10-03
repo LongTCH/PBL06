@@ -28,11 +28,8 @@ window.addEventListener('scroll', function () {
         loadMoreProducts();
     }
 });
-
 // doi mau checkbox size
 const checkboxes = document.querySelectorAll('.checkbox-container input');
-
-
 checkboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', function () {
         if (this.checked) {
@@ -48,14 +45,47 @@ checkboxes.forEach((checkbox) => {
 function loadProducts() {
     const formData = new FormData(document.getElementById('filterForm'));
     const queryString = new URLSearchParams(formData).toString();
-
     fetch(`/products/filter?${queryString}`)
         .then(response => response.text())
         .then(data => {
             document.getElementById('productsContainer').innerHTML = data;
         })
         .catch(error => console.error('Error:', error));
-
     return false; // Prevent form submission
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const priceSlider = document.getElementById('price-slider');
+    noUiSlider.create(priceSlider, {
+        start: [0, 3000000],
+        connect: true,
+        range: {
+            'min': 0,
+            'max': 3000000
+        },
+        tooltips: [true, true],
+        format: {
+            to: function (value) {
+                return Math.round(value);
+            },
+            from: function (value) {
+                return Number(value);
+            }
+        }
+    });
+
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+
+    priceSlider.noUiSlider.on('update', function (values, handle) {
+        if (handle === 0) {
+            minPriceInput.value = values[handle];
+        } else {
+            maxPriceInput.value = values[handle];
+        }
+        loadProducts();
+    });
+});
+
 

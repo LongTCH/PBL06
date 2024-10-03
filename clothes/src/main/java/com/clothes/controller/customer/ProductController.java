@@ -49,4 +49,18 @@ public class ProductController {
         model.addAttribute("relatedProducts", relatedProducts);
         return "customer/products/ProductDetail";
     }
+
+    @GetMapping(value = "/filter", produces = "text/html")
+    public String filterProducts(
+            @RequestParam(required = false) List<String> groupName,
+            @RequestParam(required = false) List<String> sizeOption,
+            @RequestParam(defaultValue = "0") int minPrice,
+            @RequestParam(defaultValue = "10000000") int maxPrice,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "24") int size,
+            Model model) {
+        PaginationResultDto<Product> result = productsService.filterProducts(groupName, sizeOption, minPrice, maxPrice, page, size);
+        model.addAttribute("products", result.getData());
+        return "customer/products :: productsFragment";
+    }
 }

@@ -1,9 +1,14 @@
+.container {
+    padding: 0 30px;
+}
+
 #filterForm{
     position: relative;
     display: flex;
     right: 0;
-    left: 60%;
+    left: 55%;
     margin-top: 2%;
+    width: 45%;
 }
 
 
@@ -104,17 +109,37 @@
 }
 
 
-
-.price-range-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+.price-container {
+    display: none;
+    position: absolute;
+    top: 26px;
+    left: 0px;
+    background-color: white;
+    padding: 17px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 130%;
+    z-index: 1;
+    box-sizing: border-box;
+}
+.dropdown:hover .price-container {
+    display: block;
+    top: 24px;
 }
 
-.price-range-container input[type="range"] {
-    width: 70%;
-    height: 10px;
-    margin: 0 10px;
+.price-slider-container {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.price-slider-container input[type="range"] {
+    width: 90%;
+    height: 6px;
+    margin: 0 5px;
     border-radius: 5px;
     background-color: #ccc;
     -webkit-appearance: none;
@@ -125,8 +150,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background-color: #007bff;
     cursor: pointer;
@@ -145,3 +170,34 @@
     color: #666;
     margin-left: 10px;
 }
+
+
+.noUi-handle {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.noUi-connect {
+    background-color: #000000;
+}
+
+
+.noUi-tooltip {
+    background-color: #333;
+    color: #fff;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.price-slider-container {
+    position: relative;
+    top: 20px;
+    height: 30px;
+}
+
+
+

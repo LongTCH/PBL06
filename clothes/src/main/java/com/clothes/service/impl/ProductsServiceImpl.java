@@ -3,8 +3,13 @@ package com.clothes.service.impl;
 import com.clothes.dto.PaginationResultDto;
 import com.clothes.dto.ProductExcel;
 import com.clothes.model.Product;
+import com.clothes.model.embedded.ProductVariant;
 import com.clothes.repository.ProductsRepository;
+
 import com.clothes.service.ExcelService;
+
+import com.clothes.service.GroupsService;
+
 import com.clothes.service.ProductsService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -27,6 +36,8 @@ public class ProductsServiceImpl implements ProductsService {
     @Autowired
     private ProductsRepository productRepository;
 
+    @Autowired
+    private GroupsService groupsService;
     @Override
     public PaginationResultDto<Product> findProductsByTitle(String title, int page, int size) {
         var pageProduct = productsRepository.findByTitleContainingIgnoreCase(title == null ? "" : title, PageRequest.of(page, size));
@@ -98,5 +109,56 @@ public class ProductsServiceImpl implements ProductsService {
             productRepository.save(product);
         }
 
+    }
+
+    @Override
+    public PaginationResultDto<Product> filterProducts(List<String> groupNames, List<String> sizeOptions, int minPrice, int maxPrice, int page, int size) {
+
+        List<String> groupIds = new ArrayList<>();
+
+        if (groupNames != null && !groupNames.isEmpty()) {
+            groupIds = groupsService.getGroupIdByNames(groupNames);
+
+            if (groupIds.isEmpty()) {
+                return new PaginationResultDto<>(Collections.emptyList(), 0, page, size);
+            }
+        }
+
+        List<Product> allProducts = productsRepository.findAll();
+        List<String> groupIdsCopy = new ArrayList<>(groupIds);
+
+        List<Product> filteredProducts = allProducts.stream()
+                .filter(product -> {
+                    String groupIDtmp = product.getGroupId().toString();
+                    return groupIdsCopy.isEmpty() || groupIdsCopy.contains(groupIDtmp);
+                })
+                .filter(product -> {
+                    List<ProductVariant> matchingVariants = product.getVariants().stream()
+                            .filter(variant -> {
+                                String option2 = variant.getOptions().get(2);
+
+                                boolean priceMatch = variant.getPrice() >= minPrice && variant.getPrice() <= maxPrice;
+                                boolean sizeMatch = sizeOptions == null || sizeOptions.isEmpty() || sizeOptions.contains(option2);
+
+                                return priceMatch && sizeMatch;
+                            })
+                            .collect(Collectors.toList());
+
+                    product.setVariants(matchingVariants);
+                    return !matchingVariants.isEmpty();
+                })
+                .collect(Collectors.toList());
+
+        int totalProducts = filteredProducts.size();
+        int start = Math.min(page * size, totalProducts);
+        int end = Math.min(start + size, totalProducts);
+        List<Product> paginatedProducts = filteredProducts.subList(start, end);
+
+        return new PaginationResultDto<>(paginatedProducts, totalProducts, page, size);
+    }
+
+    @Override
+    public List<Product> findProductByIds(List<String> productIds) {
+        return productsRepository.findAllById(productIds);
     }
 }

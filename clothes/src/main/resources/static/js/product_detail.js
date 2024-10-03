@@ -42,6 +42,7 @@ function selectRadio(element) {
     element.classList.add('selected');
 }
 
+
 function increaseQuantity() {
     let qtyInput = document.getElementById("quantity");
     let currentValue = parseInt(qtyInput.value);
@@ -57,3 +58,30 @@ function decreaseQuantity() {
         qtyInput.value = currentValue - 1;
     }
 }
+
+
+function addToCart() {
+    const pathname = window.location.pathname;
+    const parts = pathname.split('/');
+    const productId = parts[parts.length - 1];
+    const quantity = document.getElementById('quantity').value;
+    const selectedColor = document.querySelector('input[name="color"]:checked').value;
+    const selectedSize = document.querySelector('input[name="option2"]:checked').value;
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    const existingProduct = cart.find(item => item.id === productId && item.color === selectedColor && item.size === selectedSize);
+    if (existingProduct) {
+        existingProduct.quantity += parseInt(quantity);
+    } else {
+        cart.push({
+            id:productId,
+            variantName: selectedColor + ' / '+ selectedSize,
+            quantity: parseInt(quantity)
+        });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert('Đã thêm sản phẩm vào giỏ hàng');
+
+}
+
