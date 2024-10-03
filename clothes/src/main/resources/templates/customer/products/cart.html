@@ -30,18 +30,17 @@
             <div id="cartProductsContainer"></div>
         </div>
         <div class="col-lg-4 col-md-12 col-12 p-5">
-            <div class="cart-summary">
-                <h3>Thông tin đơn hàng</h3>
-                <div class="summary-item d-flex justify-content-between">
-                    <p>Tổng tiền:</p>
-                    <p>230.000đ</p>
-                </div>
-                <div class="summary-item d-flex justify-content-between">
-                    <p>Phí vận chuyển sẽ được tính ở trang thanh toán</p>
-
-                </div>
-                <button class="btn btn-primary w-100">Thanh toán</button>
-            </div>
+           <div class="cart-summary">
+    <h3>Thông tin đơn hàng</h3>
+    <div class="summary-item d-flex justify-content-between">
+        <p>Tổng tiền:</p>
+        <p id="totalPrice">0đ</p>
+    </div>
+    <div class="summary-item d-flex justify-content-between">
+        <p>Phí vận chuyển sẽ được tính ở trang thanh toán</p>
+    </div>
+    <button class="btn btn-primary w-100">Thanh toán</button>
+</div>
         </div>
     </div>
     <div th:replace="~{layouts/customer/footer}"></div>

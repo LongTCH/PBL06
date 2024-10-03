@@ -16,8 +16,12 @@ function updateQuantity(button, change) {
         const productTotal = productCard.querySelector('.product-total');
         const price = parseFloat(productCard.querySelector('.product-price').textContent.replace('đ', ''));
         productTotal.textContent = (price * cartItem.quantity) + 'đ';
+
+        const totalPrice = calculateTotalPrice();
+        document.getElementById('totalPrice').textContent = totalPrice + 'đ';
     }
 }
+let productData = [];
 
 document.addEventListener("DOMContentLoaded", function () {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -32,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`/cart/products?${params.toString()}`)
             .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
             .then(data => {
+                productData = data; // Store the product data
                 const filteredProducts = data.map(product => {
                     const matchingVariants = product.variants.filter(variant => {
                         const cartItem = cart.find(item => item.id === product.id && item.variantName === variant.name);
@@ -50,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error('Error:', error));
     }
 });
-
 function updateCartUI(products) {
     let cartContainer = document.getElementById('cartProductsContainer');
     let productHTML = '';
@@ -83,7 +87,7 @@ function updateCartUI(products) {
                                 <path d="M6 4h4v2H6v4H4V6H0V4h4V0h2v4z"></path>
                             </svg>
                         </button>
-                        <button class="btn btn-danger m-lg-2">Xóa</button>
+                        <button class="btn btn-danger m-lg-2" onclick="removeFromCart(this)">Xóa</button>
                     </div>
                 </div>
             `;
@@ -91,7 +95,40 @@ function updateCartUI(products) {
     });
 
     cartContainer.innerHTML = productHTML;
+
+    const totalPrice = calculateTotalPrice();
+    document.getElementById('totalPrice').textContent = totalPrice + 'đ';
 }
 
 
+function calculateTotalPrice() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalPrice = cart.reduce((total, item) => {
+        const product = productData.find(p => p.id === item.id);
+        if (product) {
+            const variant = product.variants.find(v => v.name === item.variantName);
+            if (variant) {
+                const price = parseFloat(variant.price);
+                return total + (price * item.quantity);
+            }
+        }
+        return total;
+    }, 0);
+    return totalPrice;
+}
 
+function removeFromCart(button) {
+    const productCard = button.closest('.product-card');
+    const productId = productCard.getAttribute('data-product-id');
+    const variantName = productCard.getAttribute('data-variant-name');
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    cart = cart.filter(item => !(item.id === productId && item.variantName === variantName));
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    productCard.remove();
+
+    const totalPrice = calculateTotalPrice();
+    document.getElementById('totalPrice').textContent = totalPrice + 'đ';
+}
