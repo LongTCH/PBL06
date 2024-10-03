@@ -3,7 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <<<<<<< HEAD
     <meta charset="UTF-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Home</title>
@@ -84,121 +83,5 @@
 
 
 </div>
-=======
-<meta charset="UTF-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Home</title>
-<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      rel="stylesheet"/>
-<link rel="stylesheet" th:href="@{/css/customer/products.css}"/>
-<script defer th:src="@{/js/products.js}"></script>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/nouislider/15.6.0/nouislider.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/nouislider/15.6.0/nouislider.min.js"></script>
-
-
-</head>
-<body>
-
-<!-- Header -->
-<div th:replace="~{layouts/customer/header}"></div>
-
-
-<div layout:fragment="body">
-
-    <form action="/products/filter" id="filterForm" method="get" onsubmit="return loadProducts();">
-        <!--      Loại sản phẩm-->
-
-        <p class="form-group filter">Bộ lọc:</p>
-        <div class="form-group">
-            <div class="dropdown-category" id="dropdown-category">
-                <label class="dropdown-toggle">Loại sản phẩm</label>
-                <div class="dropdown-menu">
-                    <div class="form-check">
-                        <input class="form-check-input" id="category1" name="groupName" onchange="loadProducts();" type="checkbox"
-                               value="Đầm">
-                        <label class="form-check-label" for="category1">
-                            Đầm
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" id="category2" name="groupName" onchange="loadProducts();" type="checkbox"
-                               value="Áo">
-                        <label class="form-check-label" for="category2">
-                            Áo
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" id="category3" name="groupName" onchange="loadProducts();" type="checkbox"
-                               value="Chân váy">
-                        <label class="form-check-label" for="category3">
-                            Chân váy
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" id="category4" name="groupName" onchange="loadProducts();" type="checkbox"
-                               value="Quần">
-                        <label class="form-check-label" for="category4">
-                            Quần
-                        </label>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-        <!--Size-->
-        <div class="form-group">
-
-            <div class="dropdown">
-                <div class="dropdown-toggle">Size</div>
-                <div class="size-menu">
-                    <label class="checkbox-container">
-                        <input class="filter-option" name="sizeOption" onchange="loadProducts();" type="checkbox"
-                               value="S"> S
-                    </label>
-                    <label class="checkbox-container">
-                        <input class="filter-option" name="sizeOption" onchange="loadProducts();" type="checkbox"
-                               value="M"> M
-                    </label>
-                    <label class="checkbox-container">
-                        <input class="filter-option" name="sizeOption" onchange="loadProducts()" type="checkbox"
-                               value="L"> L
-                    </label>
-                    <label class="checkbox-container">
-                        <input class="filter-option" name="sizeOption" onchange="loadProducts();" type="checkbox"
-                               value="XL"> XL
-                    </label>
-                    <label class="checkbox-container">
-                        <input class="filter-option" name="sizeOption" onchange="loadProducts();" type="checkbox"
-                               value="XXL"> XXL
-                    </label>
-                </div>
-            </div>
-        </div>
-
-
-    </form>
-
-
-    <div class="container mt-5">
-        <div class="row mx-5" id="productsContainer" th:fragment="productsFragment">
-
-            <div class="col-md-3 mb-4 product" th:each="product : ${products}">
-                <div th:replace="~{components/product-card :: product-card(product=${product})}"></div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- Footer -->
-    <div th:replace="~{layouts/customer/footer}"></div>
-</div>
-
-
->>>>>>> aa55b15 (filter)
 </body>
 </html>

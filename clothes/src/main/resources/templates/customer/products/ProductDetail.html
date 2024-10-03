@@ -129,7 +129,8 @@
                                                              th:classappend="${' ' + size.toLowerCase()}"
                                                              th:each="size : ${product.options[1].values}">
                                                             <input name="option2"
-                                                                   th:id="${'swatch-1-' + size.toLowerCase()}" th:value="${size}"
+                                                                   th:id="${'swatch-1-' + size.toLowerCase()}"
+                                                                   th:value="${size}"
                                                                    type="radio">
                                                             <label th:for="${'swatch-1-' + size.toLowerCase()}">
                                                                 <span th:text="${size}"></span>
@@ -138,7 +139,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="swatch"
-                                                     id="variant-swatch-2" th:if="${product.options.size() > 2 && product.options[2].values != null && !product.options[2].values.isEmpty()}">
+                                                     id="variant-swatch-2"
+                                                     th:if="${product.options.size() > 2 && product.options[2].values != null && !product.options[2].values.isEmpty()}">
                                                     <div class="pro-title">Chất liệu:</div>
                                                     <div class="select-swap">
                                                         <div class="swatch-element material selected"
@@ -165,7 +167,8 @@
                                                         <path d="M10 0v2H0V0z"></path>
                                                     </svg>
                                                 </button>
-                                                <input aria-label="quantity" aria-labelledby="quantity" class="qty-value"
+                                                <input aria-label="quantity" aria-labelledby="quantity"
+                                                       class="qty-value"
                                                        id="quantity" min="1" name="quantity" type="text"
                                                        value="1">
                                                 <button aria-label="plus-quantity" class="qty-btn"
@@ -262,7 +265,8 @@
                                                             <div class="proloop-actions__inner">
                                                                 <div class="proloop-actions__cart">
                                                                     <div class="actions-primary">
-                                                                        <button class="btn-proloop-cart" onclick="addToCart('${product.id}', '${product.title}', ${product.variants[0].price})"
+                                                                        <button class="btn-proloop-cart"
+                                                                                onclick="addToCart('${product.id}', '${product.title}', ${product.variants[0].price})"
                                                                                 type="button">
                                                                             <svg height="18"
                                                                                  viewBox="0 0 22 22" width="18"
