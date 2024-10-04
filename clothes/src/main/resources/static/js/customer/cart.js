@@ -3,7 +3,6 @@ function updateQuantity(button, change) {
     const productId = productCard.getAttribute('data-product-id');
     const variantName = productCard.getAttribute('data-variant-name');
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    console.log('Cart:', productId, "cc", variantName);
     const cartItem = cart.find(item => item.id === productId && item.variantName === variantName);
     if (cartItem) {
         cartItem.quantity = Math.max(cartItem.quantity + change, 1);
@@ -15,12 +14,13 @@ function updateQuantity(button, change) {
 
         const productTotal = productCard.querySelector('.product-total');
         const price = parseFloat(productCard.querySelector('.product-price').textContent.replace('đ', ''));
-        productTotal.textContent = (price * cartItem.quantity) + 'đ';
+        productTotal.textContent = (price * cartItem.quantity).toLocaleString('en-US') + 'đ';
 
         const totalPrice = calculateTotalPrice();
         document.getElementById('totalPrice').textContent = totalPrice + 'đ';
     }
 }
+
 let productData = [];
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`/cart/products?${params.toString()}`)
             .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
             .then(data => {
-                productData = data; // Store the product data
+                productData = data;
                 const filteredProducts = data.map(product => {
                     const matchingVariants = product.variants.filter(variant => {
                         const cartItem = cart.find(item => item.id === product.id && item.variantName === variant.name);
@@ -47,14 +47,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                         return false;
                     });
-                    return { ...product, variants: matchingVariants };
+                    return {...product, variants: matchingVariants};
                 }).filter(product => product.variants.length > 0);
-                console.log('Filtered products:', filteredProducts);
                 updateCartUI(filteredProducts);
             })
             .catch(error => console.error('Error:', error));
     }
 });
+
 function updateCartUI(products) {
     let cartContainer = document.getElementById('cartProductsContainer');
     let productHTML = '';
@@ -114,7 +114,7 @@ function calculateTotalPrice() {
         }
         return total;
     }, 0);
-    return totalPrice;
+    return totalPrice.toLocaleString('en-US') + 'đ';
 }
 
 function removeFromCart(button) {
