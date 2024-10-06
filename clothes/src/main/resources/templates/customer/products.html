@@ -38,7 +38,8 @@
                     <label class="dropdown-toggle">Loại sản phẩm</label>
                     <div class="dropdown-menu">
                         <div th:each="group : ${groups}" class="form-check">
-                            <input class="form-check-input" type="checkbox" th:name="'groupName'" th:value="${group.name}"
+                            <input class="form-check-input" type="checkbox" th:name="'groupName'"
+                                   th:value="${group.name}"
                                    th:id="${group.id}" onchange="loadProducts();">
                             <label class="form-check-label" th:for=" ${group.name}">
                                 <span th:text="${group.name}"></span>
@@ -48,39 +49,7 @@
                 </div>
             </div>
 
-
-            <!--Size-->
-            <div class="form-group col-md-3">
-
-                <div class="dropdown">
-                    <div class="dropdown-toggle">Size</div>
-                    <div class="size-menu">
-                        <label class="checkbox-container">
-                            <input type="checkbox" class="filter-option" name="sizeOption" value="S"
-                                   onchange="loadProducts();"> S
-                        </label>
-                        <label class="checkbox-container">
-                            <input type="checkbox" class="filter-option" name="sizeOption" value="M"
-                                   onchange="loadProducts();"> M
-                        </label>
-                        <label class="checkbox-container">
-                            <input type="checkbox" class="filter-option" name="sizeOption" value="L"
-                                   onchange="loadProducts()"> L
-                        </label>
-                        <label class="checkbox-container">
-                            <input type="checkbox" class="filter-option" name="sizeOption" value="XL"
-                                   onchange="loadProducts();"> XL
-                        </label>
-                        <label class="checkbox-container">
-                            <input type="checkbox" class="filter-option" name="sizeOption" value="XXL"
-                                   onchange="loadProducts();"> XXL
-                        </label>
-                    </div>
-                </div>
-            </div>
-
             <!--Loc gia-->
-
             <div class="form-group col-md-3">
                 <div class="dropdown">
 
