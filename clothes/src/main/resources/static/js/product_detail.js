@@ -42,6 +42,7 @@ function selectRadio(element) {
     element.classList.add('selected');
 }
 
+
 function increaseQuantity() {
     let qtyInput = document.getElementById("quantity");
     let currentValue = parseInt(qtyInput.value);
@@ -55,5 +56,45 @@ function decreaseQuantity() {
     let currentValue = parseInt(qtyInput.value);
     if (!isNaN(currentValue) && currentValue > 1) {
         qtyInput.value = currentValue - 1;
+    }
+}
+
+
+async function addToCart() {
+    const pathname = window.location.pathname;
+    const parts = pathname.split('/');
+    const productId = parts[parts.length - 1];
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const selectedColor = document.querySelector('input[name="color"]:checked').value;
+    const selectedSize = document.querySelector('input[name="option2"]:checked').value;
+    const variantName = `${selectedColor} / ${selectedSize}`;
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+
+    try {
+        const response = await fetch(`/cart/variants?id=${productId}&variantName=${variantName}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const variant = await response.json();
+
+        const existingProduct = cart.find(item => item.id === productId && item.variantId === variant.id);
+        if (existingProduct) {
+            existingProduct.quantity += quantity;
+        }else if (quantity > variant.quantity){
+            alert('Sản phẩm không đủ số lượng');
+        }
+        else {
+            cart.push({
+                id: productId,
+                variantId: variant.id,
+                quantity: quantity,
+            });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert('Đã thêm sản phẩm vào giỏ hàng');
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Không thể thêm sản phẩm vào giỏ hàng');
     }
 }
