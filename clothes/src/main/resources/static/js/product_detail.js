@@ -97,3 +97,4 @@ async function addToCart() {
         alert('Không thể thêm sản phẩm vào giỏ hàng');
     }
 }
+

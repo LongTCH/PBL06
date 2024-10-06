@@ -30,5 +30,4 @@ public class GroupsServiceImpl implements GroupsService {
         List<Group> groups = groupsRepository.findAll();
         return groups;
     }
-
 }

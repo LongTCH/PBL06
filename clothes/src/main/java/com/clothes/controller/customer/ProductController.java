@@ -69,5 +69,5 @@ public class ProductController {
         model.addAttribute("products", result.getData());
         return "customer/products :: productsFragment";
     }
-
 }
+
