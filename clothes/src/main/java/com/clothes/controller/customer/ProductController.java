@@ -2,6 +2,7 @@ package com.clothes.controller.customer;
 
 import com.clothes.dto.PaginationResultDto;
 import com.clothes.model.Product;
+import com.clothes.service.GroupsService;
 import com.clothes.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ public class ProductController {
     @Autowired
     private ProductsService productsService;
 
+    @Autowired
+    private GroupsService groupsService;
+
     @GetMapping(value = "/search", produces = "application/json")
     public ResponseEntity<PaginationResultDto<Product>> search(@RequestParam(required = false) String title,
                                                                @RequestParam(defaultValue = "0") int page,
@@ -35,6 +39,8 @@ public class ProductController {
                                    @RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "24") int size) {
         var paginationResult = productsService.getAllProducts(page, size);
+        var groups = groupsService.getAllGroups();
+        model.addAttribute("groups", groups);
         model.addAttribute("products", paginationResult.getData());
         model.addAttribute("pagination", paginationResult);
         model.addAttribute("currentPage", page);
@@ -63,4 +69,5 @@ public class ProductController {
         model.addAttribute("products", result.getData());
         return "customer/products :: productsFragment";
     }
+
 }

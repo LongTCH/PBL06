@@ -22,4 +22,10 @@ public class GroupsServiceImpl implements GroupsService {
                 .map(Group::getId)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Group> getAllGroups() {
+        List<Group> groups = groupsRepository.findAll();
+        return groups;
+    }
 }

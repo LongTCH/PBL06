@@ -1,9 +1,9 @@
 function updateQuantity(button, change) {
     const productCard = button.closest('.product-card');
     const productId = productCard.getAttribute('data-product-id');
-    const variantName = productCard.getAttribute('data-variant-name');
+    const variantId = productCard.getAttribute('data-variant-id');
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartItem = cart.find(item => item.id === productId && item.variantName === variantName);
+    const cartItem = cart.find(item => item.id === productId && item.variantId === variantId);
     if (cartItem) {
         cartItem.quantity = Math.max(cartItem.quantity + change, 1);
 
@@ -29,8 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (cart.length > 0) {
         const params = new URLSearchParams();
         cart.forEach(item => {
-            params.append('ids', item.id);
-            params.append('variantName', item.variantName);
+            params.append('id', item.id);
         });
 
         fetch(`/cart/products?${params.toString()}`)
@@ -39,10 +38,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 productData = data;
                 const filteredProducts = data.map(product => {
                     const matchingVariants = product.variants.filter(variant => {
-                        const cartItem = cart.find(item => item.id === product.id && item.variantName === variant.name);
+                        const cartItem = cart.find(item => item.id === product.id && item.variantId === variant.id);
                         if (cartItem) {
                             variant.quantity = cartItem.quantity;
-                            variant.variantId = cartItem.variantId;
                             return true;
                         }
                         return false;
@@ -62,7 +60,7 @@ function updateCartUI(products) {
     products.forEach(product => {
         product.variants.forEach(variant => {
             productHTML += `
-                <div class="product-card" data-product-id="${product.id}" data-variant-name="${variant.name}">
+                <div class="product-card" data-product-id="${product.id}" data-variant-id="${variant.id}">
                     <div class="product-image">
                         <img src="${product.images[0].url}" alt="product-image"/>
                     </div>
@@ -106,7 +104,7 @@ function calculateTotalPrice() {
     const totalPrice = cart.reduce((total, item) => {
         const product = productData.find(p => p.id === item.id);
         if (product) {
-            const variant = product.variants.find(v => v.name === item.variantName);
+            const variant = product.variants.find(v => v.id === item.variantId);
             if (variant) {
                 const price = parseFloat(variant.price);
                 return total + (price * item.quantity);
@@ -120,15 +118,15 @@ function calculateTotalPrice() {
 function removeFromCart(button) {
     const productCard = button.closest('.product-card');
     const productId = productCard.getAttribute('data-product-id');
-    const variantName = productCard.getAttribute('data-variant-name');
+    const variantId = productCard.getAttribute('data-variant-id');
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    cart = cart.filter(item => !(item.id === productId && item.variantName === variantName));
+    cart = cart.filter(item => !(item.id === productId && item.variantId === variantId));
 
     localStorage.setItem('cart', JSON.stringify(cart));
 
     productCard.remove();
 
     const totalPrice = calculateTotalPrice();
-    document.getElementById('totalPrice').textContent = totalPrice + 'đ';
+    document.getElementById('totalPrice').textContent = totalPrice;
 }
