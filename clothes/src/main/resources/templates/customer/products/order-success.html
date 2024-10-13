@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Đặt hàng thành công</h1>
+    <p>Cảm ơn bạn đã mua hàng</p>
+
+    <div class="order-details mt-4">
+        <h3>Thông tin đơn hàng</h3>
+        <p><strong>Mã đơn hàng:</strong> <span th:text="${order.id}"></span></p>
+        <p><span th:text="${order.customerName}"></span></p>
+        <p><span
+                th:text="${order.customerAddress.street} + ', ' + ${order.customerAddress.ward} + ', ' + ${order.customerAddress.district} + ', ' + ${order.customerAddress.city}"></span>
+        </p>
+    </div>
+</div>
+</body>
+</html>
