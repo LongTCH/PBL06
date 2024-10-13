@@ -1,0 +1,103 @@
+.product-card {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-image img {
+    max-width: 100px;
+    border-radius: 4px;
+    margin-right: 20px;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-info h5 {
+    font-size: 15px;
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+.product-info p {
+    margin-bottom: 5px;
+    color: #6c757d;
+}
+
+.product-total {
+    font-size: 18px;
+    font-weight: normal;
+    position: relative;
+
+}
+
+.product-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#totalPrice {
+    font-size: 18px;
+    font-weight: bold;
+    position: relative;
+
+}
+
+.product-thumbnail-quantity {
+    font-size: 0.85714em;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: 0.15em 0.65em;
+    border-radius: 2em;
+    background-color: rgba(153, 153, 153, 0.9);
+    color: #fff;
+    position: absolute;
+    right: 43em;
+    z-index: 2;
+}
+
+.shipping-info {
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.shipping-info .form-check {
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+
+}
+
+.shipping-info .form-check label {
+    font-size: 16px;
+    font-weight: normal;
+    margin-left: 10px;
+}
+
+.checkout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.checkout form-check {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+
+

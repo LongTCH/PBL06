@@ -67,10 +67,10 @@ function updateCartUI(products) {
                     <div class="product-info">
                         <h5 class="product-name">${product.title}</h5>
                         <p>${variant.name}</p>
-                        <p class="product-price">${variant.price}đ</p>
+                        <p class="product-price">${variant.price.toLocaleString('en-US')}đ</p>
                         
                     </div>
-                    <p class="product-total">${variant.price * variant.quantity}đ</p>
+                    <p class="product-total">${(variant.price * variant.quantity).toLocaleString('en-US')}đ</p>
                     <div class="product-action">
                         <button type="button" class="qty-btn decrease-quantity" onclick="updateQuantity(this, -1)">
                             <svg class="icon icon--minus" viewBox="0 0 10 2">
@@ -97,7 +97,6 @@ function updateCartUI(products) {
     const totalPrice = calculateTotalPrice();
     document.getElementById('totalPrice').textContent = totalPrice + 'đ';
 }
-
 
 function calculateTotalPrice() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];

@@ -5,10 +5,10 @@
     <title>Register</title>
 </head>
 <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        rel="stylesheet"
 />
 <body>
 <section class="h-100" style="background-color: #f8eff1">
@@ -18,14 +18,14 @@
                 <div class="card card-registration my-4">
                     <div class="row g-0">
                         <div class="col-xl-6 d-none d-xl-block">
-                            <img src="https://toplist.vn/images/800px/huong-boutique-1131153.jpg"
-                                 alt="" class="img-fluid"
+                            <img alt=""
+                                 class="img-fluid" src="https://toplist.vn/images/800px/huong-boutique-1131153.jpg"
                                  style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem; height: 100%"/>
                         </div>
                         <div class="col-xl-6">
                             <div class="card-body p-md-4 text-black">
                                 <h3 class="mb-4 text-uppercase">Đăng ký tài khoản</h3>
-                                <div th:if="${errorMessage}" class="alert alert-danger">
+                                <div class="alert alert-danger" th:if="${errorMessage}">
                                     <span th:text="${errorMessage}"></span>
                                 </div>
                                 <form action="/sessions/new-account" method="post">
@@ -33,32 +33,36 @@
                                         <div class="col-md-12 mb-2">
                                             <div class="form-outline">
                                                 <label class="form-label" for="firstName">First name</label>
-                                                <input type="text" id="firstName" name="firstName" class="form-control form-control-sm"/>
+                                                <input class="form-control form-control-sm" id="firstName" name="firstName"
+                                                       type="text"/>
                                             </div>
                                         </div>
                                         <div class="col-md-12 mb-2">
                                             <div class="form-outline">
                                                 <label class="form-label" for="lastName">Last name</label>
-                                                <input type="text" id="lastName" name="lastName"  class="form-control form-control-sm"/>
+                                                <input class="form-control form-control-sm" id="lastName" name="lastName"
+                                                       type="text"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-outline mb-2">
                                         <label class="form-label" for="email">Email</label>
-                                        <input type="text" id="email" name="email" class="form-control form-control-sm"/>
+                                        <input class="form-control form-control-sm" id="email" name="email"
+                                               type="text"/>
                                     </div>
                                     <div class="form-outline mb-2">
                                         <label class="form-label" for="password">Password</label>
-                                        <input type="password" id="password" name="password" class="form-control form-control-sm"/>
+                                        <input class="form-control form-control-sm" id="password" name="password"
+                                               type="password"/>
                                     </div>
                                     <div class="mb-2 mt-4">
-                                        <button class="btn btn-info btn-lg btn-block w-100" type="submit"
-                                                style="color: white;">Đăng ký
+                                        <button class="btn btn-info btn-lg btn-block w-100" style="color: white;"
+                                                type="submit">Đăng ký
                                         </button>
                                     </div>
                                     <div class="d-flex justify-content-center pt-2">
                                         <p style="color: #393f81;">Bạn đã có tài khoản? <a
-                                                th:href="@{/sessions/login}" class="text-decoration-none">Đăng nhập tại
+                                                class="text-decoration-none" th:href="@{/sessions/login}">Đăng nhập tại
                                             đây</a>
                                         </p>
                                     </div>

@@ -40,6 +40,7 @@
 .product-card .image-2 {
     opacity: 0;
 }
+
 .product-card:hover .image-1 {
     opacity: 0;
 }
