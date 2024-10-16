@@ -14,7 +14,7 @@ function updateQuantity(button, change) {
 
         const productTotal = productCard.querySelector('.product-total');
         const price = parseFloat(productCard.querySelector('.product-price').textContent.replace('đ', ''));
-        productTotal.textContent = (price * cartItem.quantity).toLocaleString('en-US') + 'đ';
+        productTotal.textContent = (price * cartItem.quantity * 1000).toLocaleString('en-US') + 'đ';
 
         const totalPrice = calculateTotalPrice();
         document.getElementById('totalPrice').textContent = totalPrice + 'đ';
@@ -70,7 +70,7 @@ function updateCartUI(products) {
                         <p class="product-price">${variant.price.toLocaleString('en-US')}đ</p>
                         
                     </div>
-                    <p class="product-total">${(variant.price * variant.quantity).toLocaleString('en-US')}đ</p>
+                    <p class="product-total">${(variant.price * variant.quantity).toLocaleString('en-US')}</p>
                     <div class="product-action">
                         <button type="button" class="qty-btn decrease-quantity" onclick="updateQuantity(this, -1)">
                             <svg class="icon icon--minus" viewBox="0 0 10 2">
@@ -111,7 +111,7 @@ function calculateTotalPrice() {
         }
         return total;
     }, 0);
-    return totalPrice.toLocaleString('en-US') + 'đ';
+    return totalPrice.toLocaleString('en-US');
 }
 
 function removeFromCart(button) {
