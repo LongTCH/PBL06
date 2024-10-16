@@ -18,8 +18,9 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${product.title}">Product Title</h5>
-                    <p class="card-text" id="productPrice" th:text="${product.variants[0].price} + ' đ'">Price</p>
-                </div>
+                    <p class="card-text" id="productPrice"
+                       th:text="${#numbers.formatDecimal(product.variants[0].price, 1, 'COMMA', 0, 'POINT')} + 'đ'">
+                        Price</p></div>
             </div>
         </div>
     </a>
