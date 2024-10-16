@@ -15,13 +15,25 @@ public class GroupsServiceImpl implements GroupsService {
     @Autowired
     private GroupsRepository groupsRepository;
 
+    aa55b15(filter)
+
+<<<<<<<HEAD
+
     @Override
     public List<String> getGroupIdByNames(List<String> groupNames) {
+<<<<<<<HEAD
         List<Group> groups = groupsRepository.findByNameIn(groupNames);
+=======
+
+        List<Group> groups = groupsRepository.findByNameIn(groupNames);
+
+>>>>>>>aa55b15(filter)
         return groups.stream()
                 .map(Group::getId)
                 .collect(Collectors.toList());
     }
+=======
+        >>>>>>>
 
     @Override
     public List<Group> getAllGroups() {

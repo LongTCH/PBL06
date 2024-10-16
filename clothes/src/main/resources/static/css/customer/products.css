@@ -1,14 +1,38 @@
+<
+<
+<
+<
+<
+<
+<
+HEAD
 .container {
     padding: 0 30px;
 }
 
-#filterForm{
+=
+=
+=
+=
+=
+=
+=
+>>> >>> > aa55b15
+
+(
+filter
+
+)
+#filterForm {
     position: relative;
     display: flex;
     right: 0;
-    left: 55%;
+< < < < < < < HEAD left: 55 %;
     margin-top: 2%;
     width: 45%;
+= = = = = = = left: 60 %;
+    margin-top: 2%;
+>>> >>> > aa55b15 (filter)
 }
 
 
@@ -41,7 +65,7 @@
 }
 
 
-.form-check-input{
+.form-check-input {
     cursor: pointer;
 }
 
@@ -50,10 +74,11 @@
     width: 200px;
 }
 
-.filter{
-    margin-right:16px ;
+.filter {
+    margin-right: 16px;
     font-weight: bold;
 }
+
 .size-menu {
     display: none;
     position: absolute;
@@ -109,6 +134,14 @@
 }
 
 
+<
+<
+<
+<
+<
+<
+<
+HEAD
 .price-container {
     display: none;
     position: absolute;
@@ -122,6 +155,7 @@
     z-index: 1;
     box-sizing: border-box;
 }
+
 .dropdown:hover .price-container {
     display: block;
     top: 24px;
@@ -140,64 +174,85 @@
     width: 90%;
     height: 6px;
     margin: 0 5px;
-    border-radius: 5px;
-    background-color: #ccc;
-    -webkit-appearance: none;
-    appearance: none;
+= = = = = = = . price-range-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.range-handle {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: #007bff;
-    cursor: pointer;
+    .price-range-container input[type="range"] {
+        width: 70%;
+        height: 10px;
+        margin: 0 10px;
+    >>> >>> > aa55b15 (filter) border-radius: 5 px;
+        background-color: #ccc;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .range-handle {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    < < < < < < < HEAD width: 16 px;
+        height: 16px;
+    = = = = = = = width: 20 px;
+        height: 20px;
+    >>> >>> > aa55b15 (filter) border-radius: 50 %;
+        background-color: #007bff;
+        cursor: pointer;
+    }
+
+    #min-handle {
+        left: 20%;
+    }
+
+    #max-handle {
+        left: 80%;
+    }
+
+    #min-price-value, #max-price-value {
+        font-size: 14px;
+        color: #666;
+        margin-left: 10px;
+    < < < < < < < HEAD
+    }
+
+
+    .noUi-handle {
+        background-color: #ffffff;
+        border: 2px solid #000000;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
+    .noUi-connect {
+        background-color: #000000;
+    }
+
+
+    .noUi-tooltip {
+        background-color: #333;
+        color: #fff;
+        border-radius: 4px;
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    .price-slider-container {
+        position: relative;
+        top: 20px;
+        height: 30px;
+    }
+
+
+= = = = = = =
 }
 
-#min-handle {
-    left: 20%;
-}
+>>> >>> > aa55b15
 
-#max-handle {
-    left: 80%;
-}
+(
+filter
 
-#min-price-value, #max-price-value {
-    font-size: 14px;
-    color: #666;
-    margin-left: 10px;
-}
-
-
-.noUi-handle {
-    background-color: #ffffff;
-    border: 2px solid #000000;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.noUi-connect {
-    background-color: #000000;
-}
-
-
-.noUi-tooltip {
-    background-color: #333;
-    color: #fff;
-    border-radius: 4px;
-    padding: 5px;
-    font-size: 12px;
-}
-
-.price-slider-container {
-    position: relative;
-    top: 20px;
-    height: 30px;
-}
-
-
-
+)

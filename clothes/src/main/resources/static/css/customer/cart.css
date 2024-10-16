@@ -86,13 +86,14 @@ body {
     color: #6c757d;
 }
 
-.product-total{
+.product-total {
     font-size: 18px;
     font-weight: bold;
     position: relative;
     left: 14%;
     top: -26px;
 }
+
 .product-action {
     display: flex;
     align-items: center;
@@ -112,7 +113,8 @@ body {
     text-align: center;
     width: 100%;
 }
-.qty-btn{
+
+.qty-btn {
     float: left;
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid #f3f4f4;
@@ -128,12 +130,14 @@ body {
     border-radius: 0;
     appearance: none;
 }
+
 .icon {
     display: inline-block;
     width: 16px;
     height: 16px;
 }
-.cart-summary{
+
+.cart-summary {
     position: relative;
     top: 29%;
     padding: 20px;
@@ -141,6 +145,7 @@ body {
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .btn-primary {
     background-color: #000000;
     color: #fff;
@@ -150,10 +155,12 @@ body {
     font-size: 16px;
     cursor: pointer;
 }
+
 .btn-primary:hover {
     background-color: #000000;
 }
-#totalPrice{
+
+#totalPrice {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
