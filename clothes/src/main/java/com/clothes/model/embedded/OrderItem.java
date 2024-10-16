@@ -1,7 +1,12 @@
 package com.clothes.model.embedded;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
+@Getter
+@Setter
 public class OrderItem implements Serializable {
     private String productId;
     private String productVariantId;

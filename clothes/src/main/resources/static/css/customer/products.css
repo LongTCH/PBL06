@@ -2,7 +2,7 @@
     padding: 0 30px;
 }
 
-#filterForm{
+#filterForm {
     position: relative;
     display: flex;
     right: 0;
@@ -41,7 +41,7 @@
 }
 
 
-.form-check-input{
+.form-check-input {
     cursor: pointer;
 }
 
@@ -50,10 +50,11 @@
     width: 200px;
 }
 
-.filter{
-    margin-right:16px ;
+.filter {
+    margin-right: 16px;
     font-weight: bold;
 }
+
 .size-menu {
     display: none;
     position: absolute;
@@ -122,6 +123,7 @@
     z-index: 1;
     box-sizing: border-box;
 }
+
 .dropdown:hover .price-container {
     display: block;
     top: 24px;
@@ -198,6 +200,3 @@
     top: 20px;
     height: 30px;
 }
-
-
-

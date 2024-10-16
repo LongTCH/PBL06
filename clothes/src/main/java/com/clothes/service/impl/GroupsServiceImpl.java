@@ -15,8 +15,10 @@ public class GroupsServiceImpl implements GroupsService {
     @Autowired
     private GroupsRepository groupsRepository;
 
+
     @Override
     public List<String> getGroupIdByNames(List<String> groupNames) {
+
         List<Group> groups = groupsRepository.findByNameIn(groupNames);
         return groups.stream()
                 .map(Group::getId)

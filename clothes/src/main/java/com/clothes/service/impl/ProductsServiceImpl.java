@@ -5,11 +5,8 @@ import com.clothes.dto.ProductExcel;
 import com.clothes.model.Product;
 import com.clothes.model.embedded.ProductVariant;
 import com.clothes.repository.ProductsRepository;
-
 import com.clothes.service.ExcelService;
-
 import com.clothes.service.GroupsService;
-
 import com.clothes.service.ProductsService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +34,7 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Autowired
     private GroupsService groupsService;
+
     @Override
     public PaginationResultDto<Product> findProductsByTitle(String title, int page, int size) {
         var pageProduct = productsRepository.findByTitleContainingIgnoreCase(title == null ? "" : title, PageRequest.of(page, size));

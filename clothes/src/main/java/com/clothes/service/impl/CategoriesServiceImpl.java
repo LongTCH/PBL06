@@ -21,6 +21,7 @@ public class CategoriesServiceImpl implements CategoriesService {
                 .map(Category::getName)
                 .orElse("Unknown Category");
     }
+
     @Override
     public List<Category> getAllCategories() {
         return categoriesRepository.findAll();

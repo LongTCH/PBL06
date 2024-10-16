@@ -81,10 +81,9 @@ async function addToCart() {
         const existingProduct = cart.find(item => item.id === productId && item.variantId === variant.id);
         if (existingProduct) {
             existingProduct.quantity += quantity;
-        }else if (quantity > variant.quantity){
+        } else if (quantity > variant.quantity) {
             alert('Sản phẩm không đủ số lượng');
-        }
-        else {
+        } else {
             cart.push({
                 id: productId,
                 variantId: variant.id,
@@ -98,3 +97,4 @@ async function addToCart() {
         alert('Không thể thêm sản phẩm vào giỏ hàng');
     }
 }
+

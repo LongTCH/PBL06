@@ -21,6 +21,7 @@ public class AccountsServiceImpl implements AccountsService {
         }
         return account.get();
     }
+
     @Override
     public Account createAccount(String firstName, String lastName, String email, String password) {
         var account = new Account();

@@ -25,16 +25,18 @@ public class SessionsController {
     public String login() {
         return "login";
     }
+
     @GetMapping("/register")
     public String register() {
         return "register";
     }
+
     @PostMapping("/new-account")
     public String getMethodName(@RequestParam String email, @RequestParam String password,
                                 @RequestParam String firstName, @RequestParam String lastName, Model model) {
         try {
             accountsService.findAccountByEmail(email);
-            model.addAttribute("errorMessage","Tài khoản đã tồn tại trong hệ thống");
+            model.addAttribute("errorMessage", "Tài khoản đã tồn tại trong hệ thống");
             return "register";
         } catch (AccountNotFoundException e) {
             accountsService.createAccount(firstName, lastName, email, passwordEncoder.encode(password));
