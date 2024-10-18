@@ -1,5 +1,4 @@
 function showToast(type, message) {
-    console.log(type + ": " + message);
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
 

@@ -3,11 +3,15 @@ package com.clothes.dto;
 import com.clothes.model.embedded.Image;
 import com.clothes.model.embedded.Option;
 import com.clothes.model.embedded.ProductVariant;
+import com.clothes.service.CategoriesService;
 import com.clothes.service.ExcelService;
+import com.clothes.service.GroupsService;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.Row;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Component
 public class ProductExcel implements ExcelReader<ProductExcel> {
     private String title;
     private List<Image> images;
@@ -27,6 +32,15 @@ public class ProductExcel implements ExcelReader<ProductExcel> {
     private String publishedDate;
     private String groupId;
     private String categoryId;
+
+    private final CategoriesService categoryService;
+    private final GroupsService groupsService;
+
+    @Autowired
+    public ProductExcel(CategoriesService categoryService, GroupsService groupsService) {
+        this.categoryService = categoryService;
+        this.groupsService = groupsService;
+    }
 
     @Override
     public ProductExcel fromRow(Row row) {
@@ -88,7 +102,13 @@ public class ProductExcel implements ExcelReader<ProductExcel> {
         }
 
         this.groupId = ExcelService.getCellValueAsString(row.getCell(8));
+        if (!groupsService.existsById(this.groupId)) {
+            throw new IllegalArgumentException("Group ID không tồn tại: " + this.groupId);
+        }
         this.categoryId = ExcelService.getCellValueAsString(row.getCell(9));
+        if (!categoryService.existsById(this.categoryId)) {
+            throw new IllegalArgumentException("Category ID không tồn tại: " + this.categoryId);
+        }
         return this;
     }
 }

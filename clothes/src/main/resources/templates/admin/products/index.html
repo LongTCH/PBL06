@@ -8,6 +8,8 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Products</title>
     <link rel="stylesheet" th:href="@{/css/admin/product_create.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/sweetalert.js}"></script>
 </head>
 <body>
 <section layout:fragment="body">
@@ -55,7 +57,7 @@
                 <th>Tên sản phẩm</th>
                 <th>Danh mục</th>
                 <th>Giá</th>
-                <th>Trạng thái</th>
+                <th>Số lượng</th>
                 <th>Hành động</th>
             </tr>
             </thead>
@@ -65,17 +67,24 @@
             </tr>
             <tr th:each="product : ${products}">
                 <td th:text="${product.getId()}"></td>
-                <td><img alt="Product Image" style="width: 100px; height: auto;" th:src="${product.images[0].url}"></td>
+                <td>
+                    <img alt="Product Image" style="width: 100px; height: auto;"
+                         th:if="${product.images != null and !product.images.isEmpty()}"
+                         th:src="${product.images[0].url}"/>
+                    <span th:unless="${product.images != null and !product.images.isEmpty()}">No Image</span>
+                </td>
                 <td th:text="${product.title}"></td>
                 <td th:if="${categoryNames.containsKey(product.categoryId)}"
                     th:text="${categoryNames[product.categoryId]}"></td>
                 <td th:unless="${categoryNames.containsKey(product.categoryId)}">Không có danh mục</td>
-                <td th:text="${product.variants[0].price} + 'đ'">100,000 VNĐ</td>
-                <td th:text="${product.available ? 'Còn hàng' : 'Hết hàng'}"></td>
+                <td th:text="${(product.variants != null && !product.variants.isEmpty()) ? product.variants[0].price + 'đ' : ''}"></td>
+                <td th:text="${product.getTotalQuantity()}"></td>
                 <td>
-                    <button class="btn btn-success btn-sm mb-2">Xem</button>
-                    <button class="btn btn-warning btn-sm mb-2">Sửa</button>
-                    <button class="btn btn-danger btn-sm">Xóa</button>
+                    <a class="btn btn-warning btn-sm mb-2"
+                       th:href="@{/admin/products/{id}/edit(id=${product.id})}">Sửa</a>
+                    <form id="deleteForm" th:action="@{/admin/products/{id}/delete(id=${product.id})}" method="post">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(this)" th:data-id="${product.id}">Xóa</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
