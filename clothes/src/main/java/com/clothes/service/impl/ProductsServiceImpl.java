@@ -8,7 +8,6 @@ import com.clothes.repository.ProductsRepository;
 import com.clothes.service.ExcelService;
 import com.clothes.service.GroupsService;
 import com.clothes.service.ProductsService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +55,7 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public List<Product> findRelatedProductsByCategoryId(ObjectId categoryId) {
+    public List<Product> findRelatedProductsByCategoryId(String categoryId) {
         return productsRepository.findByCategoryId(categoryId);
     }
 
@@ -75,7 +75,7 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public PaginationResultDto<Product> getProductsByCategoryWithSearch(int page, int size, String categoryId, String keyword) {
         Pageable pageable = PageRequest.of(page, size);
-        ObjectId objId = new ObjectId(categoryId);
+        String objId = categoryId;
         Page<Product> pageProduct;
         if (keyword != null && !keyword.isEmpty()) {
             pageProduct = productsRepository.findByCategoryIdAndTitleContainingIgnoreCase(objId, keyword, pageable);
@@ -101,8 +101,8 @@ public class ProductsServiceImpl implements ProductsService {
             product.setVariants(productExcel.getVariants());
             product.setOptions(productExcel.getOptions());
             product.setPublishedDate(LocalDateTime.parse(productExcel.getPublishedDate()));
-            product.setGroupId(new ObjectId(productExcel.getGroupId()));
-            product.setCategoryId(new ObjectId(productExcel.getCategoryId()));
+            product.setGroupId(productExcel.getGroupId());
+            product.setCategoryId(productExcel.getCategoryId());
             productRepository.save(product);
         }
 
@@ -157,5 +157,27 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public List<Product> findProductByIds(List<String> productIds) {
         return productsRepository.findAllById(productIds);
+    }
+
+    @Override
+    public void updateVariants(Product product) {
+        List<ProductVariant> newVariants = new ArrayList<>();
+        for (String color : product.getColors()) {
+            for (String size : product.getSizes()) {
+                ProductVariant newVariant = new ProductVariant();
+                newVariant.setName(color + " / " + size);
+                newVariant.setOptions(Map.of(1, color, 2, size));
+                newVariant.setPrice(product.getPrice());
+                newVariant.setCompareAtPrice(product.getCompareAtPrice());
+                newVariant.setQuantity(0);
+                newVariant.setAvailable(true);
+                newVariants.add(newVariant);
+            }
+        }
+        product.setVariants(newVariants);
+    }
+
+    public void deleteProductById(String id) {
+        productsRepository.deleteById(id);
     }
 }

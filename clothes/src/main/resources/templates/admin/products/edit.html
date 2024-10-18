@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en"
+      layout:decorate="~{layouts/admin/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Edit Product</title>
+    <script src="https://cdn.tiny.cloud/1/7a4elom45u7vra09ve5vbra723eoo17ntpaapini36wsm3e2/tinymce/7/tinymce.min.js"></script>
+    <script th:src="@{/js/edit_product.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/admin/edit_product.css}"/>
+</head>
+<body>
+<section class="container my-4" layout:fragment="body">
+    <div class="col-lg-12 col-md-12 col-12">
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-target="#pills-desc" data-bs-toggle="tab"
+                        id="pills-desc-tab">
+                    Thông tin sản phẩm
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-target="#content-colors-sizes" data-bs-toggle="tab"
+                        id="tab-colors-sizes">
+                    Màu sắc/ Kích thước
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-target="#pills-variants" data-bs-toggle="tab"
+                        id="pills-variants-tab">
+                    Giá/ Số lượng/ Trạng thái
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div aria-labelledby="pills-desc-tab" class="tab-pane fade show active" id="pills-desc">
+                <div class="card">
+                    <div class="card-body">
+                        <form enctype="multipart/form-data" method="post"
+                              th:action="@{/admin/products/{id}/update-info(id=${product.id})}">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="productId">Mã sản phẩm</label>
+                                        <input class="form-control" disabled id="productId"
+                                               th:value="${product.getId()}"
+                                               type="text">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="productTitle">Tên sản phẩm</label>
+                                        <input class="form-control" id="productTitle" name="title"
+                                               th:value="${product.getTitle()}"
+                                               type="text">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="productCategory">Danh mục sản phẩm</label>
+                                        <select class="form-select" id="productCategory" name="categoryId">
+                                            <option th:each="category : ${categories}"
+                                                    th:selected="${category.id == selectedCategoryId}"
+                                                    th:text="${category.name}"
+                                                    th:value="${category.id}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="productStatus">Tình trạng sản phẩm</label>
+                                        <select class="form-select" id="productStatus" name="status">
+                                            <option th:selected="${product.available == true}" value="true">Còn hàng
+                                            </option>
+                                            <option th:selected="${product.available == false}" value="false">Hết hàng
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="imagesToAdd">Thêm ảnh mới</label>
+                                        <div class="image-upload-container"
+                                             onclick="document.getElementById('imagesToAdd').click()">
+                                            <span class="icon-camera"></span>
+                                        </div>
+                                        <input class="form-control" id="imagesToAdd" multiple name="imagesToAdd"
+                                               onchange="previewImages(event)" style="display: none;"
+                                               type="file">
+                                    </div>
+                                    <div class="image-gallery"></div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Ảnh đã có</label>
+                                        <div class="existing-images">
+                                            <div class="image-container" th:each="image : ${product.images}">
+                                                <img class="img-thumbnail"
+                                                     style="width: 100px; height: 100px; object-fit: contain;"
+                                                     th:alt="'Ảnh ' + ${image.position}"
+                                                     th:src="${image.url}"/>
+                                                <button class="delete-btn" onclick="deleteImage(this)"
+                                                        th:data-image-url="${image.url}" type="button">X
+                                                </button>
+                                            </div>
+                                            <input id="imagesToRemove" name="imagesToRemove" type="hidden" value=""/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="productDescription">Mô tả sản phẩm</label>
+                                        <textarea class="form-control" id="productDescription" name="description"
+                                                  rows="4"
+                                                  th:text="${product.getDescription()}"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 d-flex align-items-center justify-content-center">
+                                <button class="btn btn-success">Thêm / Cập nhật</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div aria-labelledby="tab-colors-sizes" class="tab-pane fade" id="content-colors-sizes">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <form method="post" th:action="@{/admin/products/{id}/update-colors-sizes(id=${product.id})}">
+                            <div class="mb-3">
+                                <label class="form-label" for="productColors">Màu sắc</label>
+                                <div class="color-item row align-items-center mb-2" th:each="color : ${colors}">
+                                    <div class="col-10">
+                                        <input class="form-control" id="productColors" name="colors[]" readonly
+                                               th:value="${color}" type="text">
+                                    </div>
+                                    <div class="col-2 text-end">
+                                        <button class="btn btn-danger" onclick="deleteItem(this)" type="button">Xoá
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="btn btn-secondary" id="addColorButton" onclick="addColor()"
+                                        type="button">
+                                    Thêm màu
+                                </button>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="productSizes">Kích thước</label>
+                                <div class="size-item row align-items-center mb-2" th:each="size : ${sizes}">
+                                    <div class="col-10">
+                                        <input class="form-control" id="productSizes" name="sizes[]" readonly
+                                               th:value="${size}" type="text">
+                                    </div>
+                                    <div class="col-2 text-end">
+                                        <button class="btn btn-danger" onclick="deleteItem(this)" type="button">Xoá
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="btn btn-secondary" id="addSizeButton" onclick="addSize()" type="button">
+                                    Thêm
+                                    kích thước
+                                </button>
+                            </div>
+                            <div class="mb-3">
+                                <button class="btn btn-success">Thêm / Cập nhật</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div aria-labelledby="pills-variants-tab" class="tab-pane fade" id="pills-variants">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <form method="post"
+                              th:action="@{/admin/products/{id}/update-price-quantity-available(id=${product.id})}">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Màu sắc</th>
+                                    <th>Kích thước</th>
+                                    <th>Giá gốc</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="variant : ${variants}">
+                                    <td th:text="${variant.options['1']}"></td>
+                                    <td th:text="${variant.options['2']}"></td>
+                                    <td>
+                                        <label>
+                                            <input class="form-control" name="compareAtPrice[]"
+                                                   th:value="${variant.compareAtPrice}"
+                                                   type="text"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input class="form-control" name="price[]" th:value="${variant.price}"
+                                                   type="text"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input class="form-control" name="quantity[]" th:value="${variant.quantity}"
+                                                   type="text"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <select class="form-select" name="available[]">
+                                                <option th:selected="${variant.available == true}" value="true">Còn hàng
+                                                </option>
+                                                <option th:selected="${variant.available == false}" value="false">Hết
+                                                    hàng
+                                                </option>
+                                            </select>
+                                        </label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="mt-3">
+                                <button class="btn btn-success">Cập nhật</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
