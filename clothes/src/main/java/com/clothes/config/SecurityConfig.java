@@ -23,8 +23,7 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                         .requestMatchers("/admin/**").hasRole(AccountRolesEnum.ADMIN.name())
                         .requestMatchers("/seller/**").hasRole(AccountRolesEnum.SELLER.name())
-                        .requestMatchers("/customer/**")
-                        .hasRole(AccountRolesEnum.CUSTOMER.name())
+                        .requestMatchers("/customer/**").hasRole(AccountRolesEnum.CUSTOMER.name())
                         .anyRequest().authenticated())
                 .formLogin(f -> f.loginPage("/sessions/login").permitAll()
                         .loginProcessingUrl("/sessions/login")
@@ -32,7 +31,7 @@ public class SecurityConfig {
                         .successHandler(loginSuccessHandler)
                         .failureUrl("/sessions/login?error=true"))
                 .logout(f -> f.logoutUrl("/sessions/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/sessions/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("SESSION", "JSESSIONID"))
                 .sessionManagement(
@@ -43,5 +42,19 @@ public class SecurityConfig {
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    public void registerUser(String password) {
+        if (isValidPassword(password)) {
+            String encodedPassword = passwordEncoder().encode(password);
+        } else {
+            throw new IllegalArgumentException("Mật khẩu không hợp lệ.");
+        }
+    }
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= 6 &&
+                password.matches(".*[a-zA-Z].*") &&
+                password.matches(".*[0-6].*");
     }
 }
