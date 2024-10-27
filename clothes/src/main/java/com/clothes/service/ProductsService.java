@@ -2,7 +2,6 @@ package com.clothes.service;
 
 import com.clothes.dto.PaginationResultDto;
 import com.clothes.model.Product;
-import org.bson.types.ObjectId;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -13,9 +12,13 @@ public interface ProductsService {
     PaginationResultDto<Product> getAllProducts(int page, int size);
 
 
+    PaginationResultDto<Product> getAllProducts(int page, int size);
+
     Product findProductById(String id);
 
     List<Product> findRelatedProductsByCategoryId(ObjectId category);
+
+    List<Product> findRelatedProductsByCategoryId(String category);
 
     PaginationResultDto<Product> getAllProductsWithSearch(int page, int size, String keyword);
 
@@ -27,4 +30,8 @@ public interface ProductsService {
 
     PaginationResultDto<Product> filterProducts(List<String> groupNames, List<String> sizeOptions, int minPrice, int maxPrice, int page, int size);
 
+}
+    void updateVariants(Product product);
+
+    void deleteProductById(String id);
 }

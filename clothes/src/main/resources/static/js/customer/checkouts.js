@@ -198,4 +198,25 @@ document.getElementById('checkoutForm').addEventListener('submit', function (eve
             })
             .catch(error => console.error('Error:', error));
     }
+        totalPrice: calculateTotalPrice()
+    };
+    console.log(formData);
+
+    fetch('/checkouts/addOrder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                localStorage.removeItem('cart');
+                window.location.href = `/checkouts/success?orderId=${data.orderId}`;
+            } else {
+                alert('Failed to place order. Please try again.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
 });

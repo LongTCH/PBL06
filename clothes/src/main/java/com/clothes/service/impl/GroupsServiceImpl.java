@@ -30,4 +30,9 @@ public class GroupsServiceImpl implements GroupsService {
         List<Group> groups = groupsRepository.findAll();
         return groups;
     }
+
+    @Override
+    public boolean existsById(String groupId) {
+        return groupsRepository.existsById(groupId);
+    }
 }

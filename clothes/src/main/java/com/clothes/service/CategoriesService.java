@@ -1,7 +1,6 @@
 package com.clothes.service;
 
 import com.clothes.model.Category;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -11,4 +10,10 @@ public interface CategoriesService {
     List<Category> getAllCategories();
 
     List<Category> getCategoryByGroupId(ObjectId groupId);
+
+    String getCategoryNameById(String categoryId);
+
+    List<Category> getAllCategories();;
+
+    boolean existsById(String categoryId);
 }

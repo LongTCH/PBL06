@@ -12,3 +12,8 @@ spring:
       name: admin
       password: admin
 
+  cloudinary:
+    cloud_name: dpl6qaj9m
+    api_key: 155838669771664
+    api_secret: v6JfO11VIZFhK2ONNyJvFMbKUIU
+

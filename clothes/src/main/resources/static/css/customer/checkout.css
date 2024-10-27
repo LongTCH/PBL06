@@ -92,6 +92,7 @@ h3 {
 }
 
 .checkout form-check {
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -157,4 +158,11 @@ h3 {
     color: #fff;
     font-size: 16px;
     cursor: pointer;
+}
+
+.checkout form-check {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
 }

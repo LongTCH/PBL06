@@ -43,6 +43,7 @@ public class CheckoutsController {
         String phone = (String) body.get("phone");
         Map<String, Object> addressMap = (Map<String, Object>) body.get("address");
         Integer amount = (Integer) body.get("totalPrice");
+
         List<Map<String, Object>> items = (List<Map<String, Object>>) body.get("items");
         List<OrderItem> orderItems = items.stream().map(item -> {
             OrderItem orderItem = new OrderItem();
@@ -76,7 +77,6 @@ public class CheckoutsController {
         model.addAttribute("order", order);
         return "customer/products/order-success";
     }
-
     @PostMapping("/submitOrder")
     public ResponseEntity<?> submitOrder(@RequestBody Map<String, Object> body, HttpServletRequest request) {
         int orderTotal = (int) body.get("amount");
@@ -108,6 +108,4 @@ public class CheckoutsController {
 
         return paymentStatus == 1 ? "customer/VNPay/ordersuccess" : "customer/VNPay/orderfail";
     }
-
-
 }
