@@ -9,4 +9,6 @@ public interface CategoriesService {
     String getCategoryNameById(ObjectId categoryId);
 
     List<Category> getAllCategories();
+
+    List<Category> getCategoryByGroupId(ObjectId groupId);
 }
