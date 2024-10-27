@@ -157,25 +157,45 @@ document.getElementById('checkoutForm').addEventListener('submit', function (eve
             street: document.getElementById('address').value
         },
         items: items,
-        totalPrice: calculateTotalPrice()
+        totalPrice: calculateTotalPrice(),
+        paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value
     };
-    console.log(formData);
 
-    fetch('/checkouts/addOrder', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === "success") {
-                localStorage.removeItem('cart');
-                window.location.href = `/checkouts/success?orderId=${data.orderId}`;
-            } else {
-                alert('Failed to place order. Please try again.');
-            }
+    if (formData.paymentMethod === '2') { // Bank transfer
+        fetch('/checkouts/submitOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                amount: formData.totalPrice,
+                orderInfo: 'Thanh toan don hang',
+                data: formData
+            })
         })
-        .catch(error => console.error('Error:', error));
+            .then(response => response.json())
+            .then(data => {
+                localStorage.removeItem('cart');
+                window.location.href = data.redirectUrl;
+            })
+            .catch(error => console.error('Error:', error));
+    } else {
+        fetch('/checkouts/addOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    localStorage.removeItem('cart');
+                    window.location.href = `/checkouts/success?orderId=${data.orderId}`;
+                } else {
+                    alert('Failed to place order. Please try again.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 });
