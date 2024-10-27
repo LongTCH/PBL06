@@ -155,8 +155,11 @@
                         </div>
                         <span class="profile-username">
                                     <span class="op-7">Hi,</span>
-                                    <span class="fw-bold">Hizrian</span>
-                                </span>
+                            <span class="fw-bold">
+                                <span th:if="${session.account != null}"
+                                      th:text="${session.account.firstName} + ' ' + ${session.account.lastName}"></span>
+                            </span>
+                        </span>
                     </a>
                     <ul class="dropdown-menu dropdown-user animated fadeIn">
                         <div class="dropdown-user-scroll scrollbar-outer">
@@ -166,15 +169,19 @@
                                         <img alt="" class="avatar-img rounded" th:src="@{/images/profile.jpg}"/>
                                     </div>
                                     <div class="u-text">
-                                        <h4>Historian</h4>
-                                        <p class="text-muted">hello@example.com</p>
-                                        <a class="btn btn-xs btn-secondary btn-sm" href="/">View Profile</a>
+                                        <h4 th:if="${session.account != null}" th:text="${session.account.firstName} + ' ' + ${session.account.lastName}"></h4>
+                                        <p class="text-muted" th:if="${session.account != null}" th:text="${session.account.email}"></p>
+                                        <a class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Logout</a>
+                                <form th:action="@{/sessions/logout}" method="post" style="display:inline;">
+                                    <button type="submit" class="dropdown-item"
+                                            style="border: none; background: none; cursor: pointer;">Logout
+                                    </button>
+                                </form>
                             </li>
                         </div>
                     </ul>
