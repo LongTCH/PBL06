@@ -1,0 +1,22 @@
+.detail {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+
+}
+
+.order-success {
+    display: flex;
+    align-items: center;
+}
+
+.order-success img {
+    margin-right: 20px;
+    margin-bottom: -20px;
+}
+
+.order-success h1, .order-success p {
+    margin: 0;
+}

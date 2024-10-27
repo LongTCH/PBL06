@@ -4,20 +4,53 @@
     <meta charset="UTF-8">
     <title>Order Confirmation</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/customer/order-success.css}">
 </head>
 <body>
 <div class="container">
-    <h1 class="mt-5">Đặt hàng thành công</h1>
-    <p>Cảm ơn bạn đã mua hàng</p>
-
-    <div class="order-details mt-4">
-        <h3>Thông tin đơn hàng</h3>
-        <p><strong>Mã đơn hàng:</strong> <span th:text="${order.id}"></span></p>
-        <p><span th:text="${order.customerName}"></span></p>
-        <p><span
-                th:text="${order.customerAddress.street} + ', ' + ${order.customerAddress.ward} + ', ' + ${order.customerAddress.district} + ', ' + ${order.customerAddress.city}"></span>
-        </p>
+    <div class="order-success">
+        <img class="fa" th:src="@{/icons/complete.png}">
+        <div>
+            <h1 class="mt-5">Đặt hàng thành công</h1>
+            <p>Cảm ơn bạn đã mua hàng</p>
+        </div>
     </div>
+    <div class="row mt-4">
+        <div class="detail col-lg-8">
+            <h3>Thông tin đơn hàng</h3>
+            <p><strong>Mã đơn hàng: </strong> <span th:text="${order.id}"></span></p>
+            <p><strong>Khách hàng: </strong><span th:text="${order.customerName}"></span></p>
+            <p th:text="${order.customerAddress.street}"></p>
+            <p th:text="${order.customerAddress.ward}"></p>
+            <p th:text="${order.customerAddress.district}"></p>
+            <p th:text="${order.customerAddress.city}"></p>
+        </div>
+        <div class="col-lg-4">
+            <div id="orderItems" th:data-items="${order.items}"></div>
+        </div>
+    </div>
+    <a class="mt-4 btn" href="/products">Tiếp tục mua hàng</a>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const orderItemsElement = document.getElementById('orderItems');
+        const orderItems = JSON.parse(orderItemsElement.getAttribute('data-items'));
+        const productIds = orderItems.map(item => item.productId);
+        console.log(productIds);
+        if (productIds.length > 0) {
+            const params = new URLSearchParams();
+            productIds.forEach(id => {
+                params.append('id', id);
+            });
+
+            fetch(`/cart/products?${params.toString()}`)
+                .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
 </body>
 </html>

@@ -12,4 +12,3 @@ public interface GroupsService {
 
     boolean existsById(String groupId);
 }
-
