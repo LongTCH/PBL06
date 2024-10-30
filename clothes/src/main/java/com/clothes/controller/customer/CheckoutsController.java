@@ -38,36 +38,7 @@ public class CheckoutsController {
 
     @PostMapping("/addOrder")
     public ResponseEntity<?> addOrder(@RequestBody Map<String, Object> body) {
-        String name = (String) body.get("name");
-        String email = (String) body.get("email");
-        String phone = (String) body.get("phone");
-        Map<String, Object> addressMap = (Map<String, Object>) body.get("address");
-        Integer amount = (Integer) body.get("totalPrice");
-        List<Map<String, Object>> items = (List<Map<String, Object>>) body.get("items");
-        List<OrderItem> orderItems = items.stream().map(item -> {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setProductId((String) item.get("productId"));
-            orderItem.setProductVariantId((String) item.get("productVariantId"));
-            orderItem.setPrice((int) item.get("price"));
-            orderItem.setQuantity((int) item.get("quantity"));
-            return orderItem;
-        }).collect(Collectors.toList());
-
-        Address customerAddress = new Address();
-        customerAddress.setCity((String) addressMap.get("city"));
-        customerAddress.setDistrict((String) addressMap.get("district"));
-        customerAddress.setWard((String) addressMap.get("ward"));
-        customerAddress.setStreet((String) addressMap.get("street"));
-        Order order = new Order();
-        order.setCustomerName(name);
-        order.setCustomerEmail(email);
-        order.setCustomerPhone(phone);
-        order.setCustomerAddress(customerAddress);
-        order.setItems(orderItems);
-        order.setAmount(amount);
-        order.setStatus(OrderStatusEnum.CREATED);
-        ordersService.saveOrder(order);
-        return ResponseEntity.ok(Map.of("orderId", order.getId(), "status", "success"));
+       return addOrder(body, false);
     }
 
     @GetMapping("/success")
@@ -84,11 +55,49 @@ public class CheckoutsController {
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
 
-
         Map<String, Object> orderData = (Map<String, Object>) body.get("data");
-        addOrder(orderData);
+        addOrder(orderData, true);
 
         return ResponseEntity.ok(Map.of("redirectUrl", vnpayUrl));
+    }
+
+    public ResponseEntity<?> addOrder(Map<String, Object> body, boolean paid) {
+        String name = (String) body.get("name");
+        String email = (String) body.get("email");
+        String phone = (String) body.get("phone");
+        Map<String, Object> addressMap = (Map<String, Object>) body.get("address");
+        Integer amount = (Integer) body.get("totalPrice");
+        List<Map<String, Object>> items = (List<Map<String, Object>>) body.get("items");
+
+        List<OrderItem> orderItems = items.stream().map(item -> {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProductId((String) item.get("productId"));
+            orderItem.setProductVariantId((String) item.get("productVariantId"));
+            orderItem.setPrice((int) item.get("price"));
+            orderItem.setQuantity((int) item.get("quantity"));
+            return orderItem;
+        }).collect(Collectors.toList());
+
+        Address customerAddress = new Address();
+        customerAddress.setCity((String) addressMap.get("city"));
+        customerAddress.setDistrict((String) addressMap.get("district"));
+        customerAddress.setWard((String) addressMap.get("ward"));
+        customerAddress.setStreet((String) addressMap.get("street"));
+
+        Order order = new Order();
+        order.setCustomerName(name);
+        order.setCustomerEmail(email);
+        order.setCustomerPhone(phone);
+        order.setCustomerAddress(customerAddress);
+        order.setItems(orderItems);
+        order.setAmount(amount);
+        if (paid) {
+            order.setStatus(OrderStatusEnum.PAID);
+        } else {
+            order.setStatus(OrderStatusEnum.CREATED);
+        }
+        ordersService.saveOrder(order);
+        return ResponseEntity.ok(Map.of("orderId", order.getId(), "status", "success"));
     }
 
 

@@ -19,7 +19,7 @@ public class CategoriesController {
     private CategoriesService categoryService;
 
     @GetMapping()
-    public String getCategories(@RequestParam ObjectId groupId, Model model) {
+    public String getCategories(@RequestParam String groupId, Model model) {
         List<Category> categories = categoryService.getCategoryByGroupId(groupId);
         model.addAttribute("categories", categories);
         model.addAttribute("groupSelected", true); // Ensure this attribute is set
