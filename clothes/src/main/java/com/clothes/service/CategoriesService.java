@@ -10,4 +10,6 @@ public interface CategoriesService {
     List<Category> getAllCategories();;
 
     boolean existsById(String categoryId);
+
+    List<Category> getCategoryByGroupId(String groupId);
 }

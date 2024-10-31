@@ -30,4 +30,10 @@ public class CategoriesServiceImpl implements CategoriesService {
     public boolean existsById(String categoryId) {
         return categoriesRepository.existsById(categoryId);
     }
+
+    @Override
+    public List<Category> getCategoryByGroupId(String groupId) {
+        return categoriesRepository.findByGroupId(groupId);
+    }
+
 }

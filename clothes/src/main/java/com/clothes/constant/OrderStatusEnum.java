@@ -1,9 +1,8 @@
 package com.clothes.constant;
 
 public enum OrderStatusEnum {
-    CREATED("created"), CONFIRMED("confirmed"), CANCELLED("cancelled"), DELIVERED("delivered");
+    CREATED("created"),PAID("paid"), CONFIRMED("confirmed"), CANCELLED("cancelled"), DELIVERED("delivered");
     private final String value;
-
     OrderStatusEnum(String value) {
         this.value = value;
     }
