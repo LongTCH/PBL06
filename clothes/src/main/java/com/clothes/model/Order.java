@@ -28,4 +28,6 @@ public class Order extends AuditableEntity {
     private int amount;
     private String accountId;
     private List<OrderItem> items;
+    private String sellerId;
+    private String sellerNote;
 }

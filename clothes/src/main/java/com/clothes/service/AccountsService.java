@@ -2,9 +2,6 @@ package com.clothes.service;
 
 import com.clothes.dto.PaginationResultDto;
 import com.clothes.model.Account;
-import com.clothes.model.Product;
-
-import java.util.List;
 
 public interface AccountsService {
     Account findAccountByEmail(String username);

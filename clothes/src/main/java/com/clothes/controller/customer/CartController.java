@@ -2,7 +2,6 @@ package com.clothes.controller.customer;
 
 import com.clothes.model.Product;
 import com.clothes.model.embedded.ProductVariant;
-import com.clothes.service.CartService;
 import com.clothes.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +18,6 @@ import java.util.List;
 @Controller("CartController")
 @RequestMapping("/cart")
 public class CartController {
-    @Autowired
-    private CartService cartService;
-
     @Autowired
     private ProductsService productsService;
 
@@ -62,6 +58,5 @@ public class CartController {
 
         return ResponseEntity.ok(variant);
     }
-
 
 }

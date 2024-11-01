@@ -6,7 +6,6 @@ import com.clothes.model.Order;
 import com.clothes.model.embedded.Address;
 import com.clothes.model.embedded.OrderItem;
 import com.clothes.service.OrdersService;
-import com.clothes.service.ProductsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +24,10 @@ public class CheckoutsController {
     private OrdersService ordersService;
 
     @Autowired
-    private ProductsService productsService;
-
-    @Autowired
     private VNPayService vnPayService;
 
     @GetMapping
-    public String getCheckoutPage(Model model) {
+    public String getCheckoutPage() {
 
         return "customer/products/checkouts";
     }

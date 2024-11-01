@@ -1,0 +1,275 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.gjs-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    padding: 10px;
+}
+
+.order-list-container {
+    max-height: 650px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.order-item {
+    padding: 10px;
+    border-bottom: 3px solid #eee;
+}
+
+.order-list-container:hover .order-item {
+    cursor: pointer;
+}
+
+.gjs-cell {
+    min-height: 75px;
+    flex-grow: 1;
+    flex-basis: 100%;
+}
+
+#orderList {
+    flex-basis: 40%;
+    flex-direction: column;
+    display: flex;
+    border: 3px solid #cec6db;
+}
+
+#orderDetail {
+    flex-basis: 60%;
+}
+
+.tab {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block;
+    background-color: #8707d1;
+    color: white;
+}
+
+.tab:focus {
+    outline: none;
+}
+
+
+.tab-container {
+    background-color: #4a94e3;
+    color: white;
+    display: inline-block;
+}
+
+.tab-content {
+    animation: fadeEffect 1s;
+}
+
+.tab-contents {
+    min-height: 100px;
+    padding: 10px;
+}
+
+#detailCustomer {
+    min-height: 100vh;
+}
+
+#orderCode {
+    font-size: large;
+    font-weight: bold;
+    margin: 14px 0px 14px 0px;
+}
+
+table {
+    width: 100%;
+    undefined: undefined;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    undefined: undefined;
+    padding: 8px;
+    text-align: left;
+}
+
+#code_time {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    min-height: auto;
+}
+
+#detail_title {
+    font-size: large;
+    margin: 14px 0px 14px 0px;
+    font-weight: 800;
+}
+
+#detailTitle {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    min-height: auto;
+}
+
+#table_content {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#product_name {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+    width: 50%;
+}
+
+#product_price {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+    width: 30%;
+}
+
+#product_quantity {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+    width: 20%;
+}
+
+#totalPrice {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#amount {
+    color: red;
+}
+
+#note {
+    margin-bottom: 10px;
+}
+
+#button {
+    height: 70px;
+    align-items: center;
+}
+
+#cancel {
+    flex-basis: 100%;
+    height: 100%;
+    min-height: auto;
+}
+
+#button_cancel, #button_confirm {
+    width: 100%;
+    height: 100%;
+}
+
+#confirm {
+    min-height: auto;
+    height: 100%;
+}
+
+#item_order {
+    background-color: #dbcef0;
+    flex-direction: column;
+    border: 1px solid black;
+    margin: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+}
+
+#detail_customer {
+    font-size: large;
+    font-weight: 800;
+    margin: 14px 0px 14px 0px;
+}
+
+#customerInfor {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    min-height: auto;
+}
+
+#time_order {
+    font-size: large;
+    margin: 14px 0px 14px 0px;
+}
+
+#order_detail {
+    border: 3px solid #cec6db;
+}
+
+#code, #time {
+    font-size: large;
+    font-weight: 800;
+    margin: 14px 0px 14px 0px;
+}
+
+#table_customer {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    margin-bottom: 20px;
+}
+
+#fullName {
+    border: 1px solid black;
+    padding: 8px;
+    font-weight: 800;
+}
+
+#customerPhone {
+    font-weight: 800;
+    border: 1px solid black;
+    padding: 8px;
+}
+
+#customerAddress {
+    border: 1px solid black;
+    padding: 8px;
+    font-weight: 800;
+}
+
+#customerEmail {
+    border: 1px solid black;
+    padding: 8px;
+    font-weight: 800;
+}
+
+.no-orders {
+    background-color: #dbcef0;
+    border: 1px solid black;
+    padding: 20px 10px 20px 10px;
+    border-radius: 5px 5px 5px 5px;
+    margin-bottom: 500px;
+}
+
+@keyframes fadeEffect {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .gjs-row {
+        flex-wrap: wrap;
+    }
+}
+
+.font-bold {
+    font-weight: bold;
+}

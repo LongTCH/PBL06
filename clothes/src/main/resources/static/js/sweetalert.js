@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function confirmDelete(button) {
         const productId = button.getAttribute('data-id');
         Swal.fire({
-            title: 'Bạn có chắc chắn?',
-            text: "Bạn đang xóa sản phẩm có ID: " + productId + ". Hành động này không thể hoàn tác!",
+            title: 'Bạn có chắc chắn xoá?',
+            text: "Hành động này không thể hoàn tác!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

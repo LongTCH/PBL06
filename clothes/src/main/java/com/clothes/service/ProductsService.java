@@ -28,4 +28,6 @@ public interface ProductsService {
     void updateVariants(Product product);
 
     void deleteProductById(String id);
+
+    List<Product> findAllProducts();
 }

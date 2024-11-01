@@ -66,7 +66,7 @@
                 <td class="text-center" colspan="6">Không có sản phẩm</td>
             </tr>
             <tr th:each="product : ${products}">
-                <td th:text="${product.getId()}"></td>
+                <td th:text="'PROD-' + ${#strings.substring(product.id, product.id.length() - 8)}"></td>
                 <td>
                     <img alt="Product Image" style="width: 100px; height: auto;"
                          th:if="${product.images != null and !product.images.isEmpty()}"
@@ -96,43 +96,29 @@
                 <ul class="pagination" th:if="${pagination != null}">
                     <!-- Previous Button -->
                     <li class="paginate_button page-item previous"
-                        id="dataTable_previous" th:classappend="${currentPage == 1} ? 'disabled' : ''">
-                        <a aria-controls="dataTable"
-                           class="page-link"
-                           data-dt-idx="0" tabindex="0"
-                           th:href="@{/admin/products( page=${currentPage - 1}, size=${size}, categoryId=${categoryId} )}"
-                           th:if="${currentPage > 1}">Previous</a>
+                        th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a aria-controls="dataTable" class="page-link" th:href="@{/admin/products(page=${currentPage - 1}, size=${size}, categoryId=${categoryId})}" th:if="${currentPage > 1}">Previous</a>
                         <span class="page-link" th:unless="${currentPage > 1}">Previous</span>
                     </li>
-                    <!-- Page Number Buttons -->
-                    <li class="paginate_button page-item"
-                        th:classappend="${i == currentPage} ? 'active' : ''"
-                        th:each="i : ${#numbers.sequence(1, pagination.getTotalPages())}"
-                        th:if="${pagination.totalPages > 0}">
-                        <a aria-controls="dataTable"
-                           class="page-link"
-                           data-dt-idx="${i}"
-                           tabindex="0"
-                           th:href="@{/admin/products( page=${i}, size=${size}, categoryId=${categoryId})}"
-                           th:text="${i}"></a>
+
+                    <!-- Dynamic Page Numbers -->
+                    <li class="paginate_button page-item" th:each="i : ${#numbers.sequence(1, pagination.getTotalPages())}"
+                        th:if="${i >= currentPage - 10 && i <= currentPage + 10}"
+                        th:classappend="${i == currentPage} ? 'active' : ''">
+                        <a class="page-link" th:href="@{/admin/products(page=${i}, size=${size}, categoryId=${categoryId})}" th:text="${i}"></a>
                     </li>
 
                     <!-- Next Button -->
                     <li class="paginate_button page-item next"
-                        id="dataTable_next"
                         th:classappend="${currentPage >= pagination.getTotalPages()} ? 'disabled' : ''">
-                        <a aria-controls="dataTable"
-                           class="page-link"
-                           data-dt-idx="2" tabindex="0"
-                           th:href="@{/admin/products(page=${currentPage + 1}, size=${size}, categoryId=${categoryId})}"
-                           th:if="${currentPage < pagination.getTotalPages()}">Next</a>
-                        <span class="page-link"
-                              th:unless="${currentPage < pagination.getTotalPages()}">Next</span>
+                        <a aria-controls="dataTable" class="page-link" th:href="@{/admin/products(page=${currentPage + 1}, size=${size}, categoryId=${categoryId})}" th:if="${currentPage < pagination.getTotalPages()}">Next</a>
+                        <span class="page-link" th:unless="${currentPage < pagination.getTotalPages()}">Next</span>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+
     <!-- Modal -->
     <div class="modal" id="productModal">
         <div class="modal-content">
