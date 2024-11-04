@@ -57,6 +57,7 @@ public class ProductsController {
         model.addAttribute("categoryNames", categoryNames);
         model.addAttribute("categories", categories);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("current_page", "product_active");
         return "/admin/products/index";
     }
 

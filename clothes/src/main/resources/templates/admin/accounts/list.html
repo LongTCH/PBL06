@@ -64,7 +64,7 @@
                 <td class="text-center" colspan="6">Không có tài khoản</td>
             </tr>
             <tr th:each="account : ${accounts}">
-                <td th:text="${account.id}"></td>
+                <td th:text="'ACC-' + ${#strings.substring(account.id, account.id.length() - 5)}"></td>
                 <td th:text="${account.email}"></td>
                 <td th:text="${account.firstName + ' ' + account.lastName}"></td>
                 <td th:text="${#temporals.format(account.createdDate, 'dd/MM/yyyy HH:mm')}"></td>

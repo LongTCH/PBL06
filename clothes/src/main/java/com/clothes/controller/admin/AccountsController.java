@@ -40,6 +40,7 @@ public class AccountsController {
         model.addAttribute("size", size);
         model.addAttribute("pagination", paginationResult);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("current_page", "account_active");
         return "admin/accounts/list";
     }
 

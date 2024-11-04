@@ -1,22 +1,27 @@
 package com.clothes.constant;
 
+import lombok.Getter;
+
+@Getter
 public enum OrderStatusEnum {
-    CREATED("created"),PAID("paid"), CONFIRMED("confirmed"), CANCELLED("cancelled"), DELIVERED("delivered");
-    private final String value;
-    OrderStatusEnum(String value) {
-        this.value = value;
-    }
+    CREATED,
+    PAID,
+    CONFIRMED,
+    CANCELLED;
 
-    public static OrderStatusEnum fromValue(String value) {
-        for (OrderStatusEnum status : OrderStatusEnum.values()) {
-            if (status.getValue().equals(value)) {
-                return status;
-            }
+    public String getVietnameseStatus() {
+        switch (this) {
+            case CREATED:
+                return "Chờ xác nhận";
+            case PAID:
+                return "Đã thanh toán";
+            case CONFIRMED:
+                return "Đã xác nhận";
+            case CANCELLED:
+                return "Đã hủy";
+            default:
+                return "Không xác định";
         }
-        throw new IllegalArgumentException("No enum constant for value " + value);
-    }
-
-    public String getValue() {
-        return value;
     }
 }
+

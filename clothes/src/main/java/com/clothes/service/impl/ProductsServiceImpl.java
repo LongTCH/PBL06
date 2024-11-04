@@ -180,4 +180,9 @@ public class ProductsServiceImpl implements ProductsService {
     public void deleteProductById(String id) {
         productsRepository.deleteById(id);
     }
+
+    @Override
+    public List<Product> findAllProducts() {
+        return productsRepository.findAll();
+    }
 }

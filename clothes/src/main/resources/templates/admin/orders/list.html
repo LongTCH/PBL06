@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang=""
+      layout:decorate="~{layouts/admin/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <title>Products</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/sweetalert.js}"></script>
+</head>
+<body>
+<section layout:fragment="body">
+    <div class="d-flex justify-content-between align-items-center p-2 mb-2" style="background-color: #d5f8c4">
+        <h3 style="color: #214c0d; margin-left: 20px; margin-bottom: 0">Quản lý đơn hàng</h3>
+    </div>
+    <div class="d-flex justify-content-between align-items-center p-2" style="gap: 10px;">
+        <div style="width: 20%;">
+            <label for="from-date">Từ ngày</label>
+            <input th:value="${fromDate}" type="date" id="from-date" name="fromDate" class="form-control">
+        </div>
+        <div style="width: 20%;">
+            <label for="to-date">Đến ngày</label>
+            <input th:value="${toDate}" type="date" id="to-date" name="toDate" class="form-control">
+        </div>
+        <div style="width: 20%;">
+            <label for="order-status">Trạng thái đơn hàng</label>
+            <select id="order-status" class="form-control" name="orderStatus">
+                <option value="">Tất cả</option>
+                <option th:each="status : ${orderStatuses}"
+                        th:value="${status.name()}"
+                        th:text="${status.getVietnameseStatus()}"
+                        th:selected="${orderStatus == status.name()}">
+                </option>
+            </select>
+        </div>
+        <div style="width: 20%;">
+            <label></label>
+            <button class="btn btn-danger w-100" onclick="filterOrders()" type="submit">
+                <i class="fas fa-filter"></i> Lọc
+            </button>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="filter-options d-flex justify-content-center" style="width: 30%">
+            <label for="sort-order" style="width: 150px">Sắp xếp theo:</label>
+            <select class="form-control form-control-sm" id="sort-order" name="sortOrder" th:onchange="filterOrders()">
+                <option value="0" th:selected="${sortOrder == 0}">Cũ nhất</option>
+                <option value="1" th:selected="${sortOrder == 1}">Mới nhất</option>
+            </select>
+        </div>
+        <div class="search-bar position-relative">
+            <input aria-label="Search" class="form-control" id="keyword" name="keyword"
+                   onkeypress="handleKeyPress(event)"
+                   placeholder="Tìm theo tên người đặt ..."
+                   style="width: 400px;"
+                   th:value="${keyword}"
+                   type="search">
+            <button class="btn btn-success position-absolute" onclick="searchOrders()"
+                    style="right: 0; top: 0; height: 100%;"
+                    type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <div class="table-responsive mt-3">
+        <table class="table table-bordered table-hover">
+            <thead class="bg-light">
+            <tr>
+                <th>Mã đơn hàng</th>
+                <th>Người đặt</th>
+                <th>Thời gian đặt</th>
+                <th>Địa chỉ</th>
+                <th>Giá trị đơn hàng</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(orders)}">
+                <td colspan="7" class="text-center">Không có đơn hàng nào</td>
+            </tr>
+            <tr th:each="order : ${orders}">
+                <td th:text="'ORDER-' + ${#strings.substring(order.id, order.id.length() - 5)}"></td>
+                <td th:text="${order.customerName}"></td>
+                <td th:text="${#temporals.format(order.createdDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${order.customerAddress.street + ', ' + order.customerAddress.ward + ', ' + order.customerAddress.district + ', ' + order.customerAddress.city}"></td>
+                <td th:text="${#numbers.formatDecimal(order.amount,  1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                <td th:text="${order.status.getVietnameseStatus()}"></td>
+                <td>
+                    <button class="btn btn-sm btn-secondary mb-1"
+                            th:data-order-id="${order.id}"
+                            onclick="viewOrderDetails(this)"
+                            type="button">
+                        <i class="fas fa-eye"></i> Xem
+                    </button>
+                    <button class="btn btn-sm btn-warning"
+                            th:data-order-id="${order.id}"
+                            onclick="viewOrderEdit(this)"
+                            type="button">
+                        <i class="fas fa-edit"></i> Sửa
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+                <ul class="pagination" th:if="${pagination != null}">
+                    <li class="paginate_button page-item previous"
+                        id="dataTable_previous" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a aria-controls="dataTable"
+                           class="page-link"
+                           data-dt-idx="0" tabindex="0"
+                           th:href="@{/admin/orders(page=${currentPage - 1}, size=${size}, sortOrder=${sortOrder}, fromDate=${fromDate}, toDate=${toDate}, orderStatus=${orderStatus})}"
+                           th:if="${currentPage > 1}">Previous</a>
+                        <span class="page-link" th:unless="${currentPage > 1}">Previous</span>
+                    </li>
+
+                    <li class="paginate_button page-item"
+                        th:classappend="${i == currentPage} ? 'active' : ''"
+                        th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+                        th:if="${pagination.totalPages > 0}">
+                        <a aria-controls="dataTable"
+                           class="page-link"
+                           data-dt-idx="${i}"
+                           tabindex="0"
+                           th:href="@{/admin/orders(page=${i}, size=${size}, sortOrder=${sortOrder}, fromDate=${fromDate}, toDate=${toDate}, orderStatus=${orderStatus})}"
+                           th:text="${i}"></a>
+                    </li>
+
+                    <li class="paginate_button page-item next"
+                        id="dataTable_next"
+                        th:classappend="${currentPage >= pagination.totalPages} ? 'disabled' : ''">
+                        <a aria-controls="dataTable"
+                           class="page-link"
+                           data-dt-idx="2" tabindex="0"
+                           th:href="@{/admin/orders(page=${currentPage + 1}, size=${size}, sortOrder=${sortOrder}, fromDate=${fromDate}, toDate=${toDate}, orderStatus=${orderStatus})}"
+                           th:if="${currentPage < pagination.totalPages}">Next</a>
+                        <span class="page-link"
+                              th:unless="${currentPage < pagination.totalPages}">Next</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="orderEditModal" tabindex="-1" aria-labelledby="orderEditModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="width: 300px; height: 300px; margin-left: 300px; margin-top: 150px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderEditModalLabel">Cập nhập trạng thái đơn hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="order-edit-content">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="order-details-content">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function filterOrders() {
+            const sortOrder = document.getElementById('sort-order').value;
+            const size = 5;
+            const currentPage = 1;
+            const fromDate = document.getElementById('from-date').value;
+            const toDate = document.getElementById('to-date').value;
+            const orderStatus = document.getElementById('order-status').value;
+            let url = `/admin/orders?page=${currentPage}&size=${size}&sortOrder=${sortOrder}`;
+            if (fromDate) url += `&fromDate=${fromDate}`;
+            if (toDate) url += `&toDate=${toDate}`;
+            if (orderStatus) url += `&orderStatus=${orderStatus}`;
+            window.location.href = url;
+        }
+
+        function searchOrders() {
+            const keyword = document.getElementById('keyword').value;
+            const sortOrder = document.getElementById('sort-order').value;
+            const fromDate = document.getElementById('from-date').value;
+            const toDate = document.getElementById('to-date').value;
+            const orderStatus = document.getElementById('order-status').value;
+            const size = 5;
+            const currentPage = 1;
+            let url = `/admin/orders?page=${currentPage}&size=${size}&sortOrder=${sortOrder}&keyword=${keyword}`;
+            if (fromDate) url += `&fromDate=${fromDate}`;
+            if (toDate) url += `&toDate=${toDate}`;
+            if (orderStatus) url += `&orderStatus=${orderStatus}`;
+            window.location.href = url;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                searchOrders();
+            }
+        }
+
+        function viewOrderDetails(button) {
+            const orderId = button.getAttribute('data-order-id');
+            fetch(`/admin/orders/${orderId}/details`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('order-details-content').innerHTML = html;
+                    const orderDetailsModal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+                    orderDetailsModal.show();
+                })
+                .catch(error => console.error('Error fetching order details:', error));
+        }
+
+        function viewOrderEdit(button) {
+            const orderId = button.getAttribute('data-order-id');
+            fetch(`/admin/orders/${orderId}/edit`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('order-edit-content').innerHTML = html;
+                    const orderEditModal = new bootstrap.Modal(document.getElementById('orderEditModal'));
+                    orderEditModal.show();
+                })
+                .catch(error => console.error('Error fetching order edit:', error));
+        }
+    </script>
+</section>
+</body>
+</html>

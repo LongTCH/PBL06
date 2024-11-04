@@ -28,25 +28,11 @@
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
-                <li class="nav-item active">
-                    <a aria-expanded="false"
-                       class="collapsed"
-                       data-bs-toggle="collapse"
-                       href="#dashboard"
-                    >
+                <li class="nav-item">
+                    <a>
                         <i class="fas fa-home"></i>
                         <p>Dashboard</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="dashboard">
-                        <ul class="nav nav-collapse">
-                            <li>
-                                <a href="/">
-                                    <span class="sub-item">Dashboard 1</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-section">
                         <span class="sidebar-mini-icon">
@@ -54,16 +40,28 @@
                         </span>
                     <h4 class="text-section">Quản lý</h4>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" th:classappend="${current_page == 'product_active' ? 'active' : ''}">
                     <a th:href="@{/admin/products}">
                         <i class="fas fa-shopping-bag"></i>
                         <p>Sản phẩm</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" th:classappend="${current_page == 'order_active' ? 'active' : ''}">
+                    <a th:href="@{/admin/orders}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Đơn hàng</p>
+                    </a>
+                </li>
+                <li class="nav-item" th:classappend="${current_page == 'account_active' ? 'active' : ''}">
                     <a th:href="@{/admin/accounts}">
                         <i class="fas fa-user-alt"></i>
                         <p>Tài khoản</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/discounts}">
+                        <i class="fas fa-tags"></i>
+                        <p>Khuyến mãi</p>
                     </a>
                 </li>
                 <li class="nav-item">
