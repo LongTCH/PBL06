@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 public class AccountsController {
     @Autowired
     private AccountsService accountsService;
+
     @GetMapping
     public String list(@RequestParam(name = "page", defaultValue = "1") int page,
                        @RequestParam(name = "size", defaultValue = "5") int size,
@@ -88,16 +89,13 @@ public class AccountsController {
         model.addAttribute("roles", roles);
         return "redirect:/admin/accounts";
     }
-    private boolean isValidPassword(String password){
+
+    private boolean isValidPassword(String password) {
         if (password.length() < 6) {
             return false;
         }
         Pattern pattern = Pattern.compile("[a-zA-Z]");
         Matcher matcher = pattern.matcher(password);
-        if (!matcher.find()) {
-            return false;
-        }
-
-        return true;
+        return matcher.find();
     }
 }

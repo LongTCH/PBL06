@@ -34,7 +34,7 @@ public class CheckoutsController {
 
     @PostMapping("/addOrder")
     public ResponseEntity<?> addOrder(@RequestBody Map<String, Object> body) {
-       return addOrder(body, false);
+        return addOrder(body, false);
     }
 
     @GetMapping("/success")
@@ -52,7 +52,7 @@ public class CheckoutsController {
         String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
 
         Map<String, Object> orderData = (Map<String, Object>) body.get("data");
-        addOrder(orderData, true);
+        request.getSession().setAttribute("orderData", orderData);
 
         return ResponseEntity.ok(Map.of("redirectUrl", vnpayUrl));
     }
@@ -110,7 +110,11 @@ public class CheckoutsController {
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("paymentTime", paymentTime);
         model.addAttribute("transactionId", transactionId);
-
+        if (paymentStatus == 1) {
+            // Assuming you have the order data in the request or session
+            Map<String, Object> orderData = (Map<String, Object>) request.getSession().getAttribute("orderData");
+            addOrder(orderData, true);
+        }
         return paymentStatus == 1 ? "customer/VNPay/ordersuccess" : "customer/VNPay/orderfail";
     }
 
