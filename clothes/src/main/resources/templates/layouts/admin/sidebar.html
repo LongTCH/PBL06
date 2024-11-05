@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar</title>
+</head>
+<body>
+<div class="sidebar" data-background-color="dark">
+    <div class="sidebar-logo">
+        <div class="logo-header" data-background-color="dark">
+            <a class="logo" th:href="@{/admin}">
+                <img alt="" height="20" th:src="@{/images/admin/logo_light.svg}"
+                />
+            </a>
+            <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                    <i class="gg-menu-right"></i>
+                </button>
+                <button class="btn btn-toggle sidenav-toggler">
+                    <i class="gg-menu-left"></i>
+                </button>
+            </div>
+            <button class="topbar-toggler more">
+                <i class="gg-more-vertical-alt"></i>
+            </button>
+        </div>
+    </div>
+    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+                <li class="nav-item">
+                    <a>
+                        <i class="fas fa-home"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
+                    <h4 class="text-section">Quản lý</h4>
+                </li>
+                <li class="nav-item" th:classappend="${current_page == 'product_active' ? 'active' : ''}">
+                    <a th:href="@{/admin/products}">
+                        <i class="fas fa-shopping-bag"></i>
+                        <p>Sản phẩm</p>
+                    </a>
+                </li>
+                <li class="nav-item" th:classappend="${current_page == 'order_active' ? 'active' : ''}">
+                    <a th:href="@{/admin/orders}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Đơn hàng</p>
+                    </a>
+                </li>
+                <li class="nav-item" th:classappend="${current_page == 'account_active' ? 'active' : ''}">
+                    <a th:href="@{/admin/accounts}">
+                        <i class="fas fa-user-alt"></i>
+                        <p>Tài khoản</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/discounts}">
+                        <i class="fas fa-tags"></i>
+                        <p>Khuyến mãi</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                        <i class="fas fa-th-list"></i>
+                        <p>Sidebar Layouts</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="sidebarLayouts">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="/">
+                                    <span class="sub-item">Icon Menu</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a data-bs-toggle="collapse" href="#charts">
+                        <i class="far fa-chart-bar"></i>
+                        <p>Charts</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="charts">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="/">
+                                    <span class="sub-item">Chart Js</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

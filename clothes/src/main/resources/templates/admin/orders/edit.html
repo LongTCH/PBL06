@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="" xmlns:th="http://www.thymeleaf.org">
+<style>
+    body {
+        font-size: 16px;
+    }
+
+</style>
+<body>
+<div class="mt-3" th:fragment="detailsContent">
+    <form method="post" th:action="@{/admin/orders/{id}/update(id=${order.id})}">
+        <div class="row d-flex justify-content-around mb-3">
+            <label class="mb-2" for="order-status">Trạng thái đơn hàng</label>
+            <select class="form-control" id="order-status" name="orderStatus" style="width: 90%">
+                <option th:each="status : ${orderStatuses}"
+                        th:selected="${status == order.status}"
+                        th:text="${status.getVietnameseStatus()}"
+                        th:value="${status}">
+                </option>
+            </select>
+        </div>
+        <button class="btn btn-success">Cập nhật</button>
+    </form>
+</div>
+</body>
+</html>

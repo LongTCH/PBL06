@@ -1,0 +1,240 @@
+<html lang=""
+      layout:decorate="~{layouts/seller/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" th:href="@{/css/seller/order.css}"/>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Seller</title>
+</head>
+<body>
+<section layout:fragment="body">
+    <div>
+        <div class="gjs-row">
+            <div class="gjs-cell" id="orderList">
+                <div class="gjs-row d-flex align-items-center">
+                    <div class="gjs-cell">
+                        <form action="#" method="get" th:action="@{/seller/orders}">
+                            <label class="text-black mb-2" for="order-status" style="font-size: 18px !important;">Trạng
+                                thái đơn hàng</label>
+                            <select class="form-control" id="order-status" name="orderStatus"
+                                    onchange="this.form.submit()">
+                                <option th:selected="${orderStatus == null}">Tất cả</option>
+                                <option th:each="status : ${orderStatuses}"
+                                        th:selected="${orderStatus == status.name()}"
+                                        th:text="${status.getVietnameseStatus()}"
+                                        th:value="${status.name()}">
+                                </option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+                <div class="order-list-container">
+                    <div class="no-orders" th:if="${#lists.isEmpty(orders)}">
+                        Không có đơn hàng nào.
+                    </div>
+                    <div class="order-item" onclick="loadOrderDetails(this)" th:data-order-id="${order.id}"
+                         th:each="order : ${orders}">
+                        <div class="gjs-row" id="item_order">
+                            <div class="gjs-cell">
+                                <div id="orderCode">Mã đơn hàng: <span
+                                        th:text="'ORDER-' + ${#strings.substring(order.id, order.id.length() - 5)}"></span>
+                                </div>
+                                <div id="time_order">Đặt lúc:
+                                    <span th:text="${#temporals.format(order.createdDate, 'HH:mm dd/MM/yyyy')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gjs-cell detail_content" hidden="hidden" id="orderDetail">
+                <div id="order_detail">
+                    <div class="tab-container" hidden="hidden" role="tablist">
+                        <div aria-controls="ie60l" class="tab" id="iw4e7" role="tab"
+                             th:classappend="${activeTab == 'orderDetails'} ? 'active'">
+                            <span>Chi tiết đơn hàng</span>
+                        </div>
+                    </div>
+                    <div class="tab-contents" id="detailCustomer">
+                        <div aria-labelledby="iw4e7" class="tab-content" hidden id="ie60l" role="tabpanel">
+                            <div class="gjs-row">
+                                <div class="gjs-cell" id="code_time">
+                                    <div id="code"></div>
+                                    <div id="time"></div>
+                                </div>
+                            </div>
+                            <div class="gjs-row">
+                                <div class="gjs-cell" id="customerInfor">
+                                    <div id="detail_customer">THÔNG TIN KHÁCH HÀNG</div>
+                                </div>
+                            </div>
+                            <div>
+                                <table id="table_customer">
+                                    <tbody>
+                                    <tr>
+                                        <td id="fullName">Họ và tên</td>
+                                        <td id="name"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="customerPhone">Số điện thoại</td>
+                                        <td id="phone"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="customerAddress">Địa chỉ</td>
+                                        <td id="address"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="customerEmail">Email:</td>
+                                        <td id="email"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="gjs-row">
+                                <div class="gjs-cell" id="detailTitle">
+                                    <div id="detail_title">CHI TIẾT ĐƠN HÀNG</div>
+                                </div>
+                            </div>
+                            <div id="table_content">
+                                <table id="table_product">
+                                    <thead>
+                                    <tr>
+                                        <th id="product_name">Tên sản phẩm</th>
+                                        <th id="product_price">Đơn giá</th>
+                                        <th id="product_quantity">Số lượng</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <p class="mt-2" id="totalPrice">Tổng tiền:
+                                    <span id="amount"></span></p>
+                                <input id="order-id" type="hidden" value=""/>
+                                <div class="font-bold" id="note"><i>Ghi chú</i></div>
+                                <textarea id="sellerNote" name="note"
+                                          placeholder="Thông tin về việc xác nhận hoặc hủy đơn hàng"
+                                          style="width: 100%"></textarea>
+                                <div class="gjs-row" id="button">
+                                    <div class="gjs-cell m-3" id="cancel">
+                                        <button class="btn btn-outline-danger" id="button_cancel" name="action"
+                                                onclick="handleOrderAction('cancel')" type="button"
+                                                value="cancel">HỦY ĐƠN
+                                        </button>
+                                    </div>
+                                    <div class="gjs-cell" id="confirm">
+                                        <button class="btn btn-outline-success" id="button_confirm" name="action"
+                                                onclick="handleOrderAction('confirm')" type="button"
+                                                value="confirm">
+                                            XÁC NHẬN
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function loadOrderDetails(orderElement) {
+                const id = orderElement.getAttribute("data-order-id");
+                fetch(`http://localhost:8080/seller/orders/${id}/details`)
+                    .then(response => response.json())
+                    .then(orderDetails => {
+                        document.getElementById("sellerNote").value = orderDetails.note;
+                        document.getElementById("code").innerText = "Mã đơn hàng: " + "ORDER-" + orderDetails.order.id.substring(orderDetails.order.id.length - 5);
+
+                        const createdDate = new Date(orderDetails.order.createdDate);
+                        const formattedDate = createdDate.toLocaleString('vi-VN', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        }).replace(',', ' -');
+                        document.getElementById("time").innerText = "Đặt lúc: " + formattedDate;
+                        document.getElementById("name").innerText = orderDetails.order.customerName;
+                        document.getElementById("phone").innerText = orderDetails.order.customerPhone;
+                        document.getElementById("address").innerText = orderDetails.order.customerAddress.city + ", " + orderDetails.order.customerAddress.district + ", " + orderDetails.order.customerAddress.ward + ", " + orderDetails.order.customerAddress.street;
+                        document.getElementById("email").innerText = orderDetails.order.customerEmail;
+
+                        const orderItemsTable = document.querySelector("#table_product tbody");
+                        orderItemsTable.innerHTML = "";
+
+                        orderDetails.order.items.forEach(item => {
+                            const product = orderDetails.products[item.productId];
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${product.title}</td>
+                                <td>${formatCurrency(product.price)}</td>
+                                <td>${item.quantity}</td>
+                            `;
+                            orderItemsTable.appendChild(row);
+                        });
+
+                        document.getElementById("amount").innerText = formatCurrency(orderDetails.order.amount);
+                        document.getElementById("ie60l").hidden = false;
+                        const tabContainer = document.querySelector(".tab-container");
+                        const detail_content = document.querySelector(".detail_content");
+                        detail_content.removeAttribute("hidden");
+                        tabContainer.removeAttribute("hidden");
+                        document.getElementById("order-id").value = orderDetails.order.id;
+                    });
+            }
+
+            function formatCurrency(number) {
+                return new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(number);
+            }
+
+            function handleOrderAction(action) {
+                const id = document.getElementById("order-id").value;
+                const note = document.getElementById("sellerNote").value;
+                const sellerId = document.getElementById("sellerId").value;
+
+                const requestBody = {
+                    action: action,
+                    note: note,
+                    sellerId: sellerId
+                };
+
+                fetch(`http://localhost:8080/seller/orders/${id}/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            if (action === "confirm") {
+                                Swal.fire("Thành công!", "Đơn hàng đã được xác nhận.", "success");
+                            } else if (action === "cancel") {
+                                Swal.fire("Thành công!", "Đơn hàng đã được huỷ.", "success");
+                            }
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            Swal.fire("Lỗi!", "Đã xảy ra lỗi, vui lòng thử lại.", "error");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert("Đã xảy ra lỗi, vui lòng thử lại.");
+                    });
+            }
+        </script>
+    </div>
+</section>
+</body>
+</html>

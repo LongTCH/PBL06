@@ -1,0 +1,112 @@
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: whitesmoke;
+}
+
+.header {
+    padding-left: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+    text-transform: uppercase;
+}
+
+
+.header-menu ul {
+    background-color: #ffffff;
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+}
+
+.header-menu ul li {
+    position: relative;
+    margin-left: 20px;
+    background-color: #ffffff;
+
+}
+
+.header-menu ul li:hover {
+    text-decoration: none;
+}
+
+.header-menu ul li:hover::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    height: 2px;
+    background-color: currentColor;
+    animation: hover-underline 0.5s forwards;
+}
+
+@keyframes hover-underline {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+.header-menu ul li a {
+    background-color: #ffffff;
+
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+
+.header-icons ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+}
+
+.header-icons ul li {
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+
+}
+
+
+.header-icons ul li:hover .search-icon {
+    opacity: 0.7;
+    transition: opacity 0.2s ease-in-out;
+}
+
+
+@media (max-width: 768px) {
+    .header {
+        display: none;
+    }
+
+    .header-menu ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header-icons ul {
+        margin-top: 10px;
+    }
+}
+  

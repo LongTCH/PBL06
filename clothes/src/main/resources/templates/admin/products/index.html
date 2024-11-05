@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang=""
+      layout:decorate="~{layouts/admin/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Products</title>
+    <link rel="stylesheet" th:href="@{/css/admin/product_create.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/sweetalert.js}"></script>
+</head>
+<body>
+<section layout:fragment="body">
+    <div class="d-flex justify-content-between align-items-center p-2" style="background-color: #d5f8c4">
+        <h3 style="color: #214c0d; margin-left: 20px; margin-bottom: 0">Quản lý sản phẩm</h3>
+        <a class="product-management-add-button">
+            <button class="btn btn-success">
+                <i class="fas fa-plus-circle fa-lg"></i>
+                Thêm sản phẩm
+            </button>
+        </a>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="filter-options">
+            <label for="categoryFilter">Lọc theo danh mục:</label>
+            <select class="form-control form-control-sm" id="categoryFilter" name="categoryId"
+                    th:onchange="filterProducts()">
+                <option th:selected="${categoryId == 'all'}" th:value="all">Tất cả</option>
+                <option th:each="category : ${categories}"
+                        th:selected="${categoryId.equals(category.getId())}"
+                        th:text="${category.getName()}"
+                        th:value="${category.getId()}">
+                </option>
+            </select>
+        </div>
+        <div class="search-bar position-relative">
+            <input aria-label="Search" class="form-control" id="keyword" name="keyword"
+                   onkeypress="handleKeyPress(event)"
+                   placeholder="Tìm theo tiêu đề ..."
+                   style="width: 400px;"
+                   th:value="${keyword}" type="search">
+            <button class="btn btn-success position-absolute" onclick="searchProduct()"
+                    style="right: 0; top: 0; height: 100%;"
+                    type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <div class="mt-3">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Danh mục</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(products)}">
+                <td class="text-center" colspan="6">Không có sản phẩm</td>
+            </tr>
+            <tr th:each="product : ${products}">
+                <td th:text="'PROD-' + ${#strings.substring(product.id, product.id.length() - 8)}"></td>
+                <td>
+                    <img alt="Product Image" style="width: 100px; height: auto;"
+                         th:if="${product.images != null and !product.images.isEmpty()}"
+                         th:src="${product.images[0].url}"/>
+                    <span th:unless="${product.images != null and !product.images.isEmpty()}">No Image</span>
+                </td>
+                <td th:text="${product.title}"></td>
+                <td th:if="${categoryNames.containsKey(product.categoryId)}"
+                    th:text="${categoryNames[product.categoryId]}"></td>
+                <td th:unless="${categoryNames.containsKey(product.categoryId)}">Không có danh mục</td>
+                <td th:text="${(product.variants != null && !product.variants.isEmpty()) ? product.variants[0].price + 'đ' : ''}"></td>
+                <td th:text="${product.getTotalQuantity()}"></td>
+                <td>
+                    <a class="btn btn-warning btn-sm mb-2"
+                       th:href="@{/admin/products/{id}/edit(id=${product.id})}">Sửa</a>
+                    <form id="deleteForm" method="post" th:action="@{/admin/products/{id}/delete(id=${product.id})}">
+                        <button class="btn btn-danger btn-sm" onclick="confirmDelete(this)" th:data-id="${product.id}"
+                                type="button">Xóa
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+                <ul class="pagination" th:if="${pagination != null}">
+                    <!-- Previous Button -->
+                    <li class="paginate_button page-item previous"
+                        th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a aria-controls="dataTable" class="page-link"
+                           th:href="@{/admin/products(page=${currentPage - 1}, size=${size}, categoryId=${categoryId})}"
+                           th:if="${currentPage > 1}">Previous</a>
+                        <span class="page-link" th:unless="${currentPage > 1}">Previous</span>
+                    </li>
+
+                    <!-- Dynamic Page Numbers -->
+                    <li class="paginate_button page-item"
+                        th:classappend="${i == currentPage} ? 'active' : ''"
+                        th:each="i : ${#numbers.sequence(1, pagination.getTotalPages())}"
+                        th:if="${i >= currentPage - 10 && i <= currentPage + 10}">
+                        <a class="page-link"
+                           th:href="@{/admin/products(page=${i}, size=${size}, categoryId=${categoryId})}"
+                           th:text="${i}"></a>
+                    </li>
+
+                    <!-- Next Button -->
+                    <li class="paginate_button page-item next"
+                        th:classappend="${currentPage >= pagination.getTotalPages()} ? 'disabled' : ''">
+                        <a aria-controls="dataTable" class="page-link"
+                           th:href="@{/admin/products(page=${currentPage + 1}, size=${size}, categoryId=${categoryId})}"
+                           th:if="${currentPage < pagination.getTotalPages()}">Next</a>
+                        <span class="page-link" th:unless="${currentPage < pagination.getTotalPages()}">Next</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form class="d-flex justify-content-between align-items-center py-3" enctype="multipart/form-data"
+                  method="post"
+                  th:action="@{/admin/products}"
+            >
+                <button class="container-btn-file">
+                    <svg
+                            fill="#fff"
+                            height="20"
+                            viewBox="0 0 50 50"
+                            width="20"
+                            xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                                d="M28.8125 .03125L.8125 5.34375C.339844
+                                        5.433594 0 5.863281 0 6.34375L0 43.65625C0
+                                        44.136719 .339844 44.566406 .8125 44.65625L28.8125
+                                        49.96875C28.875 49.980469 28.9375 50 29 50C29.230469
+                                        50 29.445313 49.929688 29.625 49.78125C29.855469 49.589844
+                                        30 49.296875 30 49L30 1C30 .703125 29.855469 .410156 29.625
+                                        .21875C29.394531 .0273438 29.105469 -.0234375 28.8125 .03125ZM32
+                                        6L32 13L34 13L34 15L32 15L32 20L34 20L34 22L32 22L32 27L34 27L34
+                                        29L32 29L32 35L34 35L34 37L32 37L32 44L47 44C48.101563 44 49
+                                        43.101563 49 42L49 8C49 6.898438 48.101563 6 47 6ZM36 13L44
+                                        13L44 15L36 15ZM6.6875 15.6875L11.8125 15.6875L14.5 21.28125C14.710938
+                                        21.722656 14.898438 22.265625 15.0625 22.875L15.09375 22.875C15.199219
+                                        22.511719 15.402344 21.941406 15.6875 21.21875L18.65625 15.6875L23.34375
+                                        15.6875L17.75 24.9375L23.5 34.375L18.53125 34.375L15.28125
+                                        28.28125C15.160156 28.054688 15.035156 27.636719 14.90625
+                                        27.03125L14.875 27.03125C14.8125 27.316406 14.664063 27.761719
+                                        14.4375 28.34375L11.1875 34.375L6.1875 34.375L12.15625 25.03125ZM36
+                                        20L44 20L44 22L36 22ZM36 27L44 27L44 29L36 29ZM36 35L44 35L44 37L36 37Z"
+                        ></path>
+                    </svg>
+                    Upload File
+                    <input class="file" id="file" name="file" type="file">
+                </button>
+                <button class="btn-excel-upload" id="btn-submit" type="submit">
+                    <div class="iconButton mr-2">
+                        <svg
+                                height="24"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M0 0h24v24H0z" fill="none"></path>
+                            <path
+                                    d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                                    fill="currentColor"
+                            ></path>
+                        </svg>
+                    </div>
+                    Import
+                </button>
+            </form>
+        </div>
+    </div>
+    <script th:src="@{/js/product_create.js}" type="text/javascript"></script>
+    <script>
+        function filterProducts() {
+            const categoryId = document.getElementById('categoryFilter').value;
+            const size = 48;
+            const currentPage = 1;
+            window.location.href = `/admin/products?page=${currentPage}&size=${size}&categoryId=${categoryId}`;
+        }
+
+        function searchProduct() {
+            const keyword = document.getElementById('keyword').value;
+            const categoryId = document.getElementById('categoryFilter').value;
+            const size = 48;
+            const currentPage = 1;
+            window.location.href = `/admin/products?page=${currentPage}&size=${size}&categoryId=${categoryId}&keyword=${keyword}`;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                searchProduct();
+            }
+        }
+    </script>
+</section>
+</body>
+</html>

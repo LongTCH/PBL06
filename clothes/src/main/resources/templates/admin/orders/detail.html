@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="" xmlns:th="http://www.thymeleaf.org">
+<style>
+    body {
+        font-size: 16px;
+    }
+
+    .font-bold {
+        font-weight: bold;
+    }
+</style>
+<body>
+<div class="mt-3" th:fragment="detailsContent">
+    <div class="row d-flex justify-content-around mb-3">
+        <div class="col-auto d-flex">
+            <p class="mb-0 font-bold">Ngày tạo:</p>
+            <p class="mb-0 ms-2" th:text="${#temporals.format(order.createdDate, 'HH:MM dd/MM/yyyy')}"></p>
+        </div>
+        <div class="col-auto d-flex">
+            <p class="mb-0 font-bold">Trạng thái đơn hàng:</p>
+            <p class="mb-0 ms-2" th:text="${order.status.getVietnameseStatus()}"></p>
+        </div>
+    </div>
+    <div class="container mt-1">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        Thông tin người nhận
+                    </div>
+                    <div class="card-body">
+                        <p th:text="${order.customerName}"></p>
+                        <p th:text="${order.customerPhone}"></p>
+                        <p th:text="${order.getCustomerEmail()}"></p>
+                        <p th:text="${order.customerAddress.street + ', ' + order.customerAddress.ward + ', ' + order.customerAddress.district + ', ' + order.customerAddress.city}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Đơn giá</th>
+                <th>Số lượng</th>
+                <th>Tổng</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${order.items}">
+                <td>
+                    <img alt="" style="width: 100px; height: auto" th:src="${item.product.images[0].getUrl()}">
+                </td>
+                <td th:text="${#numbers.formatDecimal(item.price,  1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${#numbers.formatDecimal(item.price*item.quantity,  1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

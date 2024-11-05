@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: clothes
+  data:
+    mongodb:
+      database: clothes
+      host: localhost
+      port: 27017
+      auto-index-creation: true
+  security:
+    user:
+      name: admin
+      password: admin
+  cloudinary:
+    cloud_name: dpl6qaj9m
+    api_key: 155838669771664
+    api_secret: v6JfO11VIZFhK2ONNyJvFMbKUIU
