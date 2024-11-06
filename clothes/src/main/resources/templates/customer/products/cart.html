@@ -25,7 +25,7 @@
         <div class="col-lg-8 col-md-12 col-12 p-5 content-cart">
             <div class="cart-title">
                 <h3>Giỏ hàng của bạn</h3>
-                <p>Bạn đang có 1 sản phẩm trong giỏ hàng</p>
+                <p>Bạn đang có <span id="cartCount">0</span> sản phẩm trong giỏ hàng</p>
             </div>
             <div id="cartProductsContainer"></div>
         </div>
@@ -46,5 +46,6 @@
 </div>
 <div th:replace="~{layouts/customer/footer}"></div>
 <script th:src="@{/js/customer/cart.js}"></script>
+
 </body>
 </html>

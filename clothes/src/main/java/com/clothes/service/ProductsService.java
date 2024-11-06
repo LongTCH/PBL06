@@ -1,5 +1,6 @@
 package com.clothes.service;
 
+import com.clothes.dto.FiltersDto;
 import com.clothes.dto.PaginationResultDto;
 import com.clothes.model.Product;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,11 +24,14 @@ public interface ProductsService {
 
     List<Product> findProductByIds(List<String> productIds);
 
-    PaginationResultDto<Product> filterProducts(List<String> groupNames, List<String> sizeOptions, int minPrice, int maxPrice, int page, int size);
+    PaginationResultDto<Product> filterProducts(FiltersDto filtersDto);
 
     void updateVariants(Product product);
 
     void deleteProductById(String id);
 
     List<Product> findAllProducts();
+
+    PaginationResultDto<Product> getProductsByGroupName(String groupId, int page, int size);
+
 }

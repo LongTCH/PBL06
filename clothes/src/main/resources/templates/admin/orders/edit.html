@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="">
+<html lang="" xmlns:th="http://www.thymeleaf.org">
 <style>
     body {
         font-size: 16px;
@@ -7,15 +7,15 @@
 
 </style>
 <body>
-<div th:fragment="detailsContent" class="mt-3">
-    <form th:action="@{/admin/orders/{id}/update(id=${order.id})}" method="post">
+<div class="mt-3" th:fragment="detailsContent">
+    <form method="post" th:action="@{/admin/orders/{id}/update(id=${order.id})}">
         <div class="row d-flex justify-content-around mb-3">
-            <label for="order-status" class="mb-2">Trạng thái đơn hàng</label>
-            <select id="order-status" class="form-control" style="width: 90%" name="orderStatus">
+            <label class="mb-2" for="order-status">Trạng thái đơn hàng</label>
+            <select class="form-control" id="order-status" name="orderStatus" style="width: 90%">
                 <option th:each="status : ${orderStatuses}"
-                        th:value="${status}"
+                        th:selected="${status == order.status}"
                         th:text="${status.getVietnameseStatus()}"
-                        th:selected="${status == order.status}">
+                        th:value="${status}">
                 </option>
             </select>
         </div>

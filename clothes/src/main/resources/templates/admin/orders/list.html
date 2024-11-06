@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <title>Products</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:src="@{/js/sweetalert.js}"></script>
@@ -19,20 +19,20 @@
     <div class="d-flex justify-content-between align-items-center p-2" style="gap: 10px;">
         <div style="width: 20%;">
             <label for="from-date">Từ ngày</label>
-            <input th:value="${fromDate}" type="date" id="from-date" name="fromDate" class="form-control">
+            <input class="form-control" id="from-date" name="fromDate" th:value="${fromDate}" type="date">
         </div>
         <div style="width: 20%;">
             <label for="to-date">Đến ngày</label>
-            <input th:value="${toDate}" type="date" id="to-date" name="toDate" class="form-control">
+            <input class="form-control" id="to-date" name="toDate" th:value="${toDate}" type="date">
         </div>
         <div style="width: 20%;">
             <label for="order-status">Trạng thái đơn hàng</label>
-            <select id="order-status" class="form-control" name="orderStatus">
+            <select class="form-control" id="order-status" name="orderStatus">
                 <option value="">Tất cả</option>
                 <option th:each="status : ${orderStatuses}"
-                        th:value="${status.name()}"
+                        th:selected="${orderStatus == status.name()}"
                         th:text="${status.getVietnameseStatus()}"
-                        th:selected="${orderStatus == status.name()}">
+                        th:value="${status.name()}">
                 </option>
             </select>
         </div>
@@ -47,8 +47,8 @@
         <div class="filter-options d-flex justify-content-center" style="width: 30%">
             <label for="sort-order" style="width: 150px">Sắp xếp theo:</label>
             <select class="form-control form-control-sm" id="sort-order" name="sortOrder" th:onchange="filterOrders()">
-                <option value="0" th:selected="${sortOrder == 0}">Cũ nhất</option>
-                <option value="1" th:selected="${sortOrder == 1}">Mới nhất</option>
+                <option th:selected="${sortOrder == 0}" value="0">Cũ nhất</option>
+                <option th:selected="${sortOrder == 1}" value="1">Mới nhất</option>
             </select>
         </div>
         <div class="search-bar position-relative">
@@ -80,7 +80,7 @@
             </thead>
             <tbody>
             <tr th:if="${#lists.isEmpty(orders)}">
-                <td colspan="7" class="text-center">Không có đơn hàng nào</td>
+                <td class="text-center" colspan="7">Không có đơn hàng nào</td>
             </tr>
             <tr th:each="order : ${orders}">
                 <td th:text="'ORDER-' + ${#strings.substring(order.id, order.id.length() - 5)}"></td>
@@ -91,14 +91,14 @@
                 <td th:text="${order.status.getVietnameseStatus()}"></td>
                 <td>
                     <button class="btn btn-sm btn-secondary mb-1"
-                            th:data-order-id="${order.id}"
                             onclick="viewOrderDetails(this)"
+                            th:data-order-id="${order.id}"
                             type="button">
                         <i class="fas fa-eye"></i> Xem
                     </button>
                     <button class="btn btn-sm btn-warning"
-                            th:data-order-id="${order.id}"
                             onclick="viewOrderEdit(this)"
+                            th:data-order-id="${order.id}"
                             type="button">
                         <i class="fas fa-edit"></i> Sửa
                     </button>
@@ -150,13 +150,13 @@
         </div>
     </div>
 
-    <div class="modal fade" id="orderEditModal" tabindex="-1" aria-labelledby="orderEditModalLabel"
-         aria-hidden="true">
+    <div aria-hidden="true" aria-labelledby="orderEditModalLabel" class="modal fade" id="orderEditModal"
+         tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="width: 300px; height: 300px; margin-left: 300px; margin-top: 150px;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="orderEditModalLabel">Cập nhập trạng thái đơn hàng</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body" id="order-edit-content">
                 </div>
@@ -164,13 +164,13 @@
         </div>
     </div>
 
-    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel"
-         aria-hidden="true">
+    <div aria-hidden="true" aria-labelledby="orderDetailsModalLabel" class="modal fade" id="orderDetailsModal"
+         tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body" id="order-details-content">
                 </div>

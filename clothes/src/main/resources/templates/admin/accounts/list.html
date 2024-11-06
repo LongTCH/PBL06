@@ -30,8 +30,8 @@
                 <option th:selected="${roleId == 'all'}" th:value="all">Tất cả</option>
                 <option th:each="role : ${roles}"
                         th:selected="${role.name() == roleId}"
-                        th:value="${role.name()}"
-                        th:text="${role.name()}"></option>
+                        th:text="${role.name()}"
+                        th:value="${role.name()}"></option>
             </select>
         </div>
         <div class="search-bar position-relative">
@@ -70,13 +70,15 @@
                 <td th:text="${#temporals.format(account.createdDate, 'dd/MM/yyyy HH:mm')}"></td>
                 <td th:text="${account.role}"></td>
                 <td>
-                    <form th:if="${account.locked}" th:action="@{/admin/accounts/unlock/{id}(id=${account.id})}" method="post">
-                        <button type="submit" class="btn btn-danger">
+                    <form method="post" th:action="@{/admin/accounts/unlock/{id}(id=${account.id})}"
+                          th:if="${account.locked}">
+                        <button class="btn btn-danger" type="submit">
                             <i class="fas fa-unlock"></i> Mở Khoá
                         </button>
                     </form>
-                    <form th:if="${!account.locked}" th:action="@{/admin/accounts/lock/{id}(id=${account.id})}" method="post">
-                        <button type="submit" class="btn btn-warning">
+                    <form method="post" th:action="@{/admin/accounts/lock/{id}(id=${account.id})}"
+                          th:if="${!account.locked}">
+                        <button class="btn btn-warning" type="submit">
                             <i class="fas fa-lock"></i> Khoá
                         </button>
                     </form>
@@ -141,37 +143,42 @@
                 <hr class="my-4">
                 <div class="form-group">
                     <label for="firstName">Tên</label>
-                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Nhập Tên" required>
+                    <input class="form-control" id="firstName" name="firstName" placeholder="Nhập Tên" required
+                           type="text">
                 </div>
 
                 <div class="form-group">
                     <label for="lastName">Họ</label>
-                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Nhập Họ" required>
+                    <input class="form-control" id="lastName" name="lastName" placeholder="Nhập Họ" required
+                           type="text">
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email" required>
+                    <input class="form-control" id="email" name="email" placeholder="Nhập email" required type="email">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Mật khẩu</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                    <input class="form-control" id="password" name="password" placeholder="Nhập mật khẩu"
+                           required type="password">
                 </div>
 
                 <div class="form-group">
                     <label for="confirmPassword">Xác nhận mật khẩu</label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+                    <input class="form-control" id="confirmPassword" name="confirmPassword"
+                           placeholder="Nhập lại mật khẩu"
+                           required type="password">
                 </div>
 
                 <div class="form-group">
                     <label for="role">Quyền</label>
                     <select class="form-control" id="role" name="role">
-                        <option th:each="role : ${roles}" th:value="${role.name()}" th:text="${role.name()}"></option>
+                        <option th:each="role : ${roles}" th:text="${role.name()}" th:value="${role.name()}"></option>
                     </select>
                 </div>
 
-                <button type="submit" id="btn-submit" class="btn btn-primary mt-3">Thêm Admin</button>
+                <button class="btn btn-primary mt-3" id="btn-submit" type="submit">Thêm Admin</button>
             </form>
         </div>
     </div>

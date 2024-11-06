@@ -82,8 +82,10 @@
                 <td>
                     <a class="btn btn-warning btn-sm mb-2"
                        th:href="@{/admin/products/{id}/edit(id=${product.id})}">Sửa</a>
-                    <form id="deleteForm" th:action="@{/admin/products/{id}/delete(id=${product.id})}" method="post">
-                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(this)" th:data-id="${product.id}">Xóa</button>
+                    <form id="deleteForm" method="post" th:action="@{/admin/products/{id}/delete(id=${product.id})}">
+                        <button class="btn btn-danger btn-sm" onclick="confirmDelete(this)" th:data-id="${product.id}"
+                                type="button">Xóa
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -97,21 +99,28 @@
                     <!-- Previous Button -->
                     <li class="paginate_button page-item previous"
                         th:classappend="${currentPage == 1} ? 'disabled' : ''">
-                        <a aria-controls="dataTable" class="page-link" th:href="@{/admin/products(page=${currentPage - 1}, size=${size}, categoryId=${categoryId})}" th:if="${currentPage > 1}">Previous</a>
+                        <a aria-controls="dataTable" class="page-link"
+                           th:href="@{/admin/products(page=${currentPage - 1}, size=${size}, categoryId=${categoryId})}"
+                           th:if="${currentPage > 1}">Previous</a>
                         <span class="page-link" th:unless="${currentPage > 1}">Previous</span>
                     </li>
 
                     <!-- Dynamic Page Numbers -->
-                    <li class="paginate_button page-item" th:each="i : ${#numbers.sequence(1, pagination.getTotalPages())}"
-                        th:if="${i >= currentPage - 10 && i <= currentPage + 10}"
-                        th:classappend="${i == currentPage} ? 'active' : ''">
-                        <a class="page-link" th:href="@{/admin/products(page=${i}, size=${size}, categoryId=${categoryId})}" th:text="${i}"></a>
+                    <li class="paginate_button page-item"
+                        th:classappend="${i == currentPage} ? 'active' : ''"
+                        th:each="i : ${#numbers.sequence(1, pagination.getTotalPages())}"
+                        th:if="${i >= currentPage - 10 && i <= currentPage + 10}">
+                        <a class="page-link"
+                           th:href="@{/admin/products(page=${i}, size=${size}, categoryId=${categoryId})}"
+                           th:text="${i}"></a>
                     </li>
 
                     <!-- Next Button -->
                     <li class="paginate_button page-item next"
                         th:classappend="${currentPage >= pagination.getTotalPages()} ? 'disabled' : ''">
-                        <a aria-controls="dataTable" class="page-link" th:href="@{/admin/products(page=${currentPage + 1}, size=${size}, categoryId=${categoryId})}" th:if="${currentPage < pagination.getTotalPages()}">Next</a>
+                        <a aria-controls="dataTable" class="page-link"
+                           th:href="@{/admin/products(page=${currentPage + 1}, size=${size}, categoryId=${categoryId})}"
+                           th:if="${currentPage < pagination.getTotalPages()}">Next</a>
                         <span class="page-link" th:unless="${currentPage < pagination.getTotalPages()}">Next</span>
                     </li>
                 </ul>

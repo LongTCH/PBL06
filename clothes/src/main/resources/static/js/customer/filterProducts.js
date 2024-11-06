@@ -24,11 +24,9 @@ function onChangeFilter() {
 }
 
 function filterProducts() {
-
-    // Create a FormData object from the form
     const formData = new FormData(document.getElementById('filterForm'));
+    const groupId = document.getElementById('groupId').value;
 
-    // Convert FormData to a FiltersDto object
     const filtersDto = {
         groups: [],
         minPrice: parseInt(formData.get('minPrice')) || 0,
@@ -51,8 +49,8 @@ function filterProducts() {
             }
         }
     });
-    // Send the form data to the server using fetch
-    fetch('/products', {
+
+    fetch(`/products/group/${groupId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -68,10 +66,9 @@ function filterProducts() {
             const totalProductElement = document.getElementById('totalProduct');
             totalProductElement.innerHTML = 'Sản phẩm: ' + newTotal;
         })
-
         .catch(error => console.error('Error:', error));
 
-    return false; // Prevent form submission
+    return false;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -103,6 +100,11 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             maxPriceInput.value = values[handle];
         }
-        onChangeFilter().setTimeOut(1500);
+        onChangeFilter();
     });
 });
+
+
+
+
+
