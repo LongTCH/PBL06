@@ -119,6 +119,7 @@ public class ProductsServiceImpl implements ProductsService {
                 .map(FilterSelectDto::getId)
                 .collect(Collectors.toList());
         Page<Product> paginatedProducts = productsRepository.filterProductsByPriceRangeAndGroupIds(filtersDto.getMinPrice(), filtersDto.getMaxPrice(), groupIds, PageRequest.of(filtersDto.getPage(), filtersDto.getSize()));
+
         return new PaginationResultDto<>(paginatedProducts.getContent(), filtersDto.getPage(), paginatedProducts.getTotalPages(), paginatedProducts.getTotalElements());
     }
 
@@ -145,6 +146,10 @@ public class ProductsServiceImpl implements ProductsService {
         product.setVariants(newVariants);
     }
 
+    public void deleteProductById(String id) {
+        productsRepository.deleteById(id);
+    }
+
     @Override
     public PaginationResultDto<Product> getProductsByGroupName(String groupId, int page, int size) {
         var pageProduct = productsRepository.findByGroupId(groupId, PageRequest.of(page, size));
@@ -152,9 +157,6 @@ public class ProductsServiceImpl implements ProductsService {
         return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
     }
 
-    public void deleteProductById(String id) {
-        productsRepository.deleteById(id);
-    }
 
     @Override
     public List<Product> findAllProducts() {

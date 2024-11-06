@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="">
+<html lang="" xmlns:th="http://www.thymeleaf.org">
 <style>
-    body{
+    body {
         font-size: 16px;
     }
-    .font-bold{
+
+    .font-bold {
         font-weight: bold;
     }
 </style>
 <body>
-<div th:fragment="detailsContent" class="mt-3">
+<div class="mt-3" th:fragment="detailsContent">
     <div class="row d-flex justify-content-around mb-3">
         <div class="col-auto d-flex">
             <p class="mb-0 font-bold">Ngày tạo:</p>
@@ -50,7 +51,7 @@
             <tbody>
             <tr th:each="item : ${order.items}">
                 <td>
-                    <img th:src="${item.product.images[0].getUrl()}" alt="" style="width: 100px; height: auto">
+                    <img alt="" style="width: 100px; height: auto" th:src="${item.product.images[0].getUrl()}">
                 </td>
                 <td th:text="${#numbers.formatDecimal(item.price,  1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
                 <td th:text="${item.quantity}"></td>

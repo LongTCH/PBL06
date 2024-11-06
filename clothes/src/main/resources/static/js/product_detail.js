@@ -97,6 +97,7 @@ async function addToCart(redirectToCart = false) {
         if (redirectToCart) {
             window.location.href = '/cart';
         }
+
     } catch (error) {
         console.error('Error:', error);
         showToast('error', 'Đã có lỗi xảy ra');

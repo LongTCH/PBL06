@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link rel="stylesheet" th:href="@{/css/seller/order.css}"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Seller</title>
 </head>
@@ -14,30 +14,31 @@
 <section layout:fragment="body">
     <div>
         <div class="gjs-row">
-            <div id="orderList" class="gjs-cell">
+            <div class="gjs-cell" id="orderList">
                 <div class="gjs-row d-flex align-items-center">
                     <div class="gjs-cell">
-                        <form method="get" action="#" th:action="@{/seller/orders}">
-                            <label class="text-black mb-2" for="order-status" style="font-size: 18px !important;">Trạng thái đơn hàng</label>
-                            <select id="order-status" class="form-control" name="orderStatus"
+                        <form action="#" method="get" th:action="@{/seller/orders}">
+                            <label class="text-black mb-2" for="order-status" style="font-size: 18px !important;">Trạng
+                                thái đơn hàng</label>
+                            <select class="form-control" id="order-status" name="orderStatus"
                                     onchange="this.form.submit()">
                                 <option th:selected="${orderStatus == null}">Tất cả</option>
                                 <option th:each="status : ${orderStatuses}"
-                                        th:value="${status.name()}"
+                                        th:selected="${orderStatus == status.name()}"
                                         th:text="${status.getVietnameseStatus()}"
-                                        th:selected="${orderStatus == status.name()}">
+                                        th:value="${status.name()}">
                                 </option>
                             </select>
                         </form>
                     </div>
                 </div>
                 <div class="order-list-container">
-                    <div th:if="${#lists.isEmpty(orders)}" class="no-orders">
+                    <div class="no-orders" th:if="${#lists.isEmpty(orders)}">
                         Không có đơn hàng nào.
                     </div>
-                    <div th:each="order : ${orders}" class="order-item" th:data-order-id="${order.id}"
-                         onclick="loadOrderDetails(this)">
-                        <div id="item_order" class="gjs-row">
+                    <div class="order-item" onclick="loadOrderDetails(this)" th:data-order-id="${order.id}"
+                         th:each="order : ${orders}">
+                        <div class="gjs-row" id="item_order">
                             <div class="gjs-cell">
                                 <div id="orderCode">Mã đơn hàng: <span
                                         th:text="'ORDER-' + ${#strings.substring(order.id, order.id.length() - 5)}"></span>
@@ -50,24 +51,24 @@
                     </div>
                 </div>
             </div>
-            <div id="orderDetail" class="gjs-cell detail_content" hidden="hidden">
+            <div class="gjs-cell detail_content" hidden="hidden" id="orderDetail">
                 <div id="order_detail">
-                    <div role="tablist" class="tab-container" hidden="hidden">
-                        <div role="tab" aria-controls="ie60l" id="iw4e7" class="tab"
+                    <div class="tab-container" hidden="hidden" role="tablist">
+                        <div aria-controls="ie60l" class="tab" id="iw4e7" role="tab"
                              th:classappend="${activeTab == 'orderDetails'} ? 'active'">
                             <span>Chi tiết đơn hàng</span>
                         </div>
                     </div>
-                    <div id="detailCustomer" class="tab-contents">
-                        <div role="tabpanel" id="ie60l" aria-labelledby="iw4e7" hidden class="tab-content">
+                    <div class="tab-contents" id="detailCustomer">
+                        <div aria-labelledby="iw4e7" class="tab-content" hidden id="ie60l" role="tabpanel">
                             <div class="gjs-row">
-                                <div id="code_time" class="gjs-cell">
+                                <div class="gjs-cell" id="code_time">
                                     <div id="code"></div>
                                     <div id="time"></div>
                                 </div>
                             </div>
                             <div class="gjs-row">
-                                <div id="customerInfor" class="gjs-cell">
+                                <div class="gjs-cell" id="customerInfor">
                                     <div id="detail_customer">THÔNG TIN KHÁCH HÀNG</div>
                                 </div>
                             </div>
@@ -94,7 +95,7 @@
                                 </table>
                             </div>
                             <div class="gjs-row">
-                                <div id="detailTitle" class="gjs-cell">
+                                <div class="gjs-cell" id="detailTitle">
                                     <div id="detail_title">CHI TIẾT ĐƠN HÀNG</div>
                                 </div>
                             </div>
@@ -115,20 +116,24 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <p id="totalPrice" class="mt-2">Tổng tiền:
+                                <p class="mt-2" id="totalPrice">Tổng tiền:
                                     <span id="amount"></span></p>
-                                <input type="hidden" id="order-id" value="" />
-                                <div id="note" class="font-bold"><i>Ghi chú</i></div>
-                                <textarea id="sellerNote" style="width: 100%" name="note" placeholder="Thông tin về việc xác nhận hoặc hủy đơn hàng"></textarea>
-                                <div id="button" class="gjs-row">
-                                    <div id="cancel" class="gjs-cell m-3">
-                                        <button type="button" name="action" onclick="handleOrderAction('cancel')" value="cancel" id="button_cancel"
-                                                class="btn btn-outline-danger">HỦY ĐƠN
+                                <input id="order-id" type="hidden" value=""/>
+                                <div class="font-bold" id="note"><i>Ghi chú</i></div>
+                                <textarea id="sellerNote" name="note"
+                                          placeholder="Thông tin về việc xác nhận hoặc hủy đơn hàng"
+                                          style="width: 100%"></textarea>
+                                <div class="gjs-row" id="button">
+                                    <div class="gjs-cell m-3" id="cancel">
+                                        <button class="btn btn-outline-danger" id="button_cancel" name="action"
+                                                onclick="handleOrderAction('cancel')" type="button"
+                                                value="cancel">HỦY ĐƠN
                                         </button>
                                     </div>
-                                    <div id="confirm" class="gjs-cell">
-                                        <button type="button" name="action" onclick="handleOrderAction('confirm')" value="confirm" id="button_confirm"
-                                                class="btn btn-outline-success">
+                                    <div class="gjs-cell" id="confirm">
+                                        <button class="btn btn-outline-success" id="button_confirm" name="action"
+                                                onclick="handleOrderAction('confirm')" type="button"
+                                                value="confirm">
                                             XÁC NHẬN
                                         </button>
                                     </div>
@@ -192,6 +197,7 @@
                     currency: 'VND'
                 }).format(number);
             }
+
             function handleOrderAction(action) {
                 const id = document.getElementById("order-id").value;
                 const note = document.getElementById("sellerNote").value;

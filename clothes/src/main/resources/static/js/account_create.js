@@ -21,7 +21,7 @@ btnSubmit.onclick = function () {
     var inputFields = document.querySelectorAll("#accountModal input");
     var allFilled = true;
 
-    inputFields.forEach(function(input) {
+    inputFields.forEach(function (input) {
         if (input.value.trim() === "") {
             allFilled = false;
         }

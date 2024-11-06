@@ -8,6 +8,7 @@ public interface GroupsService {
 
     List<String> getGroupIdByNames(List<String> groupNames);
 
+
     List<Group> getAllGroups();
 
     boolean existsById(String groupId);
