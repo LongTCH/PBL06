@@ -11,7 +11,9 @@
           rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/customer/product-detail.css}">
     <link href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/admin/toast.css}">
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script th:src="@{/js/toast.js}"></script>
 </head>
 <body>
 <div>
@@ -89,8 +91,8 @@
                                     <div class="info-body">
                                         <div class="product-price">
                                             <span class="pro-title">Giá:</span>
-                                            <span class="pro-price" th:text="${product.variants[0].price} + 'đ'"></span>
-                                            <del th:text="${product.variants[0].compareAtPrice} + 'đ'"></del>
+                                            <span class="pro-price" id="formatted-price" th:text="${product.variants[0].price}"></span>
+                                            <del id="formatted-CompareAtprice" th:text="${product.variants[0].compareAtPrice}"></del>
                                             <span class="pro-percent">
                                                 <svg height="13" viewBox="0 0 448 512" width="13"
                                                      xmlns="http://www.w3.org/2000/svg">
@@ -183,7 +185,7 @@
                                                 <button class="button btn-addtocart" onclick="addToCart()"
                                                         type="button">Thêm vào giỏ
                                                 </button>
-                                                <button class="button btn-buynow"
+                                                <button class="button btn-buynow" onclick="addToCart(true)"
                                                         style="background-color: #121212; border-color: #121212;"
                                                         type="button">
                                                     <span>Mua ngay</span>

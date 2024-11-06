@@ -25,7 +25,6 @@ let productData = [];
 
 document.addEventListener("DOMContentLoaded", function () {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
     if (cart.length > 0) {
         const params = new URLSearchParams();
         cart.forEach(item => {

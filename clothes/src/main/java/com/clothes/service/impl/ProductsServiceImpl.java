@@ -1,5 +1,7 @@
 package com.clothes.service.impl;
 
+import com.clothes.dto.FilterSelectDto;
+import com.clothes.dto.FiltersDto;
 import com.clothes.dto.PaginationResultDto;
 import com.clothes.dto.ProductExcel;
 import com.clothes.model.Product;
@@ -18,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -109,49 +110,17 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public PaginationResultDto<Product> filterProducts(List<String> groupNames, List<String> sizeOptions, int minPrice, int maxPrice, int page, int size) {
-
-        List<String> groupIds = new ArrayList<>();
-
-        if (groupNames != null && !groupNames.isEmpty()) {
-            groupIds = groupsService.getGroupIdByNames(groupNames);
-
-            if (groupIds.isEmpty()) {
-                return new PaginationResultDto<>(Collections.emptyList(), 0, page, size);
-            }
-        }
-
-        List<Product> allProducts = productsRepository.findAll();
-        List<String> groupIdsCopy = new ArrayList<>(groupIds);
-
-        List<Product> filteredProducts = allProducts.stream()
-                .filter(product -> {
-                    String groupIDtmp = product.getGroupId().toString();
-                    return groupIdsCopy.isEmpty() || groupIdsCopy.contains(groupIDtmp);
-                })
-                .filter(product -> {
-                    List<ProductVariant> matchingVariants = product.getVariants().stream()
-                            .filter(variant -> {
-                                String option2 = variant.getOptions().get(2);
-
-                                boolean priceMatch = variant.getPrice() >= minPrice && variant.getPrice() <= maxPrice;
-                                boolean sizeMatch = sizeOptions == null || sizeOptions.isEmpty() || sizeOptions.contains(option2);
-
-                                return priceMatch && sizeMatch;
-                            })
-                            .collect(Collectors.toList());
-
-                    product.setVariants(matchingVariants);
-                    return !matchingVariants.isEmpty();
-                })
+    public PaginationResultDto<Product> filterProducts(FiltersDto filtersDto) {
+        boolean isAtLeastOneGroupSelected = filtersDto.getGroups().stream().anyMatch(FilterSelectDto::getSelected);
+        List<String> groupIds = isAtLeastOneGroupSelected ? filtersDto.getGroups().stream()
+                .filter(FilterSelectDto::getSelected)
+                .map(FilterSelectDto::getId)
+                .collect(Collectors.toList()) : filtersDto.getGroups().stream()
+                .map(FilterSelectDto::getId)
                 .collect(Collectors.toList());
+        Page<Product> paginatedProducts = productsRepository.filterProductsByPriceRangeAndGroupIds(filtersDto.getMinPrice(), filtersDto.getMaxPrice(), groupIds, PageRequest.of(filtersDto.getPage(), filtersDto.getSize()));
 
-        int totalProducts = filteredProducts.size();
-        int start = Math.min(page * size, totalProducts);
-        int end = Math.min(start + size, totalProducts);
-        List<Product> paginatedProducts = filteredProducts.subList(start, end);
-
-        return new PaginationResultDto<>(paginatedProducts, totalProducts, page, size);
+        return new PaginationResultDto<>(paginatedProducts.getContent(), filtersDto.getPage(), paginatedProducts.getTotalPages(), paginatedProducts.getTotalElements());
     }
 
     @Override
@@ -180,6 +149,14 @@ public class ProductsServiceImpl implements ProductsService {
     public void deleteProductById(String id) {
         productsRepository.deleteById(id);
     }
+
+    @Override
+    public PaginationResultDto<Product> getProductsByGroupName(String groupId, int page, int size) {
+        var pageProduct = productsRepository.findByGroupId(groupId, PageRequest.of(page, size));
+        var products = pageProduct.getContent();
+        return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
+    }
+
 
     @Override
     public List<Product> findAllProducts() {
