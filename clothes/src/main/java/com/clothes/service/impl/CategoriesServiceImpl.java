@@ -36,4 +36,11 @@ public class CategoriesServiceImpl implements CategoriesService {
         return categoriesRepository.findByGroupId(groupId);
     }
 
+    @Override
+    public String getGroupIdByCategoryId(String categoryId) {
+        return categoriesRepository.findById(categoryId)
+                .map(Category::getGroupId)
+                .orElse("Unknown Group");
+    }
+
 }

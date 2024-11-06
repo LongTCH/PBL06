@@ -140,7 +140,7 @@ document.getElementById('checkoutForm').addEventListener('submit', function (eve
         const variant = product.variants.find(v => v.id === item.variantId);
         return {
             productId: item.id,
-            variantId: item.variantId,
+            productVariantId: item.variantId,
             quantity: item.quantity,
             price: variant.price
         };

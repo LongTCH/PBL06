@@ -11,7 +11,9 @@
           rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/customer/product-detail.css}">
     <link href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/admin/toast.css}">
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script th:src="@{/js/toast.js}"></script>
 </head>
 <body>
 <div>
@@ -183,7 +185,7 @@
                                                 <button class="button btn-addtocart" onclick="addToCart()"
                                                         type="button">Thêm vào giỏ
                                                 </button>
-                                                <button class="button btn-buynow"
+                                                <button class="button btn-buynow" onclick="addToCart(true)"
                                                         style="background-color: #121212; border-color: #121212;"
                                                         type="button">
                                                     <span>Mua ngay</span>
