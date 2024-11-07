@@ -22,6 +22,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         var account = accountsRepository.findByEmail(authentication.getName());
+        if (account.isPresent() && account.get().isLocked()) {
+            response.sendRedirect("login?locked=true");
+            return;
+        }
         HttpSession session = request.getSession();
         session.setAttribute("account", account.get());
         if (account.get().getRole().equals(AccountRolesEnum.ADMIN)) {

@@ -15,7 +15,7 @@
     <script th:src="@{/js/toast.js}"></script>
 </head>
 <body>
-<section style="background-color: #9A616D;">
+<section style="background-color: #c7b3b7;">
     <div th:if="${toastMessages != null}">
         <script th:inline="javascript">
             var toastMessages = /*[[${toastMessages}]]*/ [];
@@ -41,6 +41,9 @@
                                     <!-- Error Alert -->
                                     <div class="alert alert-danger" role="alert" th:if="${param.error}">
                                         Tên người dùng hoặc mật khẩu không chính xác.
+                                    </div>
+                                    <div class="alert alert-danger" role="alert" th:if="${param.locked}">
+                                        Tài khoản của bạn đã bị khóa.
                                     </div>
                                     <h5 class="fw-normal mb-3" style="letter-spacing: 1px;">Đăng nhập vào tài khoản của
                                         bạn</h5>

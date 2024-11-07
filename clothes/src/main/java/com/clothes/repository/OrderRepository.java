@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -18,4 +19,10 @@ public interface OrderRepository extends MongoRepository<Order, String> {
     Page<Order> findByCustomerNameContainingAndCreatedDateBetween(String keyword, LocalDate fromDate, LocalDate toDate, Pageable pageable);
 
     List<Order> findByStatus(OrderStatusEnum orderStatusEnum);
+
+    int countByStatusNot(OrderStatusEnum orderStatusEnum);
+
+    List<Order> findByStatusNot(OrderStatusEnum orderStatusEnum);
+
+    int countByCreatedDateBetweenAndStatusNot(LocalDateTime localDateTime, LocalDateTime localDateTime1, OrderStatusEnum orderStatusEnum);
 }

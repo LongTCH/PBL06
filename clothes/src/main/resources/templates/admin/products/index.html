@@ -77,7 +77,7 @@
                 <td th:if="${categoryNames.containsKey(product.categoryId)}"
                     th:text="${categoryNames[product.categoryId]}"></td>
                 <td th:unless="${categoryNames.containsKey(product.categoryId)}">Không có danh mục</td>
-                <td th:text="${(product.variants != null && !product.variants.isEmpty()) ? product.variants[0].price + 'đ' : ''}"></td>
+                <td th:text="${(product.variants != null && !product.variants.isEmpty()) ? #numbers.formatDecimal(product.variants[0].price, 1, 'COMMA', 0, 'POINT') + 'đ' : ''}"></td>
                 <td th:text="${product.getTotalQuantity()}"></td>
                 <td>
                     <a class="btn btn-warning btn-sm mb-2"

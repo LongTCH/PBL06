@@ -2346,8 +2346,8 @@ body[data-background-color=dark] .border-bottom, body[data-background-color=dark
 
 .card-title {
     margin: 0;
-    color: #2a2f5b;
-    font-size: 20px;
+    color: white;
+    font-size: 18px;
     font-weight: 600;
     line-height: 1.6
 }
