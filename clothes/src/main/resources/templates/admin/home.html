@@ -1,15 +1,154 @@
 <!DOCTYPE html>
-<html
-        lang=""
-        layout:decorate="~{layouts/admin/layout}"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en"
+      layout:decorate="~{layouts/admin/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Home</title>
+    <title>Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card .card-icon {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-<section layout:fragment="body">
+<section layout:fragment="body" class="container my-4">
+    <div class="row">
+        <div class="col-md-3 mb-4 p-1">
+            <div class="card text-white bg-danger-gradient">
+                <div class="card-body d-flex align-items-center">
+                    <i class="fas fa-shopping-cart card-icon"></i>
+                    <div>
+                        <h5 class="card-title">Tổng đơn hàng</h5>
+                        <p class="card-text" id="total-orders" th:text="${totalOrders}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4 p-1">
+            <div class="card text-white bg-success-gradient">
+                <div class="card-body d-flex align-items-center">
+                    <i class="fas fa-dollar-sign card-icon"></i>
+                    <div>
+                        <h5 class="card-title">Tổng doanh thu</h5>
+                        <p class="card-text" id="total-revenue" th:text="${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 0, 'POINT')} + 'VND'"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4 p-1">
+            <div class="card text-white bg-info-gradient">
+                <div class="card-body d-flex align-items-center">
+                    <i class="fas fa-users card-icon"></i>
+                    <div>
+                        <h5 class="card-title">Tổng user</h5>
+                        <p class="card-text" id="total-users" th:text="${totalUsers}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4 p-1">
+            <div class="card text-white bg-warning-gradient">
+                <div class="card-body d-flex align-items-center">
+                    <i class="fas fa-calendar card-icon"></i>
+                    <div>
+                        <h5 class="card-title">Đơn hàng hôm nay</h5>
+                        <p class="card-text" id="today-orders" th:text="${todayOrders}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title" style="color: #0c139c"><i class="fas fa-crown"></i> Top khách mua hàng nhiều nhất
+            </h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tên khách hàng</th>
+                    <th>Email</th>
+                    <th>Tổng số đơn hàng</th>
+                    <th>Tổng chi tiêu</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="customer, iterStat : ${topCustomers}">
+                    <tr>
+                        <td th:text="${iterStat.count}"></td>
+                        <td th:text="${customer.name}"></td>
+                        <td th:text="${customer.email}"></td>
+                        <td th:text="${customer.orderCount}"></td>
+                        <td th:text="${#numbers.formatDecimal(customer.totalSpend, 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title" style="color: #0c139c">
+                <i class="fas fa-star m-2" style="font-size: 20px"></i> Sản phẩm bán chạy tại cửa hàng
+            </h5>
+        </div>
+        <div class="card-body">
+            <canvas id="salesChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            /*<![CDATA[*/
+            const productNames = /*[[${productNames}]]*/ [];
+            const unitsSold = /*[[${unitsSold}]]*/ [];
+            /*]]>*/
+            const salesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: productNames,
+                    datasets: [{
+                        label: 'Số lượng bán',
+                        data: unitsSold,
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#7272C5', '#B60750'],
+                        borderColor: ['#4e73df', '#1cc88a', '#36b9cc', '#7272C5', '#B60750'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                display: false,
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+            });
+        });
+    </script>
 </section>
 </body>
 </html>

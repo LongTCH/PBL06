@@ -48,7 +48,7 @@ public class SecurityConfig {
         if (isValidPassword(password)) {
             String encodedPassword = passwordEncoder().encode(password);
         } else {
-            throw new IllegalArgumentException("Mật khẩu không hợp lệ.");
+            throw new IllegalArgumentException("Mật khẩu không hợp lệ. Mật khẩu ít nhất 6 ký tự, bao gồm chữ cái.");
         }
     }
 

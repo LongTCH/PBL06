@@ -1,5 +1,6 @@
 package com.clothes.repository;
 
+import com.clothes.constant.AccountRolesEnum;
 import com.clothes.model.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +16,6 @@ public interface AccountsRepository extends MongoRepository<Account, String> {
     Page<Account> findByFirstNameContainingIgnoreCase(String firstName, Pageable pageable);
 
     Page<Account> findByRoleAndFirstNameContainingIgnoreCase(String role, String firstName, Pageable pageable);
+
+    int countByRole(AccountRolesEnum role);
 }
