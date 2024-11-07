@@ -13,8 +13,10 @@
         <div class="card border-light shadow-sm mb-3 product-card">
             <div class="card-body p-0">
                 <div class="position-relative">
-                    <img alt="Product Image" class="card-img-top image-1" th:src="${product.images[0].url}">
-                    <img alt="Product Image" class="card-img-top image-2" th:src="${product.images[1].url}">
+                    <div th:if="${#lists.size(product.images) > 1}">
+                        <img alt="Product Image" class="card-img-top image-1" th:src="${product.images[0].url}">
+                        <img alt="Product Image" class="card-img-top image-2" th:src="${product.images[1].url}">
+                    </div>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${product.title}">Product Title</h5>

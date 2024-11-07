@@ -60,7 +60,7 @@ function decreaseQuantity() {
 }
 
 
-async function addToCart() {
+async function addToCart(redirectToCart = false) {
     const pathname = window.location.pathname;
     const parts = pathname.split('/');
     const productId = parts[parts.length - 1];
@@ -69,7 +69,6 @@ async function addToCart() {
     const selectedSize = document.querySelector('input[name="option2"]:checked').value;
     const variantName = `${selectedColor} / ${selectedSize}`;
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
 
     try {
         const response = await fetch(`/cart/variants?id=${productId}&variantName=${variantName}`);
@@ -82,7 +81,8 @@ async function addToCart() {
         if (existingProduct) {
             existingProduct.quantity += quantity;
         } else if (quantity > variant.quantity) {
-            alert('Sản phẩm không đủ số lượng');
+            showToast('error', 'Số lượng sản phẩm không đủ');
+            return;
         } else {
             cart.push({
                 id: productId,
@@ -91,9 +91,23 @@ async function addToCart() {
             });
         }
         localStorage.setItem('cart', JSON.stringify(cart));
-        alert('Đã thêm sản phẩm vào giỏ hàng');
+        showToast('success', 'Đã thêm sản phẩm vào giỏ hàng');
+        const cartCount = document.getElementById('cartCount');
+        cartCount.innerText = cart.length;
+        if (redirectToCart) {
+            window.location.href = '/cart';
+        }
+
     } catch (error) {
         console.error('Error:', error);
-        alert('Không thể thêm sản phẩm vào giỏ hàng');
+        showToast('error', 'Đã có lỗi xảy ra');
     }
 }
+
+const priceElement = document.getElementById('formatted-price');
+const price = parseInt(priceElement.textContent.replace('đ', '').trim());
+priceElement.textContent = price.toLocaleString('en-US') + 'đ';
+
+const CompareAtprice = document.getElementById('formatted-CompareAtprice');
+const CompareAtpriceValue = parseInt(CompareAtprice.textContent.replace('đ', '').trim());
+CompareAtprice.textContent = CompareAtpriceValue.toLocaleString('en-US') + 'đ';
