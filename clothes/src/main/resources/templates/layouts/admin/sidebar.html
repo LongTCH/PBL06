@@ -64,33 +64,17 @@
                         <p>Khuyến mãi</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                        <i class="fas fa-th-list"></i>
-                        <p>Sidebar Layouts</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="sidebarLayouts">
-                        <ul class="nav nav-collapse">
-                            <li>
-                                <a href="/">
-                                    <span class="sub-item">Icon Menu</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
+                <li class="nav-item" th:classappend="${current_page == 'statistic_active' ? 'active' : ''}">
                     <a data-bs-toggle="collapse" href="#charts">
                         <i class="far fa-chart-bar"></i>
-                        <p>Charts</p>
+                        <p>Thống kê</p>
                         <span class="caret"></span>
                     </a>
                     <div class="collapse" id="charts">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="/">
-                                    <span class="sub-item">Chart Js</span>
+                                <a th:href="@{/admin/revenue}">
+                                    <span class="sub-item">Báo cáo doanh thu</span>
                                 </a>
                             </li>
                         </ul>

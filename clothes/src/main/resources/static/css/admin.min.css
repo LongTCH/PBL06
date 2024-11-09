@@ -1008,11 +1008,11 @@ body {
 
 .sidebar .nav-collapse li a .sub-item:before, .sidebar[data-background-color=white] .nav-collapse li a .sub-item:before {
     content: '';
-    height: 4px;
-    width: 4px;
+    height: 12px;
+    width: 12px;
     background: rgba(131, 132, 138, .89);
     position: absolute;
-    left: -15px;
+    left: -20px;
     top: 50%;
     transform: translateY(-50%);
     border-radius: 100%
