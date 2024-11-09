@@ -1,40 +1,24 @@
 .card {
-    border-radius: 8px;
-    height: 35rem;
-    overflow: hidden;
+    min-height: 600px;
+    max-height: 810px;
+    transition: 0.4s;
+}
+
+.image-container {
     position: relative;
+    width: 100%;
 }
-
-.card-img-top {
-    border-bottom: 1px solid #ddd;
-}
-
-.card-body {
-    text-align: center;
-    position: relative;
-    padding-top: 400px;
-
-}
-
-.card-title {
-    font-size: 1rem;
-    font-weight: normal;
-    margin-top: 10px;
-}
-
-.card-text {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #333;
-}
-
 
 .product-card .card-img-top {
+    width: 100%;
+    transition: opacity 0.7s ease, transform 0.5s ease;
+}
+
+.product-card .image-1,
+.product-card .image-2 {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    transition: opacity 0.7s ease, transform 0.5s ease;
 }
 
 .product-card .image-2 {
@@ -49,7 +33,7 @@
     opacity: 1;
 }
 
-.position-relative {
+.card-body {
     position: relative;
-
+    padding-top: 155%;
 }
