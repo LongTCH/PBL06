@@ -10,23 +10,19 @@
 <body>
 <div class="card" th:fragment="product-card(product)">
     <a class="text-decoration-none" style="color: inherit;" th:href="@{/products/{id}(id=${product.id})}">
-        <div class="card border-light shadow-sm mb-3 product-card">
-            <div class="card-body p-0">
-                <div class="position-relative">
-                    <div th:if="${#lists.size(product.images) > 1}">
-                        <img alt="Product Image" class="card-img-top image-1" th:src="${product.images[0].url}">
-                        <img alt="Product Image" class="card-img-top image-2" th:src="${product.images[1].url}">
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${product.title}">Product Title</h5>
-                    <p class="card-text" id="productPrice"
-                       th:text="${#numbers.formatDecimal(product.variants[0].price, 1, 'COMMA', 0, 'POINT')} + 'đ'">
-                        Price</p></div>
+        <div class="d-block position-relative card border-light shadow-sm mb-3 product-card">
+            <div class="image-container">
+                <img alt="Product Image" class="card-img-top image-1" th:src="${product.images[0].url}">
+                <img alt="Product Image" class="card-img-top image-2" th:src="${product.images[1].url}">
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title" th:text="${product.title}">Product Title</h5>
+                <p class="card-text" id="productPrice"
+                   th:text="${#numbers.formatDecimal(product.variants[0].price, 1, 'COMMA', 0, 'POINT')} + 'đ'">
+                    Price</p>
             </div>
         </div>
     </a>
 </div>
-
 </body>
 </html>

@@ -6,7 +6,7 @@ function loadMoreProducts() {
     if (isLoading) return;
     isLoading = true;
     page++;
-    filterProducts();
+    if(page <= size) filterProducts();
     isLoading = false;
 }
 
