@@ -12,6 +12,7 @@ import com.clothes.service.GroupsService;
 import com.clothes.service.ProductsService;
 import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ import java.util.stream.Collectors;
 @Controller("customerProductController")
 @RequestMapping("/products")
 public class ProductController {
+    @Value("${spring.custom.predict_url}")
+    private String predictUrl;
+
     @Autowired
     private ProductsService productsService;
 
@@ -49,8 +53,8 @@ public class ProductController {
     }
 
     @GetMapping(value = "/search-image", produces = "text/html")
-    public String searchImage(){
-
+    public String searchImage(Model model){
+        model.addAttribute("predictUrl", predictUrl);
         return "/customer/searchByImage";
     }
 
