@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const predictUrl = document.getElementById('predictUrl').innerText;
     const fileInput = document.getElementById('fileInput');
     const imageContainer = document.getElementById('imageContainer');
     const image = document.getElementById('image');
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     cropper.destroy();
                 }
                 cropper = new Cropper(image, {
-                    aspectRatio: 1,
+//                    aspectRatio: 1,
                     viewMode: 1,
                 });
             };
@@ -29,22 +30,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     cropButton.addEventListener('click', function () {
-        const canvas = cropper.getCroppedCanvas();
-        croppedImage.src = canvas.toDataURL();
-        croppedImageContainer.style.display = 'block';
-        cropper.destroy();
-        imageContainer.style.display = 'none';
-        cropButton.style.display = 'none';
+        // Get the cropped canvas
+            const canvas = cropper.getCroppedCanvas();
 
-        const formData = new FormData();
-        formData.append('image', canvas.toDataURL());
-        fetch('/searchByImage', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-            .then(data => {
-                console.log(data);
-            });
+            // Convert the canvas to a Blob (binary data)
+            canvas.toBlob(function(blob) {
+                // Create a FormData object to send the file
+                const formData = new FormData();
+                formData.append('file', blob, 'cropped_image.png'); // 'file' is the key expected by FastAPI
+
+                // Send the image to the FastAPI server
+                fetch(predictUrl, {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }, 'image/jpeg');
     });
 
 });
