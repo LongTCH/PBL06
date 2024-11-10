@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ai-server:
+    image: longtch/pbl6-aiserver
+    container_name: ai-server 
+    ports:
+      - "8000:8000" 
+    networks:
+      - pbl6-net
+
+networks:
+  pbl6-net:
+    driver: bridge
+

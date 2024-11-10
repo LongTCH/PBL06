@@ -58,7 +58,7 @@ public class ProductsController {
         model.addAttribute("categories", categories);
         model.addAttribute("keyword", keyword);
         model.addAttribute("current_page", "product_active");
-        return "/admin/products/index";
+        return "admin/products/index";
     }
 
     @PostMapping
@@ -109,7 +109,7 @@ public class ProductsController {
         model.addAttribute("getCompareAtPrice", getCompareAtPrice);
         model.addAttribute("variants", variants);
 
-        return "/admin/products/edit";
+        return "admin/products/edit";
     }
 
     @PostMapping("/{id}/update-info")

@@ -1,0 +1,4 @@
+.gitignore
+*.pth
+!model.pth
+*.jpg
