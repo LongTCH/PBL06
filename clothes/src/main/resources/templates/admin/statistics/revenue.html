@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en"
+      layout:decorate="~{layouts/admin/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Statistics - Clothes Store</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<section layout:fragment="body">
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center p-2 bg-light border rounded">
+            <h3 class="text-primary mb-0">Báo cáo doanh thu</h3>
+        </div>
+        <div class="mt-4 rounded border d-flex align-items-center bg-light revenue-summary">
+            <div class="col-8">
+                <div class="p-3 bg-primary text-white d-flex align-items-center justify-content-center w-100">
+                    <h5 class="text-white mb-0">Tổng doanh thu theo ngày</h5>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-4 bg-danger">
+                    <p id="daily_revenue" style="display: none" class="text-white font-weight-bold mb-0"
+                       th:text="${totalRevenue}"></p>
+                </div>
+            </div>
+        </div>
+        <form method="get" id="dailyStatsForm" th:action="@{/admin/revenue}">
+            <div class="d-flex justify-content-center align-items-center my-3">
+                <label for="date" class="form-label" style="font-weight: bold; margin-bottom: 0">Ngày: </label>
+                <div class="me-2" style="padding-left: 5px">
+                    <input name="date" type="date" id="date" class="form-control">
+                </div>
+                <button id="dailyStatsBtn" class="btn btn-primary">Thống kê</button>
+                <button id="exportDailyExcelBtn" class="btn btn-success" style="margin-left: 5px">Xuất Excel</button>
+            </div>
+        </form>
+
+        <div id="excelPopup_daily" class="modal" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chọn thuộc tính cần xuất</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="excelAttributesForm_daily">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="orderId" id="orderId" checked>
+                                <label class="form-check-label" for="orderId">
+                                    Mã đơn hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="customerName" id="customerName"
+                                       checked>
+                                <label class="form-check-label" for="customerName">
+                                    Tên khách hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="orderDate" id="orderDate"
+                                       checked>
+                                <label class="form-check-label" for="orderDate">
+                                    Ngày đặt hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="amount" id="amount" checked>
+                                <label class="form-check-label" for="amount">
+                                    Tổng tiền
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="status" id="status" checked>
+                                <label class="form-check-label" for="status">
+                                    Trạng thái
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="close_button_daily" class="btn btn-secondary" th:data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" id="exportExcelBtn_daily">Xuất Excel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dailyTableSection" class="table-responsive mt-4" th:fragment="dailyTableSection">
+            <table class="table table-hover table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Tên khách hàng</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${completedOrders.isEmpty()}">
+                    <td colspan="5" class="text-center">Không có đơn hàng</td>
+                </tr>
+                <tr th:each="order : ${completedOrders}">
+                    <td th:text="'ORDER-' + ${#strings.substring(order.id, order.id.length() - 5)}"></td>
+                    <td th:text="${order.customerName}"></td>
+                    <td th:text="${#temporals.format(order.createdDate, 'HH:mm dd/MM/yyyy')}"></td>
+                    <td th:text="${#numbers.formatDecimal(order.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td th:text="${order.status.getVietnameseStatus()}"></td>
+                </tr>
+                <td hidden="hidden"
+                    th:text="${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 0, 'POINT')}+'VNĐ'"></td>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center mt-3">
+                <nav th:if="${!completedOrders.isEmpty() && completedOrders.totalPages > 1}">
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${completedOrders.hasPrevious()} ? '' : 'disabled'">
+                            <a class="page-link" href="#" th:data-page="${completedOrders.number - 1}">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, completedOrders.totalPages - 1)}"
+                            th:classappend="${i == completedOrders.number} ? 'active'">
+                            <a class="page-link" href="#" th:data-page="${i}" th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${completedOrders.hasNext()} ? '' : 'disabled'">
+                            <a class="page-link" href="#" th:data-page="${completedOrders.number + 1}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="mt-4 rounded border d-flex align-items-center bg-light revenue-summary">
+            <div class="col-8">
+                <div class="p-3 bg-primary text-white d-flex align-items-center justify-content-center w-100">
+                    <h5 class="text-white mb-0">Tổng doanh thu theo tháng</h5>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-4 bg-danger">
+                    <p id="month_revenue" style="display: none" class="text-white font-weight-bold mb-0"
+                       th:text="${totalRevenue}"></p>
+                </div>
+            </div>
+        </div>
+
+        <form method="get" id="monthlyStatsForm" th:action="@{/admin/revenue}">
+            <div class="d-flex justify-content-center align-items-center my-3">
+                <label for="month" class="form-label" style="font-weight: bold; margin-bottom: 0">Tháng: </label>
+                <div class="me-2" style="padding-left: 5px">
+                    <input name="month" type="month" id="month" class="form-control">
+                </div>
+                <button id="monthlyStatsBtn" class="btn btn-primary">Thống kê</button>
+                <button id="exportMonthlyExcelBtn" class="btn btn-success" style="margin-left: 5px">Xuất Excel</button>
+            </div>
+        </form>
+
+        <div id="excelPopup_month" class="modal" tabindex="-1" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chọn thuộc tính cần xuất</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form id="excelAttributesForm_month">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="orderId" id="order_Id" checked>
+                                <label class="form-check-label" for="order_Id">
+                                    Mã đơn hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="customerName" id="customer_Name"
+                                       checked>
+                                <label class="form-check-label" for="customer_Name">
+                                    Tên khách hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="orderDate" id="order_Date"
+                                       checked>
+                                <label class="form-check-label" for="order_Date">
+                                    Ngày đặt hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="amount" id="amount_" checked>
+                                <label class="form-check-label" for="amount_">
+                                    Tổng tiền
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="status" id="status_" checked>
+                                <label class="form-check-label" for="status_">
+                                    Trạng thái
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="close_button_month" class="btn btn-secondary" th:data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" id="exportExcelBtn_month">Xuất Excel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="monthlyTableSection" class="table-responsive mt-4" th:fragment="monthlyTableSection">
+            <table class="table table-hover table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Tên khách hàng</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${completedOrders.isEmpty()}">
+                    <td colspan="5" class="text-center">Không có đơn hàng</td>
+                </tr>
+                <tr th:each="order : ${completedOrders}">
+                    <td th:text="'ORDER-' + ${#strings.substring(order.id, order.id.length() - 5)}"></td>
+                    <td th:text="${order.customerName}"></td>
+                    <td th:text="${#temporals.format(order.createdDate, 'HH:mm dd/MM/yyyy')}"></td>
+                    <td th:text="${#numbers.formatDecimal(order.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td th:text="${order.status.getVietnameseStatus()}"></td>
+                </tr>
+                <td hidden="hidden" id="price_month_hidden"
+                    th:text="${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 0, 'POINT')}+'VNĐ'"></td>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center mt-3">
+                <nav th:if="${!completedOrders.isEmpty() && completedOrders.totalPages > 1}">
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${completedOrders.hasPrevious()} ? '' : 'disabled'">
+                            <a class="page-link" href="#" th:data-page="${completedOrders.number - 1}">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, completedOrders.totalPages - 1)}"
+                            th:classappend="${i == completedOrders.number} ? 'active'">
+                            <a class="page-link" href="#" th:data-page="${i}" th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${completedOrders.hasNext()} ? '' : 'disabled'">
+                            <a class="page-link" href="#" th:data-page="${completedOrders.number + 1}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        document.getElementById("close_button_daily").addEventListener("click", function() {
+            document.getElementById("excelPopup_daily").style.display = "none";
+        });
+
+        document.getElementById("close_button_month").addEventListener("click", function() {
+            document.getElementById("excelPopup_month").style.display = "none";
+        });
+
+        document.getElementById("exportDailyExcelBtn").addEventListener("click", function(event) {
+            event.preventDefault();
+            var date = document.getElementById("date").value;
+            var excelPopup_daily = document.getElementById("excelPopup_daily");
+            excelPopup_daily.style.display = "block";
+        });
+
+        document.getElementById("exportMonthlyExcelBtn").addEventListener("click", function(event) {
+            event.preventDefault();
+            var month = document.getElementById("month").value;
+            var excelPopup_month = document.getElementById("excelPopup_month");
+            excelPopup_month.style.display = "block";
+        });
+
+        document.getElementById("exportExcelBtn_daily").addEventListener("click", function() {
+            var date = document.getElementById("date").value;
+
+            var selectedAttributes = [];
+            document.querySelectorAll("#excelAttributesForm_daily input[type='checkbox']:checked").forEach(function(checkbox) {
+                selectedAttributes.push(checkbox.value);
+            });
+
+            fetch("/admin/revenue/export/excel_daily?date=" + date + "&attributes=" + selectedAttributes.join(","))
+                .then(response => response.blob())
+                .then(blob => {
+                    var link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "doanh_thu_" + date + ".xlsx";
+                    link.click();
+                    document.getElementById("excelPopup_daily").style.display = "none";
+                })
+                .catch(error => console.error('Error exporting data:', error));
+        });
+
+        document.getElementById("exportExcelBtn_month").addEventListener("click", function() {
+            var month = document.getElementById("month").value;
+            var selectedAttributes = [];
+            document.querySelectorAll("#excelAttributesForm_month input[type='checkbox']:checked").forEach(function(checkbox) {
+                selectedAttributes.push(checkbox.value);
+            });
+
+            fetch("/admin/revenue/export_month/excel?month=" + month + "&attributes=" + selectedAttributes.join(","))
+                .then(response => response.blob())
+                .then(blob => {
+                    var link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "doanh_thu_" + month + ".xlsx";
+                    link.click();
+                    document.getElementById("excelPopup_month").style.display = "none";
+                })
+                .catch(error => console.error('Error exporting data:', error));
+        });
+        document.querySelector(".btn-close").addEventListener("click", function() {
+            document.getElementById("excelPopup_daily").style.display = "none";
+        });
+        window.addEventListener("click", function(event) {
+            const modal = document.getElementById("excelPopup_daily");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const dateInput = document.getElementById("date");
+            dateInput.value = new Date().toISOString().split('T')[0];
+
+            const monthInput = document.getElementById("month");
+            monthInput.value = new Date().toISOString().split('-').slice(0, 2).join('-');
+
+            document.getElementById('dailyTableSection').style.display = 'none';
+            document.getElementById('monthlyTableSection').style.display = 'none';
+            document.getElementById('dailyStatsBtn').addEventListener('click', function (event) {
+                event.preventDefault();
+                loadDailyRevenueData();
+            });
+
+            document.getElementById('monthlyStatsBtn').addEventListener('click', function (event) {
+                event.preventDefault();
+                loadmonthlyRevenueData();
+            });
+        });
+
+        function loadDailyRevenueData(page = 0) {
+            var form = document.getElementById('dailyStatsForm');
+            var formData = new FormData(form);
+            formData.set("page", page);
+            fetch('/admin/revenue/ajax/daily?' + new URLSearchParams(formData), {
+                method: 'GET',
+            })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('dailyTableSection').innerHTML = data;
+                    document.getElementById('dailyTableSection').style.display = 'block';
+                    var totalRevenue = document.querySelector('td[hidden]').textContent;
+                    var dailyRevenueElement = document.getElementById("daily_revenue");
+                    dailyRevenueElement.textContent = totalRevenue;
+                    dailyRevenueElement.style.display = 'block';
+                    setupDailyPaginationEventListeners();
+                })
+                .catch(error => console.error('Error loading data:', error));
+        }
+
+        function loadmonthlyRevenueData(page = 0) {
+
+            var form = document.getElementById('monthlyStatsForm');
+            var formData = new FormData(form);
+            formData.set("page", page);
+            fetch('/admin/revenue/ajax/monthly?' + new URLSearchParams(formData), {
+                method: 'GET',
+            })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('monthlyTableSection').innerHTML = data;
+                    document.getElementById('monthlyTableSection').style.display = 'block';
+                    var totalRevenue = document.getElementById('price_month_hidden').textContent;
+                    var monthRevenueElement = document.getElementById("month_revenue");
+                    monthRevenueElement.textContent = totalRevenue;
+                    monthRevenueElement.style.display = 'block';
+                    setupMonthPaginationEventListeners();
+                })
+                .catch(error => console.error('Error loading data:', error));
+        }
+
+        function setupDailyPaginationEventListeners() {
+            document.querySelectorAll(".page-link").forEach(function (link) {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const page = link.getAttribute("data-page");
+                    loadDailyRevenueData(page);
+                });
+            });
+        }
+
+        function setupMonthPaginationEventListeners() {
+            document.querySelectorAll(".page-link").forEach(function (link) {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const page = link.getAttribute("data-page");
+                    loadmonthlyRevenueData(page);
+                });
+            });
+        }
+    </script>
+</section>
+</body>
+</html>

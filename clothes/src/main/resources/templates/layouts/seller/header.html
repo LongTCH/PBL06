@@ -158,7 +158,7 @@
                         </div>
                         <span class="profile-username text-white">
                                     <span class="op-7">Hi,</span>
-                            <input type="hidden" id="sellerId" th:value="${session.account.id}" />
+                            <input type="hidden" id="sellerId" th:value="${session.account != null && session.account.id != null ? session.account.id : ''}" />
                             <span class="fw-bold">
                                 <span th:if="${session.account != null}"
                                       th:text="${session.account.firstName} + ' ' + ${session.account.lastName}"></span>
@@ -175,7 +175,6 @@
                                     <div class="u-text">
                                         <h4 th:if="${session.account != null}" th:text="${session.account.firstName} + ' ' + ${session.account.lastName}"></h4>
                                         <p class="text-muted" th:if="${session.account != null}" th:text="${session.account.email}"></p>
-                                        <a class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>

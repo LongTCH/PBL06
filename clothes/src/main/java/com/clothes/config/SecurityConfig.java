@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,12 +19,12 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole(AccountRolesEnum.ADMIN.name())
-                        .requestMatchers("/seller/**").hasRole(AccountRolesEnum.SELLER.name())
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/seller/**").hasAuthority("SELLER")
                         .requestMatchers("/customer/**").hasRole(AccountRolesEnum.CUSTOMER.name())
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(f -> f.loginPage("/sessions/login").permitAll()
                         .loginProcessingUrl("/sessions/login")
@@ -34,6 +35,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/sessions/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("SESSION", "JSESSIONID"))
+                .exceptionHandling(e -> e.accessDeniedPage("/access-denied"))
                 .sessionManagement(
                         sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .build();

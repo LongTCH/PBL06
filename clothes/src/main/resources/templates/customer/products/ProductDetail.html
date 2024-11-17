@@ -255,10 +255,10 @@
                                                     <div class="proloop-image">
                                                         <div class="proloop-image__inner">
                                                             <div class="lazy-img lazy-img__prod first-image">
-                                                                <img alt="" th:src="${relatedProduct.images[0].url}">
+                                                                <img alt="" th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}" th:src="${relatedProduct.images[0].url}">
                                                             </div>
                                                             <div class="lazy-img lazy-img__prod second-image">
-                                                                <img alt="" th:src="${relatedProduct.images[1].url}">
+                                                                <img alt="" th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}" th:src="${relatedProduct.images[1].url}">
                                                             </div>
                                                         </div>
                                                         <div class="proloop-actions">

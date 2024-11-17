@@ -7,7 +7,10 @@ public enum OrderStatusEnum {
     CREATED,
     PAID,
     CONFIRMED,
-    CANCELLED;
+    DELIVERING,
+    CANCELLED,
+    REFUNDED,
+    COMPLETED;
 
     public String getVietnameseStatus() {
         switch (this) {
@@ -16,9 +19,15 @@ public enum OrderStatusEnum {
             case PAID:
                 return "Đã thanh toán";
             case CONFIRMED:
-                return "Đã xác nhận";
+                return "Xác nhận";
+            case DELIVERING:
+                return "Đang giao hàng";
             case CANCELLED:
                 return "Đã hủy";
+            case COMPLETED:
+                return "Hoàn thành";
+            case REFUNDED:
+                return "Trả hàng";
             default:
                 return "Không xác định";
         }

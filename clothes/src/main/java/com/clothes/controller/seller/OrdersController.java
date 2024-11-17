@@ -3,32 +3,24 @@ package com.clothes.controller.seller;
 import com.clothes.constant.OrderStatusEnum;
 import com.clothes.dto.OrderDetailsResponse;
 import com.clothes.dto.OrderUpdateRequest;
-import com.clothes.model.Account;
 import com.clothes.model.Order;
 import com.clothes.model.Product;
-import com.clothes.repository.OrderRepository;
-import com.clothes.security.CustomUserDetails;
 import com.clothes.service.OrdersService;
 import com.clothes.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Controller("sellerOrdersController")
 @RequestMapping("/seller/orders")
 public class OrdersController {
-    @Autowired
-    private OrderRepository orderRepository;
     @Autowired
     private OrdersService ordersService;
     @Autowired
@@ -40,14 +32,15 @@ public class OrdersController {
         List<Order> orders;
         if (orderStatus != null && !orderStatus.isEmpty() && !"Tất cả".equals(orderStatus)) {
             try {
-                orders = ordersService.getOrdersByStatus(OrderStatusEnum.valueOf(orderStatus));
+                orders = new ArrayList<>(ordersService.getOrdersByStatus(OrderStatusEnum.valueOf(orderStatus)));
             } catch (IllegalArgumentException e) {
-                orders = ordersService.getAllOrders();
+                orders = new ArrayList<>(ordersService.getAllOrders());
             }
         } else {
-            orders = ordersService.getAllOrders();
+            orders = new ArrayList<>(ordersService.getAllOrders());
         }
-        model.addAttribute("orderStatuses", OrderStatusEnum.values());
+        List<OrderStatusEnum> orderStatuses = Arrays.stream(OrderStatusEnum.values()).collect(Collectors.toList());
+        model.addAttribute("orderStatuses", orderStatuses);
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("orders", orders);
         model.addAttribute("current_page", "order_active");
@@ -67,6 +60,7 @@ public class OrdersController {
         if (orderDetails != null) {
             OrderDetailsResponse response = new OrderDetailsResponse(orderDetails, productMap);
             response.setNote(orderDetails.getSellerNote());
+            response.setStatus(orderDetails.getStatus().name());
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.notFound().build();
@@ -82,7 +76,14 @@ public class OrdersController {
                 order.setStatus(OrderStatusEnum.CONFIRMED);
             } else if ("cancel".equals(request.getAction())) {
                 order.setStatus(OrderStatusEnum.CANCELLED);
+            } else if ("delivering".equals(request.getAction())) {
+                order.setStatus(OrderStatusEnum.DELIVERING);
+            } else if ("complete".equals(request.getAction())) {
+                order.setStatus(OrderStatusEnum.COMPLETED);
+            } else if ("refunded".equals(request.getAction())) {
+                order.setStatus(OrderStatusEnum.REFUNDED);
             }
+
             order.setSellerNote(request.getNote());
             order.setSellerId(request.getSellerId());
             ordersService.saveOrder(order);

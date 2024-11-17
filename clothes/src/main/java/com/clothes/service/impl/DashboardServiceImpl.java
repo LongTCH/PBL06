@@ -29,12 +29,12 @@ public class DashboardServiceImpl implements DashboardService {
     private ProductsRepository productRepository;
     @Override
     public int getTotalOrders() {
-        return orderRepository.countByStatusNot(OrderStatusEnum.CANCELLED);
+        return orderRepository.findAll().size();
     }
 
     @Override
     public double getTotalRevenue() {
-        List<Order> orders = orderRepository.findByStatusNot(OrderStatusEnum.CANCELLED);
+        List<Order> orders = orderRepository.findByStatus(OrderStatusEnum.COMPLETED);
         double totalRevenue = 0.0;
         for (Order order : orders) {
             totalRevenue += order.getAmount();
@@ -56,7 +56,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public List<Map<String, Object>> getTopCustomers() {
-        List<Order> orders = orderRepository.findByStatusNot(OrderStatusEnum.CANCELLED);
+        List<Order> orders = orderRepository.findByStatus(OrderStatusEnum.COMPLETED);
         Map<String, Integer> customerOrderCount = new HashMap<>();
         Map<String, Double> customerTotalSpend = new HashMap<>();
         Map<String, String> customerEmails = new HashMap<>();
@@ -84,7 +84,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public List<Map<String, Object>> getTopSellingProducts() {
-        List<Order> orders = orderRepository.findByStatusNot(OrderStatusEnum.CANCELLED);
+        List<Order> orders = orderRepository.findByStatus(OrderStatusEnum.COMPLETED);
 
         Map<String, Integer> productSalesCount = new HashMap<>();
 

@@ -14,9 +14,14 @@ public class OrderDetailsResponse {
     @Setter
     @Getter
     private String note;
+    @Setter
+    @Getter
+    private String status;
 
     public OrderDetailsResponse(Order order, Map<String, Product> products) {
         this.order = order;
         this.products = products;
+        this.status = order.getStatus().name();
+
     }
 }

@@ -121,15 +121,33 @@
                                 <div id="note" class="font-bold"><i>Ghi chú</i></div>
                                 <textarea id="sellerNote" style="width: 100%" name="note" placeholder="Thông tin về việc xác nhận hoặc hủy đơn hàng"></textarea>
                                 <div id="button" class="gjs-row">
-                                    <div id="cancel" class="gjs-cell m-3">
+                                    <div id="cancel" class="gjs-cell m-3" th:if="${orderStatus == 'CREATED' || orderStatus == 'PAID' || orderStatus == 'CONFIRMED'}">
                                         <button type="button" name="action" onclick="handleOrderAction('cancel')" value="cancel" id="button_cancel"
                                                 class="btn btn-outline-danger">HỦY ĐƠN
                                         </button>
                                     </div>
-                                    <div id="confirm" class="gjs-cell">
+                                    <div id="confirm" class="gjs-cell" th:if="${orderStatus == 'CREATED' || orderStatus == 'PAID'}">
                                         <button type="button" name="action" onclick="handleOrderAction('confirm')" value="confirm" id="button_confirm"
                                                 class="btn btn-outline-success">
                                             XÁC NHẬN
+                                        </button>
+                                    </div>
+                                    <div id="delivering" class="gjs-cell" th:if="${orderStatus == 'CONFIRMED'}">
+                                        <button type="button" name="action" onclick="handleOrderAction('delivering')" value="confirm" id="button_delivering"
+                                                class="btn btn-outline-primary">
+                                            Đang giao hàng
+                                        </button>
+                                    </div>
+                                    <div id="complete" class="gjs-cell m-3" th:if="${orderStatus == 'DELIVERING'}">
+                                        <button type="button" name="action" onclick="handleOrderAction('complete')" value="complete" id="button_complete"
+                                                class="btn btn-outline-success">
+                                            HOÀN THÀNH
+                                        </button>
+                                    </div>
+                                    <div id="refunded" class="gjs-cell" th:if="${orderStatus == 'DELIVERING'}">
+                                        <button type="button" name="action" onclick="handleOrderAction('refunded')" value="complete" id="button_refunded"
+                                                class="btn btn-outline-warning">
+                                            Trả hàng
                                         </button>
                                     </div>
                                 </div>
@@ -216,6 +234,12 @@
                                 Swal.fire("Thành công!", "Đơn hàng đã được xác nhận.", "success");
                             } else if (action === "cancel") {
                                 Swal.fire("Thành công!", "Đơn hàng đã được huỷ.", "success");
+                            } else if (action === "delivering") {
+                                Swal.fire("Thành công!", "Đơn hàng đang được giao hàng.", "success");
+                            } else if (action === "complete") {
+                                Swal.fire("Thành công!", "Đơn hàng đã được hoàn thành.", "success");
+                            } else if (action === "refunded") {
+                                Swal.fire("Thành công!", "Đơn hàng đã được trả hàng.", "success");
                             }
                             setTimeout(() => location.reload(), 1500);
                         } else {
