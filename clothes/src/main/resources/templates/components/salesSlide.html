@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Products</title>
+</head>
+<body>
+
+    <div class="product-container" id="productContainer">
+        <div class="product">Product 1</div>
+        <div class="product">Product 2</div>
+        <div class="product">Product 3</div>
+        <div class="product">Product 4</div>
+        <div class="product">Product 5</div>
+    </div>
+    <div class="arrow" onclick="scrollLeft()">&#9664;</div>
+    <div class="arrow" onclick="scrollRight()">&#9654;</div>
+
+    <script>
+        function scrollLeft() {
+            document.getElementById('productContainer').scrollBy({ left: -100, behavior: 'smooth' });
+        }
+
+        function scrollRight() {
+            document.getElementById('productContainer').scrollBy({ left: 100, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
