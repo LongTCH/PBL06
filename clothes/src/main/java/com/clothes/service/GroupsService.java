@@ -13,4 +13,6 @@ public interface GroupsService {
     boolean existsById(String groupId);
 
     Group getGroupById(String groupId);
+
+    String getGroupNameById(String groupId);
 }

@@ -9,8 +9,7 @@
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
             <a class="logo" th:href="@{/admin}">
-                <img alt="" height="20" th:src="@{/images/admin/logo_light.svg}"
-                />
+                <img alt="" height="20" th:src="@{/images/admin/logo_light.svg}"/>
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">
@@ -58,11 +57,28 @@
                         <p>Tài khoản</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a th:href="@{/admin/discounts}">
+                <li class="nav-item" th:classappend="${current_page == 'sale_active' ? 'active' : ''}">
+                    <a data-bs-toggle="collapse" href="#sales">
                         <i class="fas fa-tags"></i>
                         <p>Khuyến mãi</p>
+                        <span class="caret"></span>
                     </a>
+                    <div class="collapse" id="sales">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a th:href="@{/admin/sales/create}">
+                                    <span class="sub-item">Tạo mới</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a th:href="@{/admin/sales/list}">
+                                    <span class="sub-item">Danh sách khuyến mãi</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item" th:classappend="${current_page == 'statistic_active' ? 'active' : ''}">
                     <a data-bs-toggle="collapse" href="#charts">
