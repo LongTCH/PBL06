@@ -255,11 +255,15 @@
                                                     <div class="proloop-image">
                                                         <div class="proloop-image__inner">
                                                             <div class="lazy-img lazy-img__prod first-image">
-                                                                <img alt="" th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}" th:src="${relatedProduct.images[0].url}">
+                                                                <!-- Render the first image if available, otherwise fallback to a placeholder -->
+                                                                <img alt="First Image" th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}" th:src="${relatedProduct.images[0].url}" th:unless="${relatedProduct == null or #lists.isEmpty(relatedProduct.images)}" src="/path/to/placeholder-image.jpg">
                                                             </div>
+
                                                             <div class="lazy-img lazy-img__prod second-image">
-                                                                <img alt="" th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}" th:src="${relatedProduct.images[1].url}">
+                                                                <!-- Render the second image if available, otherwise fallback to a placeholder -->
+                                                                <img alt="Second Image" th:if="${relatedProduct != null and #lists.size(relatedProduct.images) > 1}" th:src="${relatedProduct.images[1].url}" th:unless="${relatedProduct == null or #lists.size(relatedProduct.images) <= 1}" src="/path/to/placeholder-image.jpg">
                                                             </div>
+
                                                         </div>
                                                         <div class="proloop-actions">
                                                             <div class="proloop-actions__inner">

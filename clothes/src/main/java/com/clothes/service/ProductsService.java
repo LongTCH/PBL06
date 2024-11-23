@@ -2,6 +2,7 @@ package com.clothes.service;
 
 import com.clothes.dto.FiltersDto;
 import com.clothes.dto.PaginationResultDto;
+import com.clothes.dto.PredictionsDto;
 import com.clothes.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,7 @@ public interface ProductsService {
 
     PaginationResultDto<Product> getProductsByGroupName(String groupId, int page, int size);
 
+    PaginationResultDto<Product> getProductsByCategoriesPrediction(PredictionsDto predictionsDto);
     Page<Product> findFilteredProducts(String groupId, String categoryId, String search, Pageable pageable);
 
     void saveAllProducts(List<Product> products);

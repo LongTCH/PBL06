@@ -1,13 +1,12 @@
 package com.clothes.service.impl;
 
-import com.clothes.dto.FilterSelectDto;
-import com.clothes.dto.FiltersDto;
-import com.clothes.dto.PaginationResultDto;
-import com.clothes.dto.ProductExcel;
+import com.clothes.dto.*;
 import com.clothes.model.Product;
 import com.clothes.model.embedded.ProductVariant;
 import com.clothes.repository.ProductsRepository;
 import com.clothes.service.ExcelService;
+import com.clothes.service.GroupsService;
+import com.clothes.service.NameObjectsService;
 import com.clothes.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +29,12 @@ public class ProductsServiceImpl implements ProductsService {
     private ProductsRepository productsRepository;
     @Autowired
     private ProductsRepository productRepository;
+
+    @Autowired
+    private GroupsService groupsService;
+
+    @Autowired
+    private NameObjectsService nameObjectsService;
 
     @Override
     public PaginationResultDto<Product> findProductsByTitle(String title, int page, int size) {
@@ -148,6 +153,17 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public PaginationResultDto<Product> getProductsByGroupName(String groupId, int page, int size) {
         var pageProduct = productsRepository.findByGroupId(groupId, PageRequest.of(page, size));
+        var products = pageProduct.getContent();
+        return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
+    }
+
+    @Override
+    public PaginationResultDto<Product> getProductsByCategoriesPrediction(PredictionsDto predictionsDto) {
+        var predictions = predictionsDto.getPredictions();
+        var page = predictionsDto.getPage();
+        var size = predictionsDto.getSize();
+        var listCategoryIds = nameObjectsService.getPredictionCategoryIds(predictions);
+        var pageProduct = productsRepository.findByCategoryIdIn(listCategoryIds, PageRequest.of(page, size));
         var products = pageProduct.getContent();
         return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
     }

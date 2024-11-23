@@ -3,6 +3,7 @@ package com.clothes.controller.customer;
 import com.clothes.dto.FilterSelectDto;
 import com.clothes.dto.FiltersDto;
 import com.clothes.dto.PaginationResultDto;
+import com.clothes.dto.PredictionsDto;
 import com.clothes.model.Category;
 import com.clothes.model.Group;
 import com.clothes.model.Product;
@@ -12,8 +13,7 @@ import com.clothes.service.GroupsService;
 import com.clothes.service.ProductsService;
 import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 @Controller("customerProductController")
 @RequestMapping("/products")
 public class ProductController {
+    @Value("${spring.custom.predict_url}")
+    private String predictUrl;
+
     @Autowired
     private ProductsService productsService;
 
@@ -38,13 +41,34 @@ public class ProductController {
     @Autowired
     private CategoriesRepository categoriesRepository;
 
-    @GetMapping(value = "/search", produces = "application/json")
-    public ResponseEntity<PaginationResultDto<Product>> search(@RequestParam(required = false) String title,
-                                                               @RequestParam(defaultValue = "0") int page,
-                                                               @RequestParam(defaultValue = "24") int size) {
+    @GetMapping(value = "/search", produces = "text/html")
+    public String search(@RequestParam(required = false) String title,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam(defaultValue = "24") int size,
+                         Model model) {
         var paginationResult = productsService.findProductsByTitle(title, page, size);
+        model.addAttribute("products", paginationResult.getData());
+        model.addAttribute("pagination", paginationResult);
+        model.addAttribute("currentPage", page);
+        return "/customer/searchByTitle";
+    }
 
-        return new ResponseEntity<>(paginationResult, HttpStatus.OK);
+    @GetMapping(value = "/search-image", produces = "text/html")
+    public String searchImage(Model model){
+        model.addAttribute("predictUrl", predictUrl);
+        return "/customer/searchByImage";
+    }
+
+    @PostMapping(value = "/search-image", consumes = "application/json", produces = "text/html")
+    public String searchImageMultiCategories(
+            @RequestBody PredictionsDto request,
+            Model model){
+        var paginationResult = productsService.getProductsByCategoriesPrediction(request);
+        model.addAttribute("products", paginationResult.getData());
+        model.addAttribute("pagination", paginationResult);
+        model.addAttribute("currentPage", request.getPage());
+
+        return "/customer/products :: productsFragment";
     }
 
     @GetMapping
