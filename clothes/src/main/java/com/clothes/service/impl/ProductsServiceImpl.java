@@ -8,10 +8,10 @@ import com.clothes.model.Product;
 import com.clothes.model.embedded.ProductVariant;
 import com.clothes.repository.ProductsRepository;
 import com.clothes.service.ExcelService;
-import com.clothes.service.GroupsService;
 import com.clothes.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,9 +30,6 @@ public class ProductsServiceImpl implements ProductsService {
     private ProductsRepository productsRepository;
     @Autowired
     private ProductsRepository productRepository;
-
-    @Autowired
-    private GroupsService groupsService;
 
     @Override
     public PaginationResultDto<Product> findProductsByTitle(String title, int page, int size) {
@@ -157,9 +152,71 @@ public class ProductsServiceImpl implements ProductsService {
         return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
     }
 
+    public Page<Product> findFilteredProducts(String group, String category, String search, Pageable pageable) {
+        List<Product> products = productRepository.findAll();
+
+        if (group != null && !group.isEmpty()) {
+            products = products.stream()
+                    .filter(product -> group.equals(product.getGroupId()))
+                    .collect(Collectors.toList());
+        }
+
+        if (category != null && !category.isEmpty()) {
+            products = products.stream()
+                    .filter(product -> category.equals(product.getCategoryId()))
+                    .collect(Collectors.toList());
+        }
+
+        if (search != null && !search.isEmpty()) {
+            products = products.stream()
+                    .filter(product -> {
+                        boolean matchesFullId = product.getId().toLowerCase().contains(search.toLowerCase());
+                        boolean matchesLastPart = product.getId().toLowerCase().endsWith(search.toLowerCase());
+                        boolean matchesWithPrefix = search.toLowerCase().startsWith("prod-") &&
+                                product.getId().toLowerCase().contains(search.substring(5).toLowerCase());
+                        boolean matchesTitle = product.getTitle().toLowerCase().contains(search.toLowerCase());
+                        return matchesFullId || matchesLastPart || matchesWithPrefix || matchesTitle;
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), products.size());
+
+        if (start > products.size()) {
+            return new PageImpl<>(Collections.emptyList(), pageable, products.size());
+        }
+
+        return new PageImpl<>(products.subList(start, end), pageable, products.size());
+    }
+
 
     @Override
     public List<Product> findAllProducts() {
         return productsRepository.findAll();
+    }
+
+    public void saveAllProducts(List<Product> products) {
+        productRepository.saveAll(products);
+    }
+
+    @Override
+    public List<Product> getProductsBySaleId(String saleId) {
+        return productRepository.findBySaleId(saleId);
+    }
+
+    @Override
+    public boolean removeProductFromSale(String productId) {
+        Optional<Product> productOpt = productRepository.findById(productId);
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
+            for (ProductVariant variant : product.getVariants()) {
+                variant.setPrice(variant.getCompareAtPrice());
+            }
+            product.setSaleId(null);
+            productRepository.save(product);
+            return true;
+        }
+        return false;
     }
 }

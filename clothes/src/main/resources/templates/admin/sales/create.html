@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en"
+      layout:decorate="~{layouts/admin/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Sales</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<section layout:fragment="body">
+    <style>
+        #paginationControls button {
+            font-size: 14px;
+            padding: 5px 8px;
+            border-radius: 12px;
+        }
+    </style>
+    <div class="d-flex justify-content-between align-items-center p-2 mb-2" style="background-color: #d5f8c4">
+        <h3 style="color: #214c0d; margin-left: 20px; margin-bottom: 0">Tạo mới khuyến mãi</h3>
+    </div>
+    <div class="row mb-3 mt-5">
+        <div class="col-md-4">
+            <label for="groupFilter" class="form-label">Nhóm</label>
+            <select id="groupFilter" class="form-select" onchange="filterProducts()">
+                <option value="">Chọn nhóm</option>
+                <option th:each="group : ${groups}"
+                        th:value="${group.id}"
+                        th:text="${group.name}"
+                        th:selected="${groupId != null and groupId.equals(group.id)}">
+                </option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="categoryFilter" class="form-label">Danh mục</label>
+            <select id="categoryFilter" class="form-select" onchange="filterProducts()">
+                <option value="">Chọn danh mục</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:selected="${categoryId != null and categoryId.equals(category.id)}"
+                        th:text="${category.name}">
+                </option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="searchProduct" class="form-label">Tìm kiếm</label>
+            <input id="searchProduct" type="text" class="form-control" placeholder="Tìm theo tên hoặc mã"
+                   th:value="${search}" onkeyup="filterProducts()">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Danh sách sản phẩm</h5>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Chọn</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Mã</th>
+                </tr>
+                </thead>
+                <tbody id="availableProducts">
+                <tr th:each="product : ${products}">
+                    <td>
+                        <button class="btn btn-primary"
+                                th:attr="data-id=${product.id}, data-title=${product.title}, data-code='PROD-' + ${#strings.substring(product.id, product.id.length() - 5)}"
+                                onclick="selectProductFromData(this)">
+                            Chọn
+                        </button>
+                    </td>
+                    <td th:text="${product.title}"></td>
+                    <td th:text="'PROD-' + ${#strings.substring(product.id, product.id.length() - 5)}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/sales/create(groupId=${groupId}, categoryId=${categoryId}, search=${search}, page=${productPage.number - 1}, size=${productPage.size})}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"
+                        th:each="pageNum : ${#numbers.sequence(productPage.number - 5, productPage.number + 5)}"
+                        th:if="${pageNum >= 0 && pageNum < productPage.totalPages}"
+                        th:classappend="${pageNum == productPage.number} ? 'active' : ''">
+                        <a class="page-link"
+                           th:href="@{/admin/sales/create(groupId=${groupId}, categoryId=${categoryId}, search=${search}, page=${pageNum}, size=${productPage.size})}"
+                           th:text="${pageNum + 1}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/sales/create(groupId=${groupId}, categoryId=${categoryId}, search=${search}, page=${productPage.number + 1}, size=${productPage.size})}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-6">
+            <h5>Sản phẩm được chọn</h5>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Mã</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody id="selectedProducts">
+                </tbody>
+            </table>
+            <div id="paginationControls" class="mt-3"></div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <label for="saleName" class="form-label">Tên khuyến mãi</label>
+            <input id="saleName" type="text" class="form-control" placeholder="Nhập tên khuyến mãi" required>
+        </div>
+        <div class="col-md-4">
+            <label for="saleValue" class="form-label">Giá trị khuyến mãi (%)</label>
+            <input type="number" id="saleValue" name="saleValue" class="form-control" min="0" max="100"
+                   placeholder="Nhập giá trị từ 0 đến 100">
+        </div>
+        <div class="col-md-4">
+            <label for="saleStatus" class="form-label">Trạng thái</label>
+            <select id="saleStatus" class="form-select">
+                <option value="open">Mở</option>
+            </select>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end mt-3">
+        <button id="saveSale" class="btn btn-success">Tạo khuyến mãi</button>
+    </div>
+
+    <script>
+        function filterProducts() {
+            const group = document.getElementById('groupFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+            const search = document.getElementById('searchProduct').value;
+
+            const currentUrl = new URL(window.location.href);
+            const currentGroupId = currentUrl.searchParams.get("groupId");
+            const currentCategoryId = currentUrl.searchParams.get("categoryId");
+            const currentSearch = currentUrl.searchParams.get("search");
+
+            if (group === currentGroupId && category === currentCategoryId && search === currentSearch) {
+                return;
+            }
+
+            const params = new URLSearchParams();
+            if (group) params.append("groupId", group);
+            if (category) params.append("categoryId", category);
+            if (search) params.append("search", search);
+
+            window.location.href = `/admin/sales/create?${params.toString()}`;
+        }
+
+        function updateCategoryFilterState() {
+            const groupFilter = document.getElementById('groupFilter');
+            const categoryFilter = document.getElementById('categoryFilter');
+
+            if (groupFilter.value) {
+                categoryFilter.disabled = false;
+            } else {
+                categoryFilter.disabled = true;
+                categoryFilter.selectedIndex = 0;
+            }
+        }
+
+        document.getElementById('groupFilter').addEventListener('change', updateCategoryFilterState);
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedSelectedProducts = localStorage.getItem('selectedProducts');
+            if (savedSelectedProducts) {
+                selectedProducts = JSON.parse(savedSelectedProducts);
+                updateSelectedProductsTable();
+            }
+
+            updateCategoryFilterState();
+        });
+
+        let selectedProducts = [];
+        let selectedProductsPerPage = 5;
+        let currentPage = 1;
+
+        function selectProductFromData(buttonElement) {
+            const productId = buttonElement.getAttribute('data-id');
+            const productName = buttonElement.getAttribute('data-title');
+            const productCode = buttonElement.getAttribute('data-code');
+            if (selectedProducts.some(product => product.id === productId)) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Sản phẩm đã được chọn!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
+
+            selectedProducts.push({id: productId, name: productName, code: productCode});
+            localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+            updateSelectedProductsTable();
+        }
+
+        function removeProduct(productId) {
+            selectedProducts = selectedProducts.filter(product => product.id !== productId);
+            localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+            updateSelectedProductsTable();
+        }
+
+        function updateSelectedProductsTable() {
+            const tbody = document.getElementById('selectedProducts');
+            tbody.innerHTML = '';
+            const startIndex = (currentPage - 1) * selectedProductsPerPage;
+            const endIndex = Math.min(startIndex + selectedProductsPerPage, selectedProducts.length);
+            selectedProducts.slice(startIndex, endIndex).forEach(product => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                <td>${product.name}</td>
+                <td>${product.code}</td>
+                <td>
+                <button class="btn btn-danger" onclick="removeProduct('${product.id}')">Xóa</button>
+                </td>
+            `;
+
+                tbody.appendChild(row);
+            });
+            updatePaginationControls();
+        }
+
+        function updatePaginationControls() {
+            const paginationContainer = document.getElementById('paginationControls');
+            paginationContainer.innerHTML = '';
+
+            const totalPages = Math.ceil(selectedProducts.length / selectedProductsPerPage);
+            const maxVisiblePages = 5;
+            const prevButton = document.createElement('button');
+            prevButton.textContent = '«';
+            prevButton.className = `btn ${currentPage > 1 ? 'btn-secondary' : 'btn-light disabled'} mx-1`;
+            prevButton.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateSelectedProductsTable();
+                }
+            };
+            paginationContainer.appendChild(prevButton);
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            if (startPage > 1) {
+                const firstPageButton = document.createElement('button');
+                firstPageButton.textContent = '1';
+                firstPageButton.className = `btn ${currentPage === 1 ? 'btn-primary' : 'btn-secondary'} mx-1`;
+                firstPageButton.onclick = () => {
+                    currentPage = 1;
+                    updateSelectedProductsTable();
+                };
+                paginationContainer.appendChild(firstPageButton);
+
+                if (startPage > 2) {
+                    const dots = document.createElement('span');
+                    dots.textContent = '...';
+                    dots.className = 'mx-1';
+                    paginationContainer.appendChild(dots);
+                }
+            }
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.className = `btn ${i === currentPage ? 'btn-primary' : 'btn-secondary'} mx-1`;
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    updateSelectedProductsTable();
+                };
+                paginationContainer.appendChild(pageButton);
+            }
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const dots = document.createElement('span');
+                    dots.textContent = '...';
+                    dots.className = 'mx-1';
+                    paginationContainer.appendChild(dots);
+                }
+                const lastPageButton = document.createElement('button');
+                lastPageButton.textContent = totalPages;
+                lastPageButton.className = `btn ${currentPage === totalPages ? 'btn-primary' : 'btn-secondary'} mx-1`;
+                lastPageButton.onclick = () => {
+                    currentPage = totalPages;
+                    updateSelectedProductsTable();
+                };
+                paginationContainer.appendChild(lastPageButton);
+            }
+            const nextButton = document.createElement('button');
+            nextButton.textContent = '»';
+            nextButton.className = `btn ${currentPage < totalPages ? 'btn-secondary' : 'btn-light disabled'} mx-1`;
+            nextButton.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateSelectedProductsTable();
+                }
+            };
+            paginationContainer.appendChild(nextButton);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedSelectedProducts = localStorage.getItem('selectedProducts');
+            if (savedSelectedProducts) {
+                selectedProducts = JSON.parse(savedSelectedProducts);
+                updateSelectedProductsTable();
+            }
+        });
+
+        document.getElementById('saveSale').addEventListener('click', () => {
+            const saleName = document.getElementById('saleName').value;
+            const saleValue = document.getElementById('saleValue').value;
+            const saleStatus = document.getElementById('saleStatus').value;
+
+            if (!saleName || !saleValue || selectedProducts.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: 'Vui lòng nhập đầy đủ thông tin và chọn ít nhất một sản phẩm!',
+                });
+                return;
+            }
+
+            const saleData = {
+                name: saleName,
+                value: saleValue,
+                status: saleStatus,
+                productIds: selectedProducts.map(product => product.id),
+            };
+
+            fetch("http://localhost:8080/admin/sales/createSale", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(saleData),
+            })
+                .then(async (response) => {
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Khuyến mãi đã được tạo!',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else if (response.status === 409) {
+                        const data = await response.json(); // Chờ API trả về JSON
+                        const {message, conflictingProducts} = data;
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Cảnh báo',
+                            text: message,
+                            showCancelButton: true,
+                            confirmButtonText: 'Chuyển',
+                            cancelButtonText: 'Hủy',
+                        }).then(result => {
+                            if (result.isConfirmed) {
+                                saleData.overrideConflict = true;
+                                fetch("http://localhost:8080/admin/sales/createSale", {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify(saleData),
+                                })
+                                    .then(res => {
+                                        if (res.ok) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Thành công',
+                                                text: 'Các sản phẩm đã được chuyển sang chương trình khuyến mãi mới!',
+                                            }).then(() => {
+                                                window.location.reload();
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Lỗi',
+                                                text: 'Có lỗi xảy ra khi chuyển sản phẩm.',
+                                            });
+                                        }
+                                    });
+                            }
+                        });
+                    } else {
+                        const data = await response.json();
+                        throw new Error(data.message || 'Có lỗi xảy ra khi tạo khuyến mãi');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: error.message,
+                    });
+                });
+        });
+    </script>
+</section>
+</body>
+</html>

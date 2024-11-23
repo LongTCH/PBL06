@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en"
+      layout:decorate="~{layouts/admin/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Sales</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<section layout:fragment="body">
+    <div class="mb-5 d-flex justify-content-between align-items-center p-2 mb-2" style="background-color: #d5f8c4">
+        <h3 style="color: #214c0d; margin-left: 20px; margin-bottom: 0">Danh sách khuyến mãi</h3>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Tên</th>
+            <th>Giá trị (%)</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="sale, iterStat : ${sales}">
+            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${sale.name}"></td>
+            <td th:text="${sale.value}"></td>
+            <td>
+                <span th:if="${sale.status == 'open'}" class="badge bg-success">Mở</span>
+                <span th:if="${sale.status == 'closed'}" class="badge bg-secondary">Đóng</span>
+            </td>
+            <td>
+                <a th:href="@{/admin/sales/{id}/products(id=${sale.id})}" class="btn btn-info btn-sm">Xem sản phẩm</a>
+
+                <button type="button" class="btn btn-warning btn-sm"
+                        th:data-sale-id="${sale.id}"
+                        th:if="${sale.status == 'open'}"
+                        onclick="confirmCloseSale(this)">
+                    Đóng khuyến mãi
+                </button>
+
+                <button type="button" class="btn btn-success btn-sm"
+                        th:data-sale-id="${sale.id}"
+                        th:if="${sale.status == 'closed'}"
+                        onclick="confirmOpenSale(this)">
+                    Mở khuyến mãi
+                </button>
+
+                <button type="button" class="btn btn-danger btn-sm"
+                        th:data-sale-id="${sale.id}"
+                        onclick="confirmDeleteSale(this)">
+                    Xoá khuyến mãi
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <script>
+        function confirmCloseSale(button) {
+            var saleId = button.getAttribute('data-sale-id');
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn muốn đóng khuyến mãi này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có, đóng khuyến mãi!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/sales/' + saleId + '/close', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/admin/sales/list';
+                        } else {
+                            Swal.fire('Lỗi!', 'Không thể đóng khuyến mãi', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function confirmOpenSale(button) {
+            var saleId = button.getAttribute('data-sale-id');
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn muốn mở khuyến mãi này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có, mở khuyến mãi!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/sales/' + saleId + '/open', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/admin/sales/list';
+                        } else {
+                            Swal.fire('Lỗi!', 'Không thể mở khuyến mãi', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function confirmDeleteSale(button) {
+            var saleId = button.getAttribute('data-sale-id');
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn muốn xoá khuyến mãi này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có, xoá khuyến mãi!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/sales/' + saleId + '/delete', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            Swal.fire(
+                                'Thành công!',
+                                'Khuyến mãi đã được xoá.',
+                                'success'
+                            ).then(() => {
+                                window.location.href = '/admin/sales/list';
+                            });
+                        } else {
+                            Swal.fire('Lỗi!', 'Không thể xoá khuyến mãi', 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</section>
+</body>
+</html>

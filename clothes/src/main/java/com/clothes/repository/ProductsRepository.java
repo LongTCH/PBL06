@@ -24,4 +24,6 @@ public interface ProductsRepository extends MongoRepository<Product, String> {
 
     @Query("{ 'variants.price': { $gte: ?0, $lte: ?1 }, 'groupId': { $in: ?2 } }")
     Page<Product> filterProductsByPriceRangeAndGroupIds(double minPrice, double maxPrice, List<String> groupIds, Pageable pageable);
+
+    List<Product> findBySaleId(String saleId);
 }
