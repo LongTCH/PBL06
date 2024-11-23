@@ -3,6 +3,7 @@ package com.clothes.controller.customer;
 import com.clothes.dto.FilterSelectDto;
 import com.clothes.dto.FiltersDto;
 import com.clothes.dto.PaginationResultDto;
+import com.clothes.dto.PredictionsDto;
 import com.clothes.model.Category;
 import com.clothes.model.Group;
 import com.clothes.model.Product;
@@ -60,16 +61,14 @@ public class ProductController {
 
     @PostMapping(value = "/search-image", consumes = "application/json", produces = "text/html")
     public String searchImageMultiCategories(
-            @RequestParam List<String> categoryPredictions,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "24") int size,
+            @RequestBody PredictionsDto request,
             Model model){
-        var paginationResult = productsService.getProductsByCategoriesPrediction(categoryPredictions, page, size);
+        var paginationResult = productsService.getProductsByCategoriesPrediction(request);
         model.addAttribute("products", paginationResult.getData());
         model.addAttribute("pagination", paginationResult);
-        model.addAttribute("currentPage", page);
+        model.addAttribute("currentPage", request.getPage());
 
-        return "/customer/searchByImage";
+        return "/customer/products :: productsFragment";
     }
 
     @GetMapping

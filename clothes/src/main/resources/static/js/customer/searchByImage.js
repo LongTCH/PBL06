@@ -1,3 +1,44 @@
+let page = 0;
+const size = 24;
+let isLoading = false;
+let predictions = [];
+function loadMoreProducts() {
+    if (predictions.length === 0) return;
+    if (isLoading) return;
+    isLoading = true;
+    page++;
+    if(page <= size) filterProducts();
+}
+
+window.addEventListener('scroll', function () {
+    if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 500) {
+        loadMoreProducts();
+    }
+});
+
+function filterProducts(){
+    if (predictions.length === 0) return;
+    fetch('/products/search-image', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            predictions: predictions,
+            page: page,
+            size: size
+        })
+    }).then(response => response.text())
+    .then(data => {
+        document.getElementById('product-list').innerHTML += data;
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = data;
+                isLoading = false;
+        }).catch(error => {
+            console.error('Error:', error);
+            isLoading = false;
+        });
+}
 document.addEventListener('DOMContentLoaded', function () {
     const predictUrl = document.getElementById('predictUrl').innerText;
     const fileInput = document.getElementById('fileInput');
@@ -38,22 +79,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Create a FormData object to send the file
                 const formData = new FormData();
                 formData.append('file', blob, 'cropped_image.png'); // 'file' is the key expected by FastAPI
-
+                predictions = []
+                page = 0;
+                document.getElementById('product-list').innerHTML = '';
                 // Send the image to the FastAPI server
                 fetch(predictUrl, {
                     method: 'POST',
                     body: formData
                 }).then(response => response.json())
                 .then(data => {
-                    let predictions = [];
-                    for (let i = 0; i < data.predictions.length; i++) {
-                        predictions.push(data.predictions[i][0]);
+                    for (let i = 0; i < data.prediction.length; i++) {
+                        predictions.push(data.prediction[i][0]);
                     }
-                    fetch('/api/v1/customers/searchByImage', {
+                    loadMoreProducts();
                 }).catch(error => {
                     console.error('Error:', error);
                 });
             }, 'image/jpeg');
     });
-
 });

@@ -7,11 +7,10 @@ function loadMoreProducts() {
     isLoading = true;
     page++;
     if(page <= size) filterProducts();
-    isLoading = false;
 }
 
 window.addEventListener('scroll', function () {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+    if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 500) {
         loadMoreProducts();
     }
 });
@@ -67,9 +66,12 @@ function filterProducts() {
             const newTotal = tempDiv.querySelector('input#totalProductFilter').value;
             const totalProductElement = document.getElementById('totalProduct');
             totalProductElement.innerHTML = 'Sản phẩm: ' + newTotal;
+            isLoading = false;
         })
 
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+        console.error('Error:', error);
+        isLoading = false;});
 
     return false; // Prevent form submission
 }

@@ -2,6 +2,7 @@ package com.clothes.service;
 
 import com.clothes.dto.FiltersDto;
 import com.clothes.dto.PaginationResultDto;
+import com.clothes.dto.PredictionsDto;
 import com.clothes.model.Product;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,5 +35,5 @@ public interface ProductsService {
 
     PaginationResultDto<Product> getProductsByGroupName(String groupId, int page, int size);
 
-    PaginationResultDto<Product> getProductsByCategoriesPrediction(List<String> predictions, int page, int size);
+    PaginationResultDto<Product> getProductsByCategoriesPrediction(PredictionsDto predictionsDto);
 }

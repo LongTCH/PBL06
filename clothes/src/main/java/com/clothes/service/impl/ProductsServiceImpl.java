@@ -1,9 +1,6 @@
 package com.clothes.service.impl;
 
-import com.clothes.dto.FilterSelectDto;
-import com.clothes.dto.FiltersDto;
-import com.clothes.dto.PaginationResultDto;
-import com.clothes.dto.ProductExcel;
+import com.clothes.dto.*;
 import com.clothes.model.Product;
 import com.clothes.model.embedded.ProductVariant;
 import com.clothes.repository.ProductsRepository;
@@ -162,7 +159,10 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public PaginationResultDto<Product> getProductsByCategoriesPrediction(List<String> predictions, int page, int size) {
+    public PaginationResultDto<Product> getProductsByCategoriesPrediction(PredictionsDto predictionsDto) {
+        var predictions = predictionsDto.getPredictions();
+        var page = predictionsDto.getPage();
+        var size = predictionsDto.getSize();
         var listCategoryIds = nameObjectsService.getPredictionCategoryIds(predictions);
         var pageProduct = productsRepository.findByCategoryIdIn(listCategoryIds, PageRequest.of(page, size));
         var products = pageProduct.getContent();
