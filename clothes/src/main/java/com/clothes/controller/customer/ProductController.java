@@ -50,25 +50,25 @@ public class ProductController {
         model.addAttribute("products", paginationResult.getData());
         model.addAttribute("pagination", paginationResult);
         model.addAttribute("currentPage", page);
-        return "/customer/searchByTitle";
+        return "customer/searchByTitle";
     }
 
     @GetMapping(value = "/search-image", produces = "text/html")
-    public String searchImage(Model model){
+    public String searchImage(Model model) {
         model.addAttribute("predictUrl", predictUrl);
-        return "/customer/searchByImage";
+        return "customer/searchByImage";
     }
 
     @PostMapping(value = "/search-image", consumes = "application/json", produces = "text/html")
     public String searchImageMultiCategories(
             @RequestBody PredictionsDto request,
-            Model model){
+            Model model) {
         var paginationResult = productsService.getProductsByCategoriesPrediction(request);
         model.addAttribute("products", paginationResult.getData());
         model.addAttribute("pagination", paginationResult);
         model.addAttribute("currentPage", request.getPage());
 
-        return "/customer/products :: productsFragment";
+        return "customer/products :: productsFragment";
     }
 
     @GetMapping

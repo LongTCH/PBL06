@@ -98,7 +98,7 @@ public class ProductsController {
         var price = product.getPrice();
         var getCompareAtPrice = product.getCompareAtPrice();
 
-        String selectedCategoryId = (product.getCategoryId() != null) ? product.getCategoryId().toString() : null;
+        String selectedCategoryId = (product.getCategoryId() != null) ? product.getCategoryId() : null;
 
         model.addAttribute("product", product);
         model.addAttribute("categories", categories);

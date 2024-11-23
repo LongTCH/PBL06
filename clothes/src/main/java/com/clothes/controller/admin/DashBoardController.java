@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class DashBoardController {
     @Autowired
     private DashboardService dashboardService;
+
     @GetMapping
     public String getMethodName(Model model, HttpSession session) {
         int totalOrders = dashboardService.getTotalOrders();

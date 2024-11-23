@@ -2,8 +2,8 @@ package com.clothes.service.impl;
 
 import com.clothes.model.Product;
 import com.clothes.model.Sale;
-import com.clothes.repository.SalesRepository;
 import com.clothes.repository.ProductsRepository;
+import com.clothes.repository.SalesRepository;
 import com.clothes.service.SalesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,18 +16,21 @@ public class SalesServiceImpl implements SalesService {
     private SalesRepository saleRepository;
     @Autowired
     private ProductsRepository productsRepository;
+
     @Override
     public void closeSale(String saleId) {
         Sale sale = saleRepository.findById(saleId).orElseThrow(() -> new RuntimeException("Sale not found"));
         sale.setStatus("closed");
         saleRepository.save(sale);
     }
+
     @Override
     public void openSale(String saleId) {
         Sale sale = saleRepository.findById(saleId).orElseThrow(() -> new RuntimeException("Sale not found"));
         sale.setStatus("open");
         saleRepository.save(sale);
     }
+
     @Override
     public void deleteSale(String saleId) {
         Sale sale = saleRepository.findById(saleId).orElseThrow(() -> new RuntimeException("Sale not found"));

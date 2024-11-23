@@ -34,7 +34,7 @@ public class CheckoutsController {
 
     @PostMapping("/addOrder")
     public ResponseEntity<?> addOrder(@RequestBody Map<String, Object> body) {
-       return addOrder(body, false);
+        return addOrder(body, false);
     }
 
     @GetMapping("/success")

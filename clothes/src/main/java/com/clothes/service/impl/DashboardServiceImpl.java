@@ -27,6 +27,7 @@ public class DashboardServiceImpl implements DashboardService {
     private AccountsRepository accountsRepository;
     @Autowired
     private ProductsRepository productRepository;
+
     @Override
     public int getTotalOrders() {
         return orderRepository.findAll().size();
