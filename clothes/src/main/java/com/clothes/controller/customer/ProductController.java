@@ -58,6 +58,20 @@ public class ProductController {
         return "/customer/searchByImage";
     }
 
+    @PostMapping(value = "/search-image", consumes = "application/json", produces = "text/html")
+    public String searchImageMultiCategories(
+            @RequestParam List<String> categoryPredictions,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "24") int size,
+            Model model){
+        var paginationResult = productsService.getProductsByCategoriesPrediction(categoryPredictions, page, size);
+        model.addAttribute("products", paginationResult.getData());
+        model.addAttribute("pagination", paginationResult);
+        model.addAttribute("currentPage", page);
+
+        return "/customer/searchByImage";
+    }
+
     @GetMapping
     public String showProductsPage(Model model,
                                    @RequestParam(defaultValue = "0") int page,

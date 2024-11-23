@@ -34,4 +34,5 @@ public interface ProductsService {
 
     PaginationResultDto<Product> getProductsByGroupName(String groupId, int page, int size);
 
+    PaginationResultDto<Product> getProductsByCategoriesPrediction(List<String> predictions, int page, int size);
 }

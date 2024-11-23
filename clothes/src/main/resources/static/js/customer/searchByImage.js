@@ -45,7 +45,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: formData
                 }).then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    let predictions = [];
+                    for (let i = 0; i < data.predictions.length; i++) {
+                        predictions.push(data.predictions[i][0]);
+                    }
+                    fetch('/api/v1/customers/searchByImage', {
                 }).catch(error => {
                     console.error('Error:', error);
                 });
