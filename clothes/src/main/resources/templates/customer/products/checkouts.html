@@ -20,28 +20,28 @@
         <p>Bạn đã có tài khoản?<a th:href="@{/sessions/login}"> Đăng nhập</a></p>
         <form id="checkoutForm">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6" th:if="session.account != null">
                     <div class="mb-3">
-                        <input class="form-control" id="fullName" placeholder="Họ và tên" required type="text">
+                        <input class="form-control" id="fullName" placeholder="Họ và tên" required type="text" th:value="${session.account.firstName + session.account.lastName}">
                     </div>
                     <div class="mb-3">
-                        <input class="form-control" id="email" placeholder="Email" required type="email">
+                        <input class="form-control" id="email" placeholder="Email" required type="email" th:value="${session.account.email}">
                     </div>
                     <div class="mb-3">
-                        <input class="form-control" id="phone" placeholder="Số điện thoại" required type="text">
+                        <input class="form-control" id="phone" placeholder="Số điện thoại" required type="text" th:value="${session.account.phone}">
                     </div>
                     <div class="mb-3">
-                        <input class="form-control" id="address" placeholder="Địa chỉ" required type="text">
+                        <input class="form-control" id="address" placeholder="Địa chỉ" required type="text" th:value="${session.account.address.street}">
                     </div>
                     <div class="css_select_div">
                         <select class="css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-                            <option value="0">Tỉnh Thành</option>
+                            <option value="0" th:text="${session.account.address.city}">Tỉnh Thành</option>
                         </select>
                         <select class="css_select" id="quan" name="quan" title="Chọn Quận Huyện">
-                            <option value="0">Quận Huyện</option>
+                            <option value="0" th:text="${session.account.address.district}">Quận Huyện</option>
                         </select>
                         <select class="css_select" id="phuong" name="phuong" title="Chọn Phường Xã">
-                            <option value="0">Phường Xã</option>
+                            <option value="0" th:text="${session.account.address.ward}">Phường Xã</option>
                         </select>
                     </div>
 

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/customer/saleProducts.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script th:src="@{/js/components/saleProducts.js}"></script>
+    <link rel="stylesheet" href="../../static/css/customer/saleProducts.css">
+</head>
+<body>
+<div th:fragment="saleProductsFragment">
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center">Sản phẩm khuyến mãi</h2>
+            </div>
+        </div>
+        <div class="row position-relative">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <th:block th:each="product : ${products}">
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="sale position-absolute p-2">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 512.002 512.002">
+                                            <g>
+                                                <path d="M201.498 512.002c-1.992 0-4.008-.398-5.934-1.229-6.741-2.907-10.387-10.266-8.617-17.39l50.724-204.178h-136.67c-4.947 0-9.576-2.439-12.373-6.52s-3.402-9.278-1.617-13.892l100.262-259.204c2.235-5.779 7.793-9.589 13.989-9.589h137.961c5.069 0 9.795 2.56 12.565 6.806 2.768 4.246 3.206 9.603 1.162 14.242l-59.369 134.76h117.42c5.486 0 10.534 2.995 13.164 7.81 2.63 4.814 2.422 10.68-.543 15.296l-209.496 326.192c-2.833 4.412-7.651 6.896-12.628 6.896z"
+                                                      fill="#ffffff"></path>
+                                            </g>
+                                        </svg>
+                                        -30%
+                                    </span>
+                                </div>
+                                <img th:src="${product.images[0].url}" class="card-img-top" alt="Hình sản phẩm"/>
+                                <div class="card-body">
+                                    <h5 class="card-title text-center" th:text="${product.title}"></h5>
+                                    <p class="card-text text-center" th:text="${product.price} + ' VND'"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new Swiper('.swiper-container', {
+            loop: true,
+            loopAdditionalSlides: 1,
+            slidesPerView: 5,
+            spaceBetween: 20,
+            freeMode: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 1,
+                    spaceBetween: 10,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 15,
+                },
+                1024: {
+                    slidesPerView: 4,
+                    spaceBetween: 20,
+                },
+            },
+        });
+
+    });
+</script>
+</body>
+</html>

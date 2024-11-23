@@ -263,7 +263,8 @@
                                                     </div>
                                                     <div class="proloop-detail">
                                                         <h3 class="proloop-title">
-                                                            <a href="/" th:text="${relatedProduct.title}"></a>
+                                                            <a th:href="@{/products/{id}(id=${relatedProduct.id})}"
+                                                               th:text="${relatedProduct.title}"></a>
                                                         </h3>
                                                         <p class="proloop-price on-sale">
                                                             <span class="price"

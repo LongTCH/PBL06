@@ -32,4 +32,6 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 
     @Query("{'createdDate' : { $gte: ?0, $lt: ?1 }, 'status': 'COMPLETED'}")
     List<Order> findCompletedOrdersByCreatedDate(LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    List<Order> findByCustomerEmail(String customerName);
 }

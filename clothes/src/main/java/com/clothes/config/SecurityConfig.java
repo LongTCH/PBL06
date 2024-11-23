@@ -23,7 +23,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/seller/**").hasAuthority("SELLER")
-                        .requestMatchers("/customer/**").hasRole(AccountRolesEnum.CUSTOMER.name())
+//                        .requestMatchers("/customer/**").hasRole(AccountRolesEnum.CUSTOMER.name())
+                        .requestMatchers("/customer/**").hasAuthority("CUSTOMER")
+
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(f -> f.loginPage("/sessions/login").permitAll()

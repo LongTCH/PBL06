@@ -5,6 +5,8 @@ import com.clothes.model.Order;
 import com.clothes.repository.OrderRepository;
 import com.clothes.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +35,10 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Order> getOrdersByStatus(OrderStatusEnum orderStatusEnum) {
         return orderRepository.findByStatus(orderStatusEnum);
+    }
+
+    @Override
+    public List<Order> getOrdersByAccountId(String customerName) {
+        return orderRepository.findByCustomerEmail(customerName);
     }
 }
