@@ -26,4 +26,6 @@ public interface ProductsRepository extends MongoRepository<Product, String> {
     Page<Product> filterProductsByPriceRangeAndGroupIds(double minPrice, double maxPrice, List<String> groupIds, Pageable pageable);
 
     Page<Product> findByCategoryIdIn(List<String> categoryIds, Pageable pageable);
+
+    List<Product> findBySaleId(String saleId);
 }

@@ -66,7 +66,7 @@
                 <td class="text-center" colspan="6">Không có sản phẩm</td>
             </tr>
             <tr th:each="product : ${products}">
-                <td th:text="'PROD-' + ${#strings.substring(product.id, product.id.length() - 8)}"></td>
+                <td th:text="'PROD-' + ${#strings.substring(product.id, product.id.length() - 5)}"></td>
                 <td>
                     <img alt="Product Image" style="width: 100px; height: auto;"
                          th:if="${product.images != null and !product.images.isEmpty()}"

@@ -26,6 +26,7 @@ public class Product implements Serializable {
     private LocalDateTime publishedDate;
     private String groupId;
     private String categoryId;
+    private String saleId;
 
     public List<String> getColors() {
         return options.stream()

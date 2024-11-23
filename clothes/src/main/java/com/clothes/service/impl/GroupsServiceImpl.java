@@ -39,4 +39,12 @@ public class GroupsServiceImpl implements GroupsService {
         return groupsRepository.findById(groupId)
                 .orElse(null);
     }
+
+    @Override
+    public String getGroupNameById(String groupId) {
+        return groupsRepository.findById(groupId)
+                .map(Group::getName)
+                .orElse("Unknown Category");
+    }
+
 }

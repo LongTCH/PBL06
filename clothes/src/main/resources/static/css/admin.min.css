@@ -981,9 +981,6 @@ body {
 
 .sidebar .nav-collapse, .sidebar[data-background-color=white] .nav-collapse {
     margin-top: 0;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    padding-top: 10px
 }
 
 .sidebar .nav-collapse li.active > a, .sidebar[data-background-color=white] .nav-collapse li.active > a {
@@ -996,7 +993,7 @@ body {
 
 .sidebar .nav-collapse li a, .sidebar[data-background-color=white] .nav-collapse li a {
     margin-bottom: 3px !important;
-    padding: 10px 25px !important
+    padding: 10px 40px !important
 }
 
 .sidebar .nav-collapse li a .sub-item, .sidebar[data-background-color=white] .nav-collapse li a .sub-item {
