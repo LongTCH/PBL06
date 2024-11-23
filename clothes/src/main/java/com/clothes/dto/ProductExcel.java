@@ -22,6 +22,8 @@ import java.util.List;
 @Setter
 @Component
 public class ProductExcel implements ExcelReader<ProductExcel> {
+    private final CategoriesService categoryService;
+    private final GroupsService groupsService;
     private String title;
     private List<Image> images;
     private List<Option> options;
@@ -32,9 +34,6 @@ public class ProductExcel implements ExcelReader<ProductExcel> {
     private String publishedDate;
     private String groupId;
     private String categoryId;
-
-    private final CategoriesService categoryService;
-    private final GroupsService groupsService;
 
     @Autowired
     public ProductExcel(CategoriesService categoryService, GroupsService groupsService) {

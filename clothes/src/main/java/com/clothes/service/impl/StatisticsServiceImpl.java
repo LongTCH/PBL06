@@ -56,7 +56,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     public long calculateRevenueByDate(LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(23, 59, 59, 999999999);
-        List<Order> completedOrders = orderRepository.findCompletedOrdersByCreatedDate(startOfDay,endOfDay);
+        List<Order> completedOrders = orderRepository.findCompletedOrdersByCreatedDate(startOfDay, endOfDay);
         return completedOrders.stream()
                 .mapToLong(Order::getAmount)
                 .sum();
@@ -68,7 +68,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         LocalDate endOfMonth = month.atEndOfMonth();
         LocalDateTime startDateTime = startOfMonth.atStartOfDay();
         LocalDateTime endDateTime = endOfMonth.atTime(23, 59, 59, 999999999);
-        List<Order> completedOrders = orderRepository.findCompletedOrdersByCreatedDate(startDateTime,endDateTime);
+        List<Order> completedOrders = orderRepository.findCompletedOrdersByCreatedDate(startDateTime, endDateTime);
         return completedOrders.stream()
                 .mapToLong(Order::getAmount)
                 .sum();
