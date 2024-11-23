@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="tab" th:fragment="profile-tab(tabName)">
+    <button class="tablinks" th:classappend="${tabName == 'profile'} ? ' active'" data-tab=""
+            onclick="window.location.href='/customer/account'">Thông tin tài khoản
+    </button>
+    <button class="tablinks" th:classappend="${tabName == 'orders'} ? ' active'" data-tab="orders"
+            onclick="window.location.href='/customer/account/orders'">Đơn hàng
+    </button>
+    <button class="tablinks" th:classappend="${tabName == 'changePass'} ? ' active'" data-tab="change-password"
+            onclick="window.location.href='/customer/account/change-password'">Đổi mật khẩu
+    </button>
+</div>
+</body>
+</html>
