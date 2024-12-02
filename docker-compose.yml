@@ -9,6 +9,13 @@ services:
     networks:
       - pbl6-net
 
+  web-server:
+    image: longtch/pbl6-clothes-server
+    container_name: web-server
+    ports:
+      - "80:80"
+    networks:
+      - pbl6-net
 networks:
   pbl6-net:
     driver: bridge
