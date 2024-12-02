@@ -84,14 +84,17 @@
                                         </div>
                                         <div class="product-sku">
                                             <span>Mã sản phẩm: <strong th:text="${product.sku}"></strong></span>
-                                            <span>Tình trạng:  <strong th:text="${product.available ? 'Còn hàng' : 'Hết hàng'}"></strong></span>
+                                            <span>Tình trạng:  <strong
+                                                    th:text="${product.available ? 'Còn hàng' : 'Hết hàng'}"></strong></span>
                                         </div>
                                     </div>
                                     <div class="info-body">
                                         <div class="product-price">
                                             <span class="pro-title">Giá:</span>
-                                            <span class="pro-price" id="formatted-price" th:text="${product.variants[0].price}"></span>
-                                            <del id="formatted-CompareAtprice" th:text="${product.variants[0].compareAtPrice}"></del>
+                                            <span class="pro-price" id="formatted-price"
+                                                  th:text="${product.variants[0].price}"></span>
+                                            <del id="formatted-CompareAtprice"
+                                                 th:text="${product.variants[0].compareAtPrice}"></del>
                                             <span class="pro-percent">
                                                 <svg height="13" viewBox="0 0 448 512" width="13"
                                                      xmlns="http://www.w3.org/2000/svg">
@@ -105,55 +108,19 @@
                                         </div>
                                         <div class="product-variants">
                                             <div class="select-swatch">
-                                                <div th:each="option : ${product.options}">
-                                                    <div th:if="${option.name == 'Màu sắc'}" class="swatch is-color">
-                                                        <div class="pro-title">Màu sắc:</div>
-                                                        <div class="select-swap">
-                                                            <div class="swatch-element color"
-                                                                 onclick="selectRadio(this)"
-                                                                 th:each="value : ${option.values}">
-                                                                <input name="color"
-                                                                       th:id="${value}"
-                                                                       th:value="${value}"
-                                                                       type="radio">
-                                                                <label th:for="${value}">
-                                                                    <span th:text="${value}"></span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div th:if="${option.name == 'Kích thước'}" class="swatch" id="variant-swatch-1">
-                                                        <div class="pro-title">Kích thước:</div>
-                                                        <div class="select-swap">
-                                                            <div class="swatch-element size"
-                                                                 onclick="selectRadio(this)"
-                                                                 th:classappend="${' ' + size.toLowerCase()}"
-                                                                 th:each="size : ${option.values}">
-                                                                <input name="size"
-                                                                       th:id="${'swatch-1-' + size.toLowerCase()}"
-                                                                       th:value="${size}"
-                                                                       type="radio">
-                                                                <label th:for="${'swatch-1-' + size.toLowerCase()}">
-                                                                    <span th:text="${size}"></span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="swatch"
-                                                     id="variant-swatch-2"
-                                                     th:if="${product.options.size() > 2 && product.options[2].values != null && !product.options[2].values.isEmpty()}">
-                                                    <div class="pro-title">Chất liệu:</div>
+                                                <div th:each="option : ${product.options}" class="swatch is-color">
+                                                    <div class="pro-title" th:text="${option.name}"></div>
                                                     <div class="select-swap">
-                                                        <div class="swatch-element material selected"
-                                                             th:classappend="${' ' + material.toLowerCase()}"
-                                                             th:each="material : ${product.options[2].values}">
-                                                            <input name="material"
-                                                                   th:id="${material.toLowerCase()}"
-                                                                   th:value="${material}"
+                                                        <div class="swatch-element color"
+                                                             onclick="selectRadio(this)"
+                                                             th:classappend="${value == product.variants[0].options[option.position] ? ' selected' : ''}"
+                                                             th:each="value : ${option.values}">
+                                                            <input th:name="${'option_' + option.position}"
+                                                                   th:value="${value}"
+                                                                   th:checked="${value == product.variants[0].options[option.position]}"
                                                                    type="radio">
-                                                            <label th:for="${material.toLowerCase()}">
-                                                                <span th:text="${material}"></span>
+                                                            <label th:for="${'option_' + option.position}">
+                                                                <span th:text="${value}"></span>
                                                             </label>
                                                         </div>
                                                     </div>
@@ -258,12 +225,20 @@
                                                         <div class="proloop-image__inner">
                                                             <div class="lazy-img lazy-img__prod first-image">
                                                                 <!-- Render the first image if available, otherwise fallback to a placeholder -->
-                                                                <img alt="First Image" th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}" th:src="${relatedProduct.images[0].url}" th:unless="${relatedProduct == null or #lists.isEmpty(relatedProduct.images)}" src="/path/to/placeholder-image.jpg">
+                                                                <img alt="First Image"
+                                                                     th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}"
+                                                                     th:src="${relatedProduct.images[0].url}"
+                                                                     th:unless="${relatedProduct == null or #lists.isEmpty(relatedProduct.images)}"
+                                                                     src="/path/to/placeholder-image.jpg">
                                                             </div>
 
                                                             <div class="lazy-img lazy-img__prod second-image">
                                                                 <!-- Render the second image if available, otherwise fallback to a placeholder -->
-                                                                <img alt="Second Image" th:if="${relatedProduct != null and #lists.size(relatedProduct.images) > 1}" th:src="${relatedProduct.images[1].url}" th:unless="${relatedProduct == null or #lists.size(relatedProduct.images) <= 1}" src="/path/to/placeholder-image.jpg">
+                                                                <img alt="Second Image"
+                                                                     th:if="${relatedProduct != null and #lists.size(relatedProduct.images) > 1}"
+                                                                     th:src="${relatedProduct.images[1].url}"
+                                                                     th:unless="${relatedProduct == null or #lists.size(relatedProduct.images) <= 1}"
+                                                                     src="/path/to/placeholder-image.jpg">
                                                             </div>
 
                                                         </div>
