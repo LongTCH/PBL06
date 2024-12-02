@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/clothes-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Expose the port your Spring Boot application is running on
-EXPOSE 8080
+EXPOSE 80
 
 # Command to run the Spring Boot application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
