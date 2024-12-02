@@ -14,6 +14,6 @@ public class Sale extends AuditableEntity {
     @Id
     private String id;
     private String name;
-    private double value;
+    private Integer value;
     private String status;
 }

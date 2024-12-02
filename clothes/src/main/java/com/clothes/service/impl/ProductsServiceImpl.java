@@ -2,8 +2,10 @@ package com.clothes.service.impl;
 
 import com.clothes.dto.*;
 import com.clothes.model.Product;
+import com.clothes.model.Sale;
 import com.clothes.model.embedded.ProductVariant;
 import com.clothes.repository.ProductsRepository;
+import com.clothes.repository.SalesRepository;
 import com.clothes.service.ExcelService;
 import com.clothes.service.GroupsService;
 import com.clothes.service.NameObjectsService;
@@ -29,6 +31,8 @@ public class ProductsServiceImpl implements ProductsService {
     private ProductsRepository productsRepository;
     @Autowired
     private ProductsRepository productRepository;
+    @Autowired
+    private SalesRepository salesRepository;
 
     @Autowired
     private GroupsService groupsService;
@@ -234,5 +238,10 @@ public class ProductsServiceImpl implements ProductsService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Product> getProductSales() {
+        return productsRepository.findAllBySaleIdIsNotNull();
     }
 }

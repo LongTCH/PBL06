@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 public class SaleRequest {
     private String name;
-    private double value;
+    private Integer value;
     private String status;
     private List<String> productIds;
     private Boolean overrideConflict;

@@ -38,7 +38,7 @@
         <div class="search-bar position-relative">
             <input aria-label="Search" class="form-control" id="keyword" name="keyword"
                    onkeypress="handleKeyPress(event)"
-                   placeholder="Tìm theo tiêu đề ..."
+                   placeholder="Tìm theo tên sản phẩm ..."
                    style="width: 400px;"
                    th:value="${keyword}" type="search">
             <button class="btn btn-success position-absolute" onclick="searchProduct()"
@@ -52,7 +52,7 @@
         <table class="table table-bordered">
             <thead class="thead-dark">
             <tr>
-                <th>ID</th>
+                <th>Mã sản phẩm</th>
                 <th>Hình ảnh</th>
                 <th>Tên sản phẩm</th>
                 <th>Danh mục</th>

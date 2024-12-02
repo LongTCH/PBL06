@@ -139,8 +139,7 @@
     <div class="d-flex justify-content-end mt-3">
         <button id="saveSale" class="btn btn-success">Tạo khuyến mãi</button>
     </div>
-
-    <script>
+    <script th:inline="javascript">
         function filterProducts() {
             const group = document.getElementById('groupFilter').value;
             const category = document.getElementById('categoryFilter').value;
@@ -190,10 +189,15 @@
         let selectedProductsPerPage = 5;
         let currentPage = 1;
 
+        /*<![CDATA[*/
+        var productSales = /*[[${productSales}]]*/ [];
+        /*]]>*/
         function selectProductFromData(buttonElement) {
             const productId = buttonElement.getAttribute('data-id');
             const productName = buttonElement.getAttribute('data-title');
             const productCode = buttonElement.getAttribute('data-code');
+            const productSale = productSales.find(product => product.id === productId);
+
             if (selectedProducts.some(product => product.id === productId)) {
                 Swal.fire({
                     icon: 'info',
@@ -203,15 +207,45 @@
                 });
                 return;
             }
-
-            selectedProducts.push({id: productId, name: productName, code: productCode});
+            if (productSale) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: `Sản phẩm này đang thuộc về sale khác!`,
+                    text: `Bạn có muốn chọn sản phẩm này không?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Chọn',
+                    cancelButtonText: 'Hủy',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        addProductToSelected(productId, productName, productCode);
+                    }
+                });
+                return;
+            }
+            addProductToSelected(productId, productName, productCode);
+            // selectedProducts.push({id: productId, name: productName, code: productCode});
+            // localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+            // updateSelectedProductsTable();
+        }
+        function addProductToSelected(productId, productName, productCode) {
+            selectedProducts.push({ id: productId, name: productName, code: productCode });
             localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
             updateSelectedProductsTable();
-        }
 
+            Swal.fire({
+                icon: 'success',
+                title: `Sản phẩm ${productName} đã được chọn!`,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
         function removeProduct(productId) {
             selectedProducts = selectedProducts.filter(product => product.id !== productId);
             localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+            const totalPages = Math.ceil(selectedProducts.length / selectedProductsPerPage);
+            if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
             updateSelectedProductsTable();
         }
 
@@ -220,6 +254,13 @@
             tbody.innerHTML = '';
             const startIndex = (currentPage - 1) * selectedProductsPerPage;
             const endIndex = Math.min(startIndex + selectedProductsPerPage, selectedProducts.length);
+            if (selectedProducts.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `<td colspan="3" class="text-center">Không có sản phẩm nào được chọn</td>`;
+                tbody.appendChild(emptyRow);
+                updatePaginationControls();
+                return;
+            }
             selectedProducts.slice(startIndex, endIndex).forEach(product => {
                 const row = document.createElement('tr');
 
@@ -348,6 +389,9 @@
             })
                 .then(async (response) => {
                     if (response.ok) {
+                        selectedProducts = [];
+                        localStorage.removeItem('selectedProducts');
+                        updateSelectedProductsTable();
                         Swal.fire({
                             icon: 'success',
                             title: 'Thành công',
@@ -356,7 +400,7 @@
                             window.location.reload();
                         });
                     } else if (response.status === 409) {
-                        const data = await response.json(); // Chờ API trả về JSON
+                        const data = await response.json();
                         const {message, conflictingProducts} = data;
                         Swal.fire({
                             icon: 'warning',

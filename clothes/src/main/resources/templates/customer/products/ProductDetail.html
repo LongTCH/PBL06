@@ -84,8 +84,7 @@
                                         </div>
                                         <div class="product-sku">
                                             <span>Mã sản phẩm: <strong th:text="${product.sku}"></strong></span>
-                                            <span>Tình trạng:  <strong
-                                                    th:text="${product.available ? 'Còn hàng' : 'Hết hàng'}"></strong></span>
+                                            <span>Tình trạng:  <strong th:text="${product.available ? 'Còn hàng' : 'Hết hàng'}"></strong></span>
                                         </div>
                                     </div>
                                     <div class="info-body">
@@ -99,42 +98,45 @@
                                                     <path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288l111.5 0L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7l-111.5 0L349.4 44.6z"
                                                           fill="#ffffff"/>
                                                 </svg>
-                                                -20%
+                                                <span th:if="${product.variants[0].compareAtPrice > 0 and product.variants[0].price > 0}"
+                                                      th:text="${T(java.lang.Math).round((((product.variants[0].compareAtPrice * 1.0) - product.variants[0].price) / product.variants[0].compareAtPrice) * 100)} + '%'">
+                                                </span>
                                             </span>
                                         </div>
                                         <div class="product-variants">
                                             <div class="select-swatch">
-                                                <div class="swatch is-color">
-                                                    <div class="pro-title">Màu sắc:</div>
-                                                    <div class="select-swap">
-                                                        <div class="swatch-element color"
-                                                             onclick="selectRadio(this)"
-                                                             th:each="value : ${product.options[0].values}">
-                                                            <input name="color"
-                                                                   th:id="${value}"
-                                                                   th:value="${value}"
-                                                                   type="radio"
-                                                            >
-                                                            <label th:for="${value}">
-                                                                <span th:text="${value}"></span>
-                                                            </label>
+                                                <div th:each="option : ${product.options}">
+                                                    <div th:if="${option.name == 'Màu sắc'}" class="swatch is-color">
+                                                        <div class="pro-title">Màu sắc:</div>
+                                                        <div class="select-swap">
+                                                            <div class="swatch-element color"
+                                                                 onclick="selectRadio(this)"
+                                                                 th:each="value : ${option.values}">
+                                                                <input name="color"
+                                                                       th:id="${value}"
+                                                                       th:value="${value}"
+                                                                       type="radio">
+                                                                <label th:for="${value}">
+                                                                    <span th:text="${value}"></span>
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="swatch" id="variant-swatch-1">
-                                                    <div class="pro-title">Kích thước:</div>
-                                                    <div class="select-swap">
-                                                        <div class="swatch-element size"
-                                                             onclick="selectRadio(this)"
-                                                             th:classappend="${' ' + size.toLowerCase()}"
-                                                             th:each="size : ${product.options[1].values}">
-                                                            <input name="option2"
-                                                                   th:id="${'swatch-1-' + size.toLowerCase()}"
-                                                                   th:value="${size}"
-                                                                   type="radio">
-                                                            <label th:for="${'swatch-1-' + size.toLowerCase()}">
-                                                                <span th:text="${size}"></span>
-                                                            </label>
+                                                    <div th:if="${option.name == 'Kích thước'}" class="swatch" id="variant-swatch-1">
+                                                        <div class="pro-title">Kích thước:</div>
+                                                        <div class="select-swap">
+                                                            <div class="swatch-element size"
+                                                                 onclick="selectRadio(this)"
+                                                                 th:classappend="${' ' + size.toLowerCase()}"
+                                                                 th:each="size : ${option.values}">
+                                                                <input name="size"
+                                                                       th:id="${'swatch-1-' + size.toLowerCase()}"
+                                                                       th:value="${size}"
+                                                                       type="radio">
+                                                                <label th:for="${'swatch-1-' + size.toLowerCase()}">
+                                                                    <span th:text="${size}"></span>
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
