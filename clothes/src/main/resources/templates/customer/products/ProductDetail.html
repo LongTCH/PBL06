@@ -91,67 +91,36 @@
                                     <div class="info-body">
                                         <div class="product-price">
                                             <span class="pro-title">Giá:</span>
-                                            <span class="pro-price" id="formatted-price" th:text="${product.variants[0].price}"></span>
-                                            <del id="formatted-CompareAtprice" th:text="${product.variants[0].compareAtPrice}"></del>
+                                            <span class="pro-price" id="formatted-price"
+                                                  th:text="${product.variants[0].price}"></span>
+                                            <del id="formatted-CompareAtprice"
+                                                 th:text="${product.variants[0].compareAtPrice}"></del>
                                             <span class="pro-percent">
                                                 <svg height="13" viewBox="0 0 448 512" width="13"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288l111.5 0L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7l-111.5 0L349.4 44.6z"
                                                           fill="#ffffff"/>
                                                 </svg>
-                                                -20%
+                                                <span th:if="${product.variants[0].compareAtPrice > 0 and product.variants[0].price > 0}"
+                                                      th:text="${T(java.lang.Math).round((((product.variants[0].compareAtPrice * 1.0) - product.variants[0].price) / product.variants[0].compareAtPrice) * 100)} + '%'">
+                                                </span>
                                             </span>
                                         </div>
                                         <div class="product-variants">
                                             <div class="select-swatch">
-                                                <div class="swatch is-color">
-                                                    <div class="pro-title">Màu sắc:</div>
+                                                <div th:each="option : ${product.options}" class="swatch is-color">
+                                                    <div class="pro-title" th:text="${option.name}"></div>
                                                     <div class="select-swap">
                                                         <div class="swatch-element color"
                                                              onclick="selectRadio(this)"
-                                                             th:each="value : ${product.options[0].values}">
-                                                            <input name="color"
-                                                                   th:id="${value}"
+                                                             th:classappend="${value == product.variants[0].options[option.position] ? ' selected' : ''}"
+                                                             th:each="value : ${option.values}">
+                                                            <input th:name="${'option_' + option.position}"
                                                                    th:value="${value}"
-                                                                   type="radio"
-                                                            >
-                                                            <label th:for="${value}">
+                                                                   th:checked="${value == product.variants[0].options[option.position]}"
+                                                                   type="radio">
+                                                            <label th:for="${'option_' + option.position}">
                                                                 <span th:text="${value}"></span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="swatch" id="variant-swatch-1">
-                                                    <div class="pro-title">Kích thước:</div>
-                                                    <div class="select-swap">
-                                                        <div class="swatch-element size"
-                                                             onclick="selectRadio(this)"
-                                                             th:classappend="${' ' + size.toLowerCase()}"
-                                                             th:each="size : ${product.options[1].values}">
-                                                            <input name="option2"
-                                                                   th:id="${'swatch-1-' + size.toLowerCase()}"
-                                                                   th:value="${size}"
-                                                                   type="radio">
-                                                            <label th:for="${'swatch-1-' + size.toLowerCase()}">
-                                                                <span th:text="${size}"></span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="swatch"
-                                                     id="variant-swatch-2"
-                                                     th:if="${product.options.size() > 2 && product.options[2].values != null && !product.options[2].values.isEmpty()}">
-                                                    <div class="pro-title">Chất liệu:</div>
-                                                    <div class="select-swap">
-                                                        <div class="swatch-element material selected"
-                                                             th:classappend="${' ' + material.toLowerCase()}"
-                                                             th:each="material : ${product.options[2].values}">
-                                                            <input name="material"
-                                                                   th:id="${material.toLowerCase()}"
-                                                                   th:value="${material}"
-                                                                   type="radio">
-                                                            <label th:for="${material.toLowerCase()}">
-                                                                <span th:text="${material}"></span>
                                                             </label>
                                                         </div>
                                                     </div>
@@ -256,12 +225,20 @@
                                                         <div class="proloop-image__inner">
                                                             <div class="lazy-img lazy-img__prod first-image">
                                                                 <!-- Render the first image if available, otherwise fallback to a placeholder -->
-                                                                <img alt="First Image" th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}" th:src="${relatedProduct.images[0].url}" th:unless="${relatedProduct == null or #lists.isEmpty(relatedProduct.images)}" src="/path/to/placeholder-image.jpg">
+                                                                <img alt="First Image"
+                                                                     th:if="${relatedProduct != null and !#lists.isEmpty(relatedProduct.images)}"
+                                                                     th:src="${relatedProduct.images[0].url}"
+                                                                     th:unless="${relatedProduct == null or #lists.isEmpty(relatedProduct.images)}"
+                                                                     src="/path/to/placeholder-image.jpg">
                                                             </div>
 
                                                             <div class="lazy-img lazy-img__prod second-image">
                                                                 <!-- Render the second image if available, otherwise fallback to a placeholder -->
-                                                                <img alt="Second Image" th:if="${relatedProduct != null and #lists.size(relatedProduct.images) > 1}" th:src="${relatedProduct.images[1].url}" th:unless="${relatedProduct == null or #lists.size(relatedProduct.images) <= 1}" src="/path/to/placeholder-image.jpg">
+                                                                <img alt="Second Image"
+                                                                     th:if="${relatedProduct != null and #lists.size(relatedProduct.images) > 1}"
+                                                                     th:src="${relatedProduct.images[1].url}"
+                                                                     th:unless="${relatedProduct == null or #lists.size(relatedProduct.images) <= 1}"
+                                                                     src="/path/to/placeholder-image.jpg">
                                                             </div>
 
                                                         </div>

@@ -66,7 +66,7 @@ async function addToCart(redirectToCart = false) {
     const productId = parts[parts.length - 1];
     const quantity = parseInt(document.getElementById('quantity').value);
     const selectedColor = document.querySelector('input[name="color"]:checked').value;
-    const selectedSize = document.querySelector('input[name="option2"]:checked').value;
+    const selectedSize = document.querySelector('input[name="size"]:checked').value;
     const variantName = `${selectedColor} / ${selectedSize}`;
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
