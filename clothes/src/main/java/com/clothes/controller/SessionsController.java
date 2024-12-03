@@ -47,7 +47,7 @@ public class SessionsController {
             return "register";
         } catch (AccountNotFoundException e) {
             try {
-                securityConfig.registerUser(password);
+                securityConfig.registerUser(email,password);
                 accountsService.createAccount(firstName, lastName, email, passwordEncoder.encode(password));
                 redirectAttrs.addFlashAttribute("toastMessages", new ToastMessage("success", "Đăng ký tài khoản thành công!"));
                 return "redirect:/sessions/login";
