@@ -46,7 +46,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    public void registerUser(String password) {
+    public void registerUser( String email, String password) {
+        if (!isValidEmail(email)) {
+            throw new IllegalArgumentException("Email không hợp lệ.");
+        }
         if (isValidPassword(password)) {
             String encodedPassword = passwordEncoder().encode(password);
         } else {
@@ -59,4 +62,10 @@ public class SecurityConfig {
                 password.matches(".*[a-zA-Z].*") &&
                 password.matches(".*[0-6].*");
     }
+
+    private boolean isValidEmail(String email) {
+        String gmailRegex = "^[a-zA-Z0-9](?!.*\\.\\.)[a-zA-Z0-9._]*[a-zA-Z0-9]@gmail\\.com$";
+        return email.matches(gmailRegex);
+    }
+
 }
