@@ -112,6 +112,7 @@ h3 {
 
 .form-check input {
     margin-right: 10px;
+    width: 10%;
 }
 
 .form-check svg {

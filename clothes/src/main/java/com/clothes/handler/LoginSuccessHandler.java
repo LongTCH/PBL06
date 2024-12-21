@@ -34,6 +34,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         } else if (account.get().getRole().equals(AccountRolesEnum.SELLER)) {
             response.sendRedirect("/seller/orders");
             return;
+        } else if (account.get().getRole().equals(AccountRolesEnum.CUSTOMER)) {
+
+            response.sendRedirect("/customer/account");
+            return;
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.sendRedirect("/");

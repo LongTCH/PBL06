@@ -23,15 +23,49 @@ function onChangeFilter() {
 }
 
 function filterProducts() {
-
-    // Create a FormData object from the form
     const formData = new FormData(document.getElementById('filterForm'));
 
-    // Convert FormData to a FiltersDto object
+    let minPrice = 0;
+    let maxPrice = 3000000;
+    const priceRange = document.getElementById('priceRange').value;
+
+    switch (priceRange) {
+        case '1':
+            maxPrice = 1000000;
+            break;
+        case '2':
+            minPrice = 1000000;
+            maxPrice = 2000000;
+            break;
+        case '3':
+            minPrice = 2000000;
+            maxPrice = 4000000;
+            break;
+        case '4':
+            minPrice = 4000000;
+            maxPrice = 8000000;
+            break;
+        case '5':
+            minPrice = 8000000;
+            maxPrice = 16000000;
+            break;
+        case '6':
+            minPrice = 16000000;
+            maxPrice = 32000000;
+            break;
+        case '7':
+            minPrice = 32000000;
+            maxPrice = 40000000;
+            break;
+        default:
+            minPrice = 0;
+            break;
+    }
+
     const filtersDto = {
         groups: [],
-        minPrice: parseInt(formData.get('minPrice')) || 0,
-        maxPrice: parseInt(formData.get('maxPrice')) || 3000000,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
         size: size,
         page: page
     };
@@ -50,7 +84,7 @@ function filterProducts() {
             }
         }
     });
-    // Send the form data to the server using fetch
+
     fetch('/products', {
         method: 'POST',
         headers: {
@@ -58,53 +92,20 @@ function filterProducts() {
         },
         body: JSON.stringify(filtersDto)
     })
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('product-list').innerHTML += data;
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = data;
-            const newTotal = tempDiv.querySelector('input#totalProductFilter').value;
-            const totalProductElement = document.getElementById('totalProduct');
-            totalProductElement.innerHTML = 'Sản phẩm: ' + newTotal;
-            isLoading = false;
-        })
-
-        .catch(error => {
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('product-list').innerHTML += data;
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = data;
+        const newTotal = tempDiv.querySelector('input#totalProductFilter').value;
+        const totalProductElement = document.getElementById('totalProduct');
+        totalProductElement.innerHTML = 'Sản phẩm: ' + newTotal;
+        isLoading = false;
+    })
+    .catch(error => {
         console.error('Error:', error);
-        isLoading = false;});
+        isLoading = false;
+    });
 
-    return false; // Prevent form submission
+    return false;
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const priceSlider = document.getElementById('price-slider');
-    noUiSlider.create(priceSlider, {
-        start: [0, 38000000],
-        connect: true,
-        range: {
-            'min': 0,
-            'max': 38000000
-        },
-        tooltips: [true, true],
-        format: {
-            to: function (value) {
-                return Math.round(value);
-            },
-            from: function (value) {
-                return Number(value);
-            }
-        }
-    });
-
-    const minPriceInput = document.getElementById('min-price');
-    const maxPriceInput = document.getElementById('max-price');
-
-    priceSlider.noUiSlider.on('update', function (values, handle) {
-        if (handle === 0) {
-            minPriceInput.value = values[handle];
-        } else {
-            maxPriceInput.value = values[handle];
-        }
-        onChangeFilter().setTimeOut(1500);
-    });
-});
