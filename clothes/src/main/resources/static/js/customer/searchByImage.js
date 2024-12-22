@@ -88,8 +88,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: formData
                 }).then(response => response.json())
                 .then(data => {
-                    for (let i = 0; i < data.prediction.length; i++) {
-                        predictions.push(data.prediction[i][0]);
+                    if (data.prediction[0][1] > 0.8)
+                    {
+                        predictions.push(data.prediction[0][0]);
+                    } else
+                    {
+                        for (let i = 0; i < data.prediction.length; i++) {
+                            predictions.push(data.prediction[i][0]);
+                        }
                     }
                     loadMoreProducts();
                 }).catch(error => {

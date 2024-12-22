@@ -2,7 +2,6 @@ package com.clothes.service.impl;
 
 import com.clothes.dto.*;
 import com.clothes.model.Product;
-import com.clothes.model.Sale;
 import com.clothes.model.embedded.ProductVariant;
 import com.clothes.repository.ProductsRepository;
 import com.clothes.repository.SalesRepository;
@@ -167,9 +166,22 @@ public class ProductsServiceImpl implements ProductsService {
         var page = predictionsDto.getPage();
         var size = predictionsDto.getSize();
         var listCategoryIds = nameObjectsService.getPredictionCategoryIds(predictions);
-        var pageProduct = productsRepository.findByCategoryIdIn(listCategoryIds, PageRequest.of(page, size));
-        var products = pageProduct.getContent();
-        return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
+        int numProductPerCategory = size / listCategoryIds.size();
+        var listNumProductPerCategory = new ArrayList<Integer>();
+        for (int i = 0; i < listCategoryIds.size() - 1; i++) {
+            listNumProductPerCategory.add(numProductPerCategory);
+        }
+        listNumProductPerCategory.add(size - numProductPerCategory * (listCategoryIds.size() - 1));
+        var listPageProduct = new ArrayList<PaginationResultDto<Product>>();
+        for (int i = 0; i < listCategoryIds.size(); i++) {
+            var pageProduct = productsRepository.findByCategoryId(listCategoryIds.get(i), PageRequest.of(page, listNumProductPerCategory.get(i)));
+            listPageProduct.add(new PaginationResultDto<>(pageProduct.getContent(), page, pageProduct.getTotalPages(), pageProduct.getTotalElements()));
+        }
+        var totalPageProduct = listPageProduct.get(0);
+        for (int i = 1; i < listPageProduct.size(); i++) {
+            totalPageProduct = totalPageProduct.plus(listPageProduct.get(i));
+        }
+        return totalPageProduct;
     }
 
     public Page<Product> findFilteredProducts(String group, String category, String search, Pageable pageable) {
