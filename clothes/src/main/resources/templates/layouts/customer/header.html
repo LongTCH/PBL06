@@ -21,7 +21,7 @@
             <div class="collapse navbar-collapse" id="navbarNav" style="font-size: large">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" style="color: black" th:href="@{/}">HÀNG MỚI VỀ</a>
+                        <a class="nav-link" style="color: black" th:href="@{/}">Trang chủ</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="sale"
@@ -59,10 +59,24 @@
                             </a>
                         </button>
                     </div>
-                    <a class="nav-link" th:href="@{/sessions/login}">
-                        <i class="fa-regular fa-user"></i>
-                        Đăng nhập
-                    </a>
+                    <div class="dropdown d-flex">
+                        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                           id="user" role="button">
+                            <i class="fa-regular fa-user"></i>
+                        </a>
+                        <ul aria-labelledby="user" class="dropdown-menu dropdown-menu-end">
+                            <li th:if="${session.account == null }">
+                                <a class="dropdown-item" th:href="@{/sessions/login}">Đăng nhập</a>
+                            </li>
+                            <li th:if="${session.account != null }">
+                                <a class="dropdown-item" th:if="${session.account != null }" th:href="@{/customer/account}">Thông tin cá nhân</a>
+                            </li>
+                            <li th:if="${session.account != null }">
+                                <a class="dropdown-item" th:if="${session.account != null }" th:href="@{/customer/account/change-password}">Đổi mật khẩu</a>
+                                <a class="dropdown-item" th:if="${session.account != null }" th:href="@{/sessions/logout}">Đăng xuất</a>
+                            </li>
+                        </ul>
+                    </div>
                     <a class="nav-link d-flex align-items-center position-relative" th:href="@{/cart}" title="Giỏ hàng">
                         <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: #333;"></i>
                         <span class="position-absolute translate-middle badge rounded-pill bg-danger" id="cartCount"

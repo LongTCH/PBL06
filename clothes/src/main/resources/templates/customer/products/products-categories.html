@@ -20,14 +20,13 @@
 </head>
 <body>
 <div>
-    <!-- Header -->
     <div th:replace="~{layouts/customer/header}"></div>
     <div layout:fragment="body">
         <div class="menubar">
             <span class="fw-bold fs-4" id="totalProduct" th:text="'Sản phẩm: '+${pagination.totalElements} "></span>
             <input class="d-none" id="groupId" th:value="${group}">
             <div class="d-flex">
-                <div class="d-flex align-items-center" th:each="group,iter : ${categories}">
+                <div class="d-flex align-items-center text-nowrap" th:each="group,iter : ${categories}">
                     <span class="mx-2" th:if="${iter.index!=0}">|</span>
                     <div class="d-md-inline" th:replace="~{components/menuFilter :: menu(group=${group})}"></div>
                 </div>
@@ -35,10 +34,8 @@
         </div>
     </div>
     <form action="" class="col-md-6" id="filterForm" method="post" th:object="${filters}">
-        <!--      Loại sản phẩm-->
-
         <p class="form-group filter">Bộ lọc:</p>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-3 d-none">
             <div class="dropdown-category" id="dropdown-category">
                 <label class="dropdown-toggle">Loại sản phẩm</label>
                 <div class="dropdown-menu">
@@ -55,27 +52,22 @@
                 </div>
             </div>
         </div>
-        <!--Loc gia-->
-        <div class="form-group col-md-3">
-            <div class="dropdown">
-
-                <div class="dropdown-toggle">Khoảng giá</div>
-                <div class="price-container">
-                    <div class="price-slider-container">
-                        <div id="price-slider"></div>
-                        <input id="min-price" name="minPrice" onchange="onChangeFilter(event)" th:field="*{minPrice}"
-                               type="hidden">
-                        <input id="max-price" name="maxPrice" onchange="onChangeFilter(event)" th:field="*{maxPrice}"
-                               type="hidden">
-                    </div>
-                </div>
+        <div class="form-group col-md-4">
+            <div class="d-flex">
+                <label class="price-dropdown me-2 font-bold">Khoảng giá:</label>
+                <select id="priceRange" class="form-control border-0" onchange="onChangeFilter()">
+                    <option class="dropdown-toggle" value="0">Toàn bộ</option>
+                    <option value="1">Dưới 1 triệu</option>
+                    <option value="2">1 triệu - 2 triệu</option>
+                    <option value="3">2 triệu - 4 triệu</option>
+                    <option value="4">4 triệu - 8 triệu</option>
+                    <option value="5">8 triệu - 16 triệu</option>
+                    <option value="6">16 triệu - 32 triệu</option>
+                    <option value="7">Trên 32 triệu</option>
+                </select>
             </div>
         </div>
-
-
     </form>
-
-
     <div class="container mt-5">
         <div id="productsContainer" th:fragment="productsFragment">
             <input class="d-none" id="totalProductFilter" th:value="${pagination.totalElements}">

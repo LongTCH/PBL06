@@ -1,6 +1,7 @@
 package com.clothes.service.impl;
 
 import com.clothes.dto.PaginationResultDto;
+import com.clothes.dto.UpdateAccountDto;
 import com.clothes.exception.AccountNotFoundException;
 import com.clothes.model.Account;
 import com.clothes.repository.AccountsRepository;
@@ -84,6 +85,25 @@ public class AccountsServiceImpl implements AccountsService {
     private String encodePassword(String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);
+    }
+
+    @Override
+    public Account updateAccount(UpdateAccountDto account) {
+        var accountToUpdate = accountsRepository.findByEmail(account.getEmail()).orElseThrow(() -> new AccountNotFoundException());
+        System.out.println(accountToUpdate);
+        accountToUpdate.setFirstName(account.getFirstName());
+        accountToUpdate.setLastName(account.getLastName());
+        accountToUpdate.setPhone(account.getPhone());
+        accountToUpdate.setAddress(account.getAddress());
+        return accountsRepository.save(accountToUpdate);
+    }
+
+    @Override
+    public void changePassword(String email, String password) {
+        Account account = accountsRepository.findByEmail(email).orElseThrow(() -> new AccountNotFoundException());
+        account.setPassword(encodePassword(password));
+        account.setPassword(encodePassword(password));
+        accountsRepository.save(account);
     }
 
 }

@@ -12,14 +12,17 @@
 .card-body {
     text-align: center;
     position: relative;
-    padding-top: 300px;
-
+    top: 100%;
+    padding-top: 40%;
 }
 
 .card-title {
     font-size: 1rem;
     font-weight: normal;
     margin-top: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-text {

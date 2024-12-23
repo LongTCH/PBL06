@@ -13,4 +13,6 @@ public interface OrdersService {
     List<Order> getAllOrders();
 
     List<Order> getOrdersByStatus(OrderStatusEnum orderStatusEnum);
+
+    List<Order> getOrdersByAccountId(String accountId);
 }

@@ -27,6 +27,7 @@ public class Product implements Serializable {
     private String groupId;
     private String categoryId;
     private String saleId;
+    private Sale saleValue;
 
     public List<String> getColors() {
         return options.stream()

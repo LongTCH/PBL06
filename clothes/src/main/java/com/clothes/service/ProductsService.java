@@ -49,4 +49,5 @@ public interface ProductsService {
     boolean removeProductFromSale(String productId);
 
     List<Product> getProductSales();
+
 }
