@@ -17,7 +17,6 @@
     <div layout:fragment="body">
         <div th:insert="~{components/banner}"></div>
         <div th:insert="~{components/saleProducts}" th:with="products=${products}"></div>
-        <div th:insert="~{components/categories}" th:with="categories=${categories}" class="w-100 d-flex"></div>
     </div>
     <div th:replace="~{layouts/customer/footer}"></div>
 </div>

@@ -26,7 +26,7 @@
             <span class="fw-bold fs-4" id="totalProduct" th:text="'Sản phẩm: '+${pagination.totalElements} "></span>
             <input class="d-none" id="groupId" th:value="${group}">
             <div class="d-flex">
-                <div class="d-flex align-items-center" th:each="group,iter : ${categories}">
+                <div class="d-flex align-items-center text-nowrap" th:each="group,iter : ${categories}">
                     <span class="mx-2" th:if="${iter.index!=0}">|</span>
                     <div class="d-md-inline" th:replace="~{components/menuFilter :: menu(group=${group})}"></div>
                 </div>

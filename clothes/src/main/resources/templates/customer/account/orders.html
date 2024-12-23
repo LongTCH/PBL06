@@ -18,6 +18,7 @@
                 <th>Thời gian đặt</th>
                 <th>Tổng tiền</th>
                 <th>Trạng thái</th>
+                <th>Chi tiết</th>
             </tr>
             </thead>
             <tbody>
@@ -25,8 +26,11 @@
                 <th th:text="${orderStat.index + 1}"></th>
                 <td th:text="${order.id}">Order ID</td>
                 <td th:text="${#temporals.format(order.createdDate, 'dd/MM/yyyy HH:mm')}"></td>
-                <td th:text="${order.amount}"></td>
+                <td th:text="${#numbers.formatDecimal(order.amount, 0, 'COMMA', 0, 'POINT')}"></td>
                 <td th:text="${order.status.getVietnameseStatus()}"></td>
+                <td>
+                    <a th:href="'/customer/account/order/' + ${order.id}">Xem chi tiết</a>
+                </td>
             </tr>
             </tbody>
         </table>

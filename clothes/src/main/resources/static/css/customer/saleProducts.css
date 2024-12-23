@@ -1,7 +1,7 @@
-.container{
-    margin-top: 20px;
-    margin-bottom: 20px;
+.container {
+    margin: 5% 0;
 }
+
 .swiper-container{
     width: 100%;
     height: 100%;
@@ -29,9 +29,10 @@
 .swiper-pagination-bullet-active{
     background-color: #fff;
 }
-.swiper-button-prev, .swiper-button-next{
-    position: relative;
+.swiper-button-prev, .swiper-button-next {
+    color: #000;
 }
+
 .sale{
     position: absolute;
     top: 0;
@@ -41,5 +42,61 @@
     padding: 2px;
     border-radius: 4px;
     margin: 3px;
+}
+.product-card{
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s ease;
+}
+.product-card .card-img-top {
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: opacity 0.7s ease, transform 0.5s ease;
+}
+
+.product-card .image-2 {
+    opacity: 0;
+    position: absolute;
+}
+
+.product-card:hover .image-1 {
+    opacity: 0;
+}
+
+.product-card:hover .image-2 {
+    opacity: 1;
+}
+
+.sale-label{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #ff0000;
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+    margin: 12px;
+    font-size: 14px;
+    font-weight: 700;
+}
+.strikethrough {
+    text-decoration: line-through;
+}
+.prices{
+    display: flex;
+    gap:17px;
+    align-items: center;
+}
+.price {
+    font-size: 20px;
+    font-weight: 700;
+    color: red;
+    margin-bottom: 0;
+}
+.slide{
+    left: 5%;
 }
 

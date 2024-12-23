@@ -98,7 +98,7 @@ function filterProducts() {
     if (groupId) {
         const group = filtersDto.groups.find(group => group.id === groupId);
         if (group) {
-            console.log('Group found:', group);
+            group.selected = true;
         } else {
             console.log('Group not found in filtersDto');
         }
