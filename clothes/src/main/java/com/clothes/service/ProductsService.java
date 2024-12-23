@@ -4,7 +4,6 @@ import com.clothes.dto.FiltersDto;
 import com.clothes.dto.PaginationResultDto;
 import com.clothes.dto.PredictionsDto;
 import com.clothes.model.Product;
-import com.clothes.model.Sale;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,4 +49,5 @@ public interface ProductsService {
 
     List<Product> getProductSales();
 
+    PaginationResultDto<Product> getProductsPaginationBySaleId(String saleId, int page, int size);
 }
