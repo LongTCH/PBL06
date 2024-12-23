@@ -256,4 +256,11 @@ public class ProductsServiceImpl implements ProductsService {
     public List<Product> getProductSales() {
         return productsRepository.findAllBySaleIdIsNotNull();
     }
+
+    @Override
+    public PaginationResultDto<Product> getProductsPaginationBySaleId(String saleId, int page, int size) {
+        var pageProduct = productsRepository.findBySaleId(saleId, PageRequest.of(page, size));
+        var products = pageProduct.getContent();
+        return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
+    }
 }

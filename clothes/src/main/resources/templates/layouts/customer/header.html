@@ -26,13 +26,8 @@
                     <li class="nav-item dropdown">
                         <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="sale"
                            role="button" style="color: black">SALE</a>
-                        <ul aria-labelledby="sale" class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" th:href="@{/}">Sale đầm</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" th:href="@{/}">Sale áo</a>
-                            </li>
+                        <ul aria-labelledby="sale" class="dropdown-menu" id="sale-items">
+                            <!-- Sale items will be dynamically inserted here -->
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -48,7 +43,9 @@
                             <div class="InputContainer">
                                 <input type="text" name="title" class="input" id="input" placeholder="Tìm kiếm">
                                 <label for="input" class="labelforsearch">
-                                    <svg viewBox="0 0 512 512" class="searchIcon"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+                                    <svg viewBox="0 0 512 512" class="searchIcon">
+                                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path>
+                                    </svg>
                                 </label>
                                 <div class="border"></div>
                             </div>
@@ -60,7 +57,8 @@
                         </button>
                     </div>
                     <div class="dropdown d-flex">
-                        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                        <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+                           data-bs-toggle="dropdown"
                            id="user" role="button">
                             <i class="fa-regular fa-user"></i>
                         </a>
@@ -69,11 +67,14 @@
                                 <a class="dropdown-item" th:href="@{/sessions/login}">Đăng nhập</a>
                             </li>
                             <li th:if="${session.account != null }">
-                                <a class="dropdown-item" th:if="${session.account != null }" th:href="@{/customer/account}">Thông tin cá nhân</a>
+                                <a class="dropdown-item" th:if="${session.account != null }"
+                                   th:href="@{/customer/account}">Thông tin cá nhân</a>
                             </li>
                             <li th:if="${session.account != null }">
-                                <a class="dropdown-item" th:if="${session.account != null }" th:href="@{/customer/account/change-password}">Đổi mật khẩu</a>
-                                <a class="dropdown-item" th:if="${session.account != null }" th:href="@{/sessions/logout}">Đăng xuất</a>
+                                <a class="dropdown-item" th:if="${session.account != null }"
+                                   th:href="@{/customer/account/change-password}">Đổi mật khẩu</a>
+                                <a class="dropdown-item" th:if="${session.account != null }"
+                                   th:href="@{/sessions/logout}">Đăng xuất</a>
                             </li>
                         </ul>
                     </div>
@@ -94,6 +95,46 @@
     const cartProducts = JSON.parse(localStorage.getItem('cart')) || [];
     cartCount.innerText = cartProducts.length;
 
+    document.addEventListener('DOMContentLoaded', function() {
+    // Define the API URL
+    const apiUrl = '/sales/list'; // Replace with your API URL
+
+    fetch(apiUrl)
+        .then(response => response.json()) // Assume the response is in JSON format
+        .then(data => {
+            // Get the dropdown menu container
+            const saleItemsContainer = document.getElementById('sale-items');
+
+            // Clear any existing items
+            saleItemsContainer.innerHTML = '';
+
+            // Iterate through the sale items data and create list items
+            data.forEach(item => {
+                // Create a new list item element
+                const listItem = document.createElement('li');
+                listItem.classList.add('nav-item');
+
+                // Create a link for the sale item
+                const link = document.createElement('a');
+                link.classList.add('dropdown-item');
+
+                // Set the link text to the sale item name
+                link.textContent = item.name; // Assuming the API response contains 'name' for the sale item
+
+                // Build the URL using the sale item's id, e.g., '/sales/:id'
+                link.href = `/sales/${item.id}`; // Assuming the API response contains 'id' for each sale item
+
+                // Append the link to the list item
+                listItem.appendChild(link);
+
+                // Append the list item to the dropdown menu
+                saleItemsContainer.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching sale items:', error);
+        });
+});
 
 </script>
 <script crossorigin="anonymous"

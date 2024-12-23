@@ -41,4 +41,14 @@ public class SalesServiceImpl implements SalesService {
         }
         saleRepository.delete(sale);
     }
+
+    @Override
+    public List<Sale> getActiveSales() {
+        return saleRepository.findByStatus("open");
+    }
+
+    @Override
+    public Sale get(String saleId) {
+        return saleRepository.findById(saleId).orElseThrow(() -> new RuntimeException("Sale not found"));
+    }
 }

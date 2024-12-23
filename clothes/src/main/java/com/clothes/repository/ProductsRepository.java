@@ -30,4 +30,6 @@ public interface ProductsRepository extends MongoRepository<Product, String> {
     List<Product> findBySaleId(String saleId);
 
     List<Product> findAllBySaleIdIsNotNull();
+
+    Page<Product> findBySaleId(String saleId, Pageable pageable);
 }
