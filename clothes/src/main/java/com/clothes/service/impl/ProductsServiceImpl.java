@@ -1,8 +1,10 @@
 package com.clothes.service.impl;
 
 import com.clothes.dto.*;
+import com.clothes.model.Category;
 import com.clothes.model.Product;
 import com.clothes.model.embedded.ProductVariant;
+import com.clothes.repository.CategoriesRepository;
 import com.clothes.repository.ProductsRepository;
 import com.clothes.repository.SalesRepository;
 import com.clothes.service.ExcelService;
@@ -38,6 +40,8 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Autowired
     private NameObjectsService nameObjectsService;
+    @Autowired
+    private CategoriesRepository categoriesRepository;
 
     @Override
     public PaginationResultDto<Product> findProductsByTitle(String title, int page, int size) {
@@ -262,5 +266,12 @@ public class ProductsServiceImpl implements ProductsService {
         var pageProduct = productsRepository.findBySaleId(saleId, PageRequest.of(page, size));
         var products = pageProduct.getContent();
         return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
+    }
+
+    @Override
+    public String findCategoryNameById(String categoryId) {
+        return categoriesRepository.findById(categoryId)
+                .map(Category::getName)
+                .orElse("Unknown Category");
     }
 }

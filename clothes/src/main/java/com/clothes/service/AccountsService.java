@@ -22,4 +22,6 @@ public interface AccountsService {
     void createAccount(Account account);
 
     void changePassword(String email, String password);
+
+    boolean isEmailExist(String email);
 }

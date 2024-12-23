@@ -82,6 +82,11 @@ public class AccountsServiceImpl implements AccountsService {
         accountsRepository.save(account);
     }
 
+    @Override
+    public boolean isEmailExist(String email) {
+        return accountsRepository.findByEmail(email).isPresent();
+    }
+
     private String encodePassword(String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);

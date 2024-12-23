@@ -75,7 +75,10 @@ public class AccountsController {
             redirectAttrs.addFlashAttribute("toastMessages", new ToastMessage("error", "Mật khẩu không hợp lệ. Mật khẩu cần ít nhất 6 ký tự, bao gồm chữ cái."));
             return "redirect:/admin/accounts";
         }
-
+        if (accountsService.isEmailExist(email)) {
+            redirectAttrs.addFlashAttribute("toastMessages", new ToastMessage("error", "Email đã tồn tại, vui lòng sử dụng email khác."));
+            return "redirect:/admin/accounts";
+        }
         Account newAccount = new Account();
         newAccount.setFirstName(firstName);
         newAccount.setLastName(lastName);

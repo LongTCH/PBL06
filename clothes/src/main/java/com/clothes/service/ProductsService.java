@@ -50,4 +50,6 @@ public interface ProductsService {
     List<Product> getProductSales();
 
     PaginationResultDto<Product> getProductsPaginationBySaleId(String saleId, int page, int size);
+
+    String findCategoryNameById(String categoryId);
 }

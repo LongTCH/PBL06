@@ -39,8 +39,13 @@ public class OrdersController {
         } else {
             orders = new ArrayList<>(ordersService.getAllOrders());
         }
-        List<OrderStatusEnum> orderStatuses = Arrays.stream(OrderStatusEnum.values()).collect(Collectors.toList());
-        model.addAttribute("orderStatuses", orderStatuses);
+        orders = orders.stream()
+                .filter(order -> !OrderStatusEnum.PAID.equals(order.getStatus()))
+                .collect(Collectors.toList());
+
+        List<OrderStatusEnum> orderStatuses = Arrays.stream(OrderStatusEnum.values())
+                .filter(status -> !OrderStatusEnum.PAID.equals(status))
+                .collect(Collectors.toList());        model.addAttribute("orderStatuses", orderStatuses);
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("orders", orders);
         model.addAttribute("current_page", "order_active");
