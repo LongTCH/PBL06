@@ -29,7 +29,6 @@
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, 'profile')">Thông tin tài khoản</button>
             <button class="tablinks" onclick="openTab(event, 'orders')">Đơn hàng</button>
-            <button class="tablinks" onclick="openTab(event, 'changePass')">Đổi mật khẩu</button>
         </div>
         <div id="profile" class="tabcontent">
             <div class="container">
@@ -130,9 +129,6 @@
         <div id="orders" class="tabcontent">
             <div th:replace="~{customer/account/orders :: fragment}"></div>
         </div>
-        <!--        <div id="changePass" class="tabcontent">-->
-        <!--            <div th:replace="~{customer/account/changePass :: changePassfragment}"></div>-->
-        <!--        </div>-->
     </div>
 </div>
 <div th:replace="~{layouts/customer/footer}"></div>

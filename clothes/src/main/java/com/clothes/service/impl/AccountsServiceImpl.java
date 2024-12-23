@@ -102,6 +102,7 @@ public class AccountsServiceImpl implements AccountsService {
     public void changePassword(String email, String password) {
         Account account = accountsRepository.findByEmail(email).orElseThrow(() -> new AccountNotFoundException());
         account.setPassword(encodePassword(password));
+        account.setPassword(encodePassword(password));
         accountsRepository.save(account);
     }
 

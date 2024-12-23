@@ -109,8 +109,8 @@ public class SalesController {
         for (Product product : products) {
             product.setSaleId(sale.getId());
             for (ProductVariant variant : product.getVariants()) {
-                variant.setCompareAtPrice(variant.getCompareAtPrice());
-                variant.setPrice((int) (variant.getCompareAtPrice() * (1 - sale.getValue() / 100)));
+                int newPrice = (int) (variant.getCompareAtPrice() * (1 - sale.getValue() / 100.0));
+                variant.setPrice(newPrice);
             }
         }
         productRepository.saveAllProducts(products);
