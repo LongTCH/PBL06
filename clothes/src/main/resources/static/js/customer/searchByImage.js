@@ -10,6 +10,11 @@ function loadMoreProducts() {
     if(page <= size) filterProducts();
 }
 
+function firstLoad(){
+    if (predictions.length === 0) return;
+    if(page <= size) filterProducts();
+}
+
 window.addEventListener('scroll', function () {
     if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 500) {
         loadMoreProducts();
@@ -80,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const formData = new FormData();
                 formData.append('file', blob, 'cropped_image.png'); // 'file' is the key expected by FastAPI
                 predictions = []
+                isLoading = true;
                 page = 0;
                 document.getElementById('product-list').innerHTML = '';
                 // Send the image to the FastAPI server
@@ -97,9 +103,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             predictions.push(data.prediction[i][0]);
                         }
                     }
-                    loadMoreProducts();
+                    firstLoad();
                 }).catch(error => {
                     console.error('Error:', error);
+                    isLoading = false;
                 });
             }, 'image/jpeg');
     });
