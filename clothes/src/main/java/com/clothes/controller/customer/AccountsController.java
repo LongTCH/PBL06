@@ -35,14 +35,13 @@ public class AccountsController {
 
     @Autowired
     private ProductsService productsService;
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping
     public String profile(Model model, HttpSession session) {
         Account account = (Account) session.getAttribute("account");
-        List<Order> orders = ordersService.getOrdersByAccountId(account.getEmail());
-        model.addAttribute("orders", orders);
         model.addAttribute("account", account);
         model.addAttribute("changePass", new ChangePassDto(account.getEmail(), "", "", ""));
         return "customer/account/profile";
@@ -70,45 +69,56 @@ public class AccountsController {
     }
 
     @PostMapping("/change-password")
-public String changePassword(@Valid @ModelAttribute("changePass") ChangePassDto changePass, BindingResult result, Model model, HttpSession session) {
-    var acc = (Account) session.getAttribute("account");
-    if (result.hasErrors()) {
-        model.addAttribute("toastMessages", new ToastMessage("error", "Cập nhật thất bại"));
-        return "customer/account/changePass";
-    } else if (!changePass.getNewPassword().equals(changePass.getConfirmPassword())) {
-        model.addAttribute("toastMessages", new ToastMessage("error", "Mật khẩu mới không khớp"));
-        return "customer/account/changePass";
-    } else if (!passwordEncoder.matches(changePass.getOldPassword(), acc.getPassword())) {
-        model.addAttribute("toastMessages", new ToastMessage("error", "Mật khẩu hiện tại không đúng"));
-        return "customer/account/changePass";
-    }
-
-    var currentAccount = (Account) session.getAttribute("account");
-    var account = new ChangePassDto(currentAccount.getEmail(), changePass.getOldPassword(), changePass.getNewPassword(), changePass.getConfirmPassword());
-    accountsService.changePassword(account.getEmail(), account.getNewPassword());
-    model.addAttribute("toastMessages", new ToastMessage("success", "Cập nhật thành công"));
-    return "customer/account/changePass";
-}
-
-   @GetMapping("order/{id}")
-public String orderDetail(@PathVariable String id, Model model) {
-    Order order = ordersService.findOrderById(id);
-
-    List<String> productIds = order.getItems().stream()
-            .map(OrderItem::getProductId)
-            .toList();
-    Map<String, Product> productsMap = productsService.findProductByIds(productIds).stream()
-            .collect(Collectors.toMap(Product::getId, product -> product));
-    for (OrderItem item : order.getItems()) {
-        Product product = productsMap.get(item.getProductId());
-        if (product == null) {
-            throw new IllegalArgumentException("Product not found with ID: " + item.getProductId());
+    public String changePassword(@Valid @ModelAttribute("changePass") ChangePassDto changePass, BindingResult result, Model model, HttpSession session) {
+        var acc = (Account) session.getAttribute("account");
+        if (result.hasErrors()) {
+            model.addAttribute("toastMessages", new ToastMessage("error", "Cập nhật thất bại"));
+            return "customer/account/changePass";
+        } else if (!changePass.getNewPassword().equals(changePass.getConfirmPassword())) {
+            model.addAttribute("toastMessages", new ToastMessage("error", "Mật khẩu mới không khớp"));
+            return "customer/account/changePass";
+        } else if (!passwordEncoder.matches(changePass.getOldPassword(), acc.getPassword())) {
+            model.addAttribute("toastMessages", new ToastMessage("error", "Mật khẩu hiện tại không đúng"));
+            return "customer/account/changePass";
         }
-        item.setProduct(product);
+
+        var currentAccount = (Account) session.getAttribute("account");
+        var account = new ChangePassDto(currentAccount.getEmail(), changePass.getOldPassword(), changePass.getNewPassword(), changePass.getConfirmPassword());
+        accountsService.changePassword(account.getEmail(), account.getNewPassword());
+        model.addAttribute("toastMessages", new ToastMessage("success", "Cập nhật thành công"));
+        return "customer/account/changePass";
     }
 
-    model.addAttribute("order", order);
+    @GetMapping("/order")
+    public String order(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Account account = (Account) session.getAttribute("account");
+        var paginationResult = ordersService.getOrdersByAccountId(account.getEmail(), page, size);
+        model.addAttribute("orders", paginationResult.getData());
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
+        model.addAttribute("totalPages", paginationResult.getTotalPages());
+        return "customer/account/orders";
+    }
 
-    return "customer/account/orderDetail";
-}
+    @GetMapping("order/{id}")
+    public String orderDetail(@PathVariable String id, Model model) {
+        Order order = ordersService.findOrderById(id);
+
+        List<String> productIds = order.getItems().stream()
+                .map(OrderItem::getProductId)
+                .toList();
+        Map<String, Product> productsMap = productsService.findProductByIds(productIds).stream()
+                .collect(Collectors.toMap(Product::getId, product -> product));
+        for (OrderItem item : order.getItems()) {
+            Product product = productsMap.get(item.getProductId());
+            if (product == null) {
+                throw new IllegalArgumentException("Product not found with ID: " + item.getProductId());
+            }
+            item.setProduct(product);
+        }
+
+        model.addAttribute("order", order);
+
+        return "customer/account/orderDetail";
+    }
 }

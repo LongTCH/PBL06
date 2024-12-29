@@ -34,7 +34,7 @@
 
         <form action="" class="col-md-6" id="filterForm" method="post" th:object="${filters}">
             <p class="form-group filter">Bộ lọc:</p>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-5">
                 <div class="dropdown-category" id="dropdown-category">
                     <label class="dropdown-toggle">Loại sản phẩm</label>
                     <div class="dropdown-menu">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-5">
                 <div class="d-flex">
                     <label class="price-dropdown me-2 font-bold">Khoảng giá:</label>
                     <select id="priceRange" class="form-control border-0" onchange="onChangeFilter()">
@@ -72,7 +72,7 @@
             <div id="productsContainer" th:fragment="productsFragment">
                 <input class="d-none" id="totalProductFilter" th:value="${pagination.totalElements}">
                 <div class="row mx-5" id="product-list"/>
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4" th:each="product : ${products}">
+                <div class="card-product col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-4" th:each="product : ${products}">
                     <div th:replace="~{components/product-card :: product-card(product=${product})}"></div>
                 </div>
             </div>

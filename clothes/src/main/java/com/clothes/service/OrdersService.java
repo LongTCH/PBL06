@@ -1,6 +1,7 @@
 package com.clothes.service;
 
 import com.clothes.constant.OrderStatusEnum;
+import com.clothes.dto.PaginationResultDto;
 import com.clothes.model.Order;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface OrdersService {
 
     List<Order> getOrdersByStatus(OrderStatusEnum orderStatusEnum);
 
-    List<Order> getOrdersByAccountId(String accountId);
+    PaginationResultDto<Order> getOrdersByAccountId(String accountId,int page, int size);
 }

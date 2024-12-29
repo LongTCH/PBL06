@@ -1,40 +1,87 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Orders</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/customer/account/orders.css}"/>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          rel="stylesheet"/>
 </head>
 <body>
-<div th:fragment="fragment">
-    <div th:if="${orders == null || orders.isEmpty()}">
-        <p>Bạn chưa có đơn hàng nào.</p>
-    </div>
-    <div th:if="${orders != null && !orders.isEmpty()}">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>STT</th>
-                <th>Mã đơn hàng</th>
-                <th>Thời gian đặt</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-                <th>Chi tiết</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${orders}">
-                <th th:text="${orderStat.index + 1}"></th>
-                <td th:text="${order.id}">Order ID</td>
-                <td th:text="${#temporals.format(order.createdDate, 'dd/MM/yyyy HH:mm')}"></td>
-                <td th:text="${#numbers.formatDecimal(order.amount, 0, 'COMMA', 0, 'POINT')}"></td>
-                <td th:text="${order.status.getVietnameseStatus()}"></td>
-                <td>
-                    <a th:href="'/customer/account/order/' + ${order.id}">Xem chi tiết</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<div th:replace="~{layouts/customer/header}"></div>
+<div layout:fragment="body">
+    <div th:fragment="fragment" th:with="page=${page ?: 0}, size=${size ?: 10}, totalPages=${totalPages ?: 1}">
+        <div class="page-content page-container" id="page-content">
+            <div class="padding">
+                <div class="row container d-flex justify-content-center">
+                    <div class="col-lg-8 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã đơn hàng</th>
+                                            <th>Thời gian đặt</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Chi tiết</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="order, orderStat : ${orders}">
+                                            <th th:text="${orderStat.index + 1}"></th>
+                                            <td th:text="${order.id}">Order ID</td>
+                                            <td th:text="${#temporals.format(order.createdDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                            <td th:text="${#numbers.formatDecimal(order.amount, 0, 'COMMA', 0, 'POINT')}"></td>
+                                            <td th:text="${order.status.getVietnameseStatus()}"></td>
+                                            <td>
+                                                <a th:href="'/customer/account/order/' + ${order.id}">Xem chi tiết</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                                            <a class="page-link"
+                                               th:href="@{|/customer/account/order?page=${page - 1}&size=${size}|}"
+                                               aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                            th:classappend="${i == page} ? 'active'">
+                                            <a class="page-link"
+                                               th:href="@{|/customer/account/order?page=${i}&size=${size}|}"
+                                               th:text="${i + 1}">1</a>
+                                        </li>
+                                        <li class="page-item" th:classappend="${page + 1 == totalPages} ? 'disabled'">
+                                            <a class="page-link"
+                                               th:href="@{|/customer/account/order?page=${page + 1}&size=${size}|}"
+                                               aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<div th:replace="~{layouts/customer/footer}"></div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

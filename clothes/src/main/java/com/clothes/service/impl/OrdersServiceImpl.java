@@ -1,12 +1,14 @@
 package com.clothes.service.impl;
 
 import com.clothes.constant.OrderStatusEnum;
+import com.clothes.dto.PaginationResultDto;
 import com.clothes.model.Order;
 import com.clothes.repository.OrderRepository;
 import com.clothes.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +40,9 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public List<Order> getOrdersByAccountId(String customerName) {
-        return orderRepository.findByCustomerEmail(customerName);
+    public PaginationResultDto<Order> getOrdersByAccountId(String customerName, int page, int size) {
+        var pageOrders = orderRepository.findByCustomerEmail(customerName, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate")));
+        var orders = pageOrders.getContent();
+        return new PaginationResultDto<>(orders, page, pageOrders.getTotalPages(), pageOrders.getTotalElements());
     }
 }

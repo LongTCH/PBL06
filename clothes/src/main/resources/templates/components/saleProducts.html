@@ -10,13 +10,13 @@
 </head>
 <body>
 <div th:fragment="saleProductsFragment">
-    <div class="container py-5">
+    <div class="sale-container py-5">
         <div class="row mb-4">
             <div class="col">
-                <h2 class="position-relative slide" th:text="${sale.name} +' ' + ${sale.value} + '%'">Sản phẩm khuyến mãi</h2>
+                <h2 class="position-relative slide-sale" th:text="${sale.name} +' ' + ${sale.value} + '%'">Sản phẩm khuyến mãi</h2>
             </div>
         </div>
-        <div class="row position-relative slide">
+        <div class="row position-relative slide-sale">
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" th:each="product : ${products}">
@@ -88,6 +88,10 @@
                 },
                 1024: {
                     slidesPerView: 4,
+                    spaceBetween: 15,
+                },
+                1500: {
+                    slidesPerView: 5,
                     spaceBetween: 15,
                 },
             },

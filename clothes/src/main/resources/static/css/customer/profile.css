@@ -134,3 +134,18 @@ body {
     color: #fff;
     font-size: 16px;
 }
+.css_select_div .form-group {
+    margin-bottom: 15px;
+}
+
+.css_label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.css_select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}

@@ -62,13 +62,17 @@
                            id="user" role="button">
                             <i class="fa-regular fa-user"></i>
                         </a>
-                        <ul aria-labelledby="user" class="dropdown-menu dropdown-menu-end">
+                        <ul aria-labelledby="user" class="dropdown-menu dropdown-menu-end ">
                             <li th:if="${session.account == null }">
                                 <a class="dropdown-item" th:href="@{/sessions/login}">Đăng nhập</a>
                             </li>
                             <li th:if="${session.account != null }">
                                 <a class="dropdown-item" th:if="${session.account != null }"
                                    th:href="@{/customer/account}">Thông tin cá nhân</a>
+                            </li>
+                            <li th:if="${session.account != null }">
+                                <a class="dropdown-item" th:if="${session.account != null }"
+                                   th:href="@{/customer/account/order}">Đơn hàng</a>
                             </li>
                             <li th:if="${session.account != null }">
                                 <a class="dropdown-item" th:if="${session.account != null }"
