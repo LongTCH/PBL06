@@ -424,6 +424,7 @@
                                                 title: 'Thành công',
                                                 text: 'Các sản phẩm đã được chuyển sang chương trình khuyến mãi mới!',
                                             }).then(() => {
+                                                localStorage.removeItem('selectedProducts');
                                                 window.location.reload();
                                             });
                                         } else {
