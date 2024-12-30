@@ -250,9 +250,10 @@
                                                         </h3>
                                                         <p class="proloop-price on-sale">
                                                             <span class="price"
-                                                                  th:text="${relatedProduct.variants[0].price} + 'đ'"></span>
+                                                                  th:text="${#numbers.formatDecimal(relatedProduct.variants[0].price, 1, 'COMMA', 0, 'POINT')} + 'đ'"></span>
                                                             <span class="price-del"
-                                                                  th:text="${relatedProduct.variants[0].compareAtPrice} + 'đ'"></span>
+                                                                  th:text="${#numbers.formatDecimal(relatedProduct.variants[0].compareAtPrice, 1, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+
                                                         </p>
                                                     </div>
                                                 </div>

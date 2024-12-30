@@ -17,8 +17,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application files
-COPY u2net_cloth_seg.onnx /root/.u2net/u2net_cloth_seg.onnx
-COPY . .
+COPY model.pth .
+COPY *.py .
 
 # Expose the port that FastAPI will run on
 EXPOSE 8000

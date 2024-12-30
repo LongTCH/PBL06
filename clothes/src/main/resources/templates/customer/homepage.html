@@ -16,7 +16,7 @@
     <div th:replace="~{layouts/customer/header}"></div>
     <div layout:fragment="body">
         <div th:insert="~{components/banner}"></div>
-        <div th:insert="~{components/saleProducts}" th:with="products=${products}"></div>
+        <div th:if="${sale != null}" th:insert="~{components/saleProducts}" th:with="products=${products}"></div>
     </div>
     <div th:replace="~{layouts/customer/footer}"></div>
 </div>

@@ -3,10 +3,7 @@ spring:
     name: clothes
   data:
     mongodb:
-      database: clothes
-      host: localhost
-      port: 27017
-      auto-index-creation: true
+      uri: mongodb://localhost:27017/clothes
   security:
     user:
       name: admin
@@ -16,4 +13,4 @@ spring:
     api_key: 155838669771664
     api_secret: v6JfO11VIZFhK2ONNyJvFMbKUIU
   custom:
-    predict_url: http://localhost:8000/predict
+    predict_url: http://longtch.id.vn/python/predict
