@@ -43,13 +43,14 @@ public class SalesController {
 
     @RequestMapping("/create")
     public String listProduct(@RequestParam(required = false) String groupId,
-                       @RequestParam(required = false) String categoryId,
-                       @RequestParam(required = false) String search,
-                       @RequestParam(defaultValue = "0") int page,
-                       @RequestParam(defaultValue = "5") int size,
-                       Model model) {
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model) {
         var groups = groupsService.getAllGroups();
-        List<Category> categories = (groupId != null) ? categoriesService.getCategoryByGroupId(groupId) : categoriesService.getAllCategories();
+        List<Category> categories = (groupId != null) ? categoriesService.getCategoryByGroupId(groupId)
+                : categoriesService.getAllCategories();
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productsService.findFilteredProducts(groupId, categoryId, search, pageable);
@@ -81,7 +82,7 @@ public class SalesController {
         model.addAttribute("groupId", groupId);
         model.addAttribute("productSales", productSales);
 
-        return "/admin/sales/create";
+        return "admin/sales/create";
     }
 
     @PostMapping("/createSale")
@@ -92,13 +93,15 @@ public class SalesController {
                 .filter(product -> product.getSaleId() != null)
                 .toList();
 
-//        if (!conflictingProducts.isEmpty() && (saleRequest.getOverrideConflict() == null || !saleRequest.getOverrideConflict())) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT)
-//                    .body(Map.of(
-//                            "message", "Một số sản phẩm đang thuộc sale khác. Bạn có muốn chuyển chúng sang sale mới không?",
-//                            "conflictingProducts", conflictingProducts
-//                    ));
-//        }
+        // if (!conflictingProducts.isEmpty() && (saleRequest.getOverrideConflict() ==
+        // null || !saleRequest.getOverrideConflict())) {
+        // return ResponseEntity.status(HttpStatus.CONFLICT)
+        // .body(Map.of(
+        // "message", "Một số sản phẩm đang thuộc sale khác. Bạn có muốn chuyển chúng
+        // sang sale mới không?",
+        // "conflictingProducts", conflictingProducts
+        // ));
+        // }
 
         Sale sale = new Sale();
         sale.setName(saleRequest.getName());
@@ -121,32 +124,38 @@ public class SalesController {
     public String listSales(Model model) {
         List<Sale> sales = salesRepository.findAll();
         model.addAttribute("sales", sales);
-        return "/admin/sales/list";
+        return "admin/sales/list";
     }
+
     @PostMapping("/{id}/close")
     public String closeSale(@PathVariable("id") String saleId) {
         salesService.closeSale(saleId);
         return "redirect:/admin/sales/list";
     }
+
     @PostMapping("/{id}/open")
     public String openSale(@PathVariable("id") String saleId) {
         salesService.openSale(saleId);
         return "redirect:/admin/sales/list";
     }
+
     @PostMapping("/{id}/delete")
     public String deleteSale(@PathVariable("id") String saleId) {
         salesService.deleteSale(saleId);
         return "redirect:/admin/sales/list";
     }
+
     @GetMapping("/{id}/products")
     public String viewProductsInSale(@PathVariable("id") String saleId, Model model) {
         List<Product> products = productsService.getProductsBySaleId(saleId);
         model.addAttribute("products", products);
         model.addAttribute("saleId", saleId);
-        return "/admin/sales/sale-products";
+        return "admin/sales/sale-products";
     }
+
     @PostMapping("/{saleId}/products/{productId}/remove")
-    public String removeProductFromSale(@PathVariable String saleId, @PathVariable String productId, RedirectAttributes redirectAttributes) {
+    public String removeProductFromSale(@PathVariable String saleId, @PathVariable String productId,
+            RedirectAttributes redirectAttributes) {
         boolean success = productsService.removeProductFromSale(productId);
 
         if (success) {
