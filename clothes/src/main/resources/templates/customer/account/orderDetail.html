@@ -56,13 +56,13 @@
                                         <img th:src="${orderDetail.product.images[0].getUrl()}" alt="" style="width: 100px; height: auto">
                                     </td>
                                     <td th:text="${orderDetail.product.title}"></td>
-                                    <td th:text="${#numbers.formatDecimal(orderDetail.price, 0, 'COMMA', 0, 'POINT')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(orderDetail.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
                                     <td th:text="${orderDetail.quantity}"></td>
-                                    <td th:text="${#numbers.formatDecimal(orderDetail.price * orderDetail.quantity, 0, 'COMMA', 0, 'POINT')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(orderDetail.price * orderDetail.quantity, 0, 'COMMA', 0, 'POINT') + ' đ'}"></td>
                                 </tr>
                                 </tbody>
                             </table>
-                            <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(order.amount, 0, 'COMMA', 0, 'POINT')}"></span></p>
+                            <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(order.amount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span></p>
                         </div>
                     </div>
                 </div>
