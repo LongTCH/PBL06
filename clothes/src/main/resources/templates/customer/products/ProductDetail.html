@@ -99,6 +99,7 @@
                                         </div>
                                         <div class="product-variants">
                                             <div class="select-swatch">
+                                                <p id="numOptions" class="d-none" th:text="${#lists.size(product.options)}"></p>
                                                 <div th:each="option : ${product.options}" class="swatch is-color">
                                                     <div class="pro-title" th:text="${option.name}"></div>
                                                     <div class="select-swap">

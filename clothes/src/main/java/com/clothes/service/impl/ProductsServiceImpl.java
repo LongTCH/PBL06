@@ -263,4 +263,31 @@ public class ProductsServiceImpl implements ProductsService {
         var products = pageProduct.getContent();
         return new PaginationResultDto<>(products, page, pageProduct.getTotalPages(), pageProduct.getTotalElements());
     }
+
+    @Override
+    public ProductVariant findVariant(FindVariantByOptionsDto dto) {
+        Product product = productsRepository.findById(dto.getProductId()).orElse(null);
+        if (product == null) {
+            return null;
+        }
+
+        return product.getVariants().stream()
+                .filter(v -> compareOptionValues(v.getOptions(), dto.getOptions()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private boolean compareOptionValues(Map<Integer, String> options1, Map<Integer, String> options2) {
+        if (options1.size() != options2.size()) {
+            return false;
+        }
+
+        for (Map.Entry<Integer, String> entry : options1.entrySet()) {
+            if (!options2.containsKey(entry.getKey()) || !options2.get(entry.getKey()).equals(entry.getValue())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

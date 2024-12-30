@@ -1,5 +1,6 @@
 package com.clothes.controller.customer;
 
+import com.clothes.dto.FindVariantByOptionsDto;
 import com.clothes.model.Product;
 import com.clothes.model.embedded.ProductVariant;
 import com.clothes.service.ProductsService;
@@ -8,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,26 +35,15 @@ public class CartController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/variants")
+    @PostMapping("/variants")
     @ResponseBody
     public ResponseEntity<ProductVariant> getVariantByIdAndName(
-            @RequestParam("id") String id,
-            @RequestParam("variantName") String variantName) {
-        Product product = productsService.findProductById(id);
-        if (product == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        ProductVariant variant = product.getVariants().stream()
-                .filter(v -> v.getName().equals(variantName))
-                .findFirst()
-                .orElse(null);
-
+            @RequestBody FindVariantByOptionsDto dto) {
+        ProductVariant variant = productsService.findVariant(dto);
         if (variant == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         return ResponseEntity.ok(variant);
     }
-
 }

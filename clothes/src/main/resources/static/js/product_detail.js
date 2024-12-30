@@ -65,18 +65,26 @@ async function addToCart(redirectToCart = false) {
     const parts = pathname.split('/');
     const productId = parts[parts.length - 1];
     const quantity = parseInt(document.getElementById('quantity').value, 10);
-    const selectedColor = document.querySelector('input[name="option_1"]:checked')?.value;
-    const selectedSize = document.querySelector('input[name="option_2"]:checked')?.value;
-    if (!selectedColor || !selectedSize) {
-        showToast('error', 'Vui lòng chọn màu sắc và kích thước');
-        return;
+    const numOptions = parseInt(document.getElementById('numOptions').textContent);
+    let options = {};
+    for (let i = 1; i<=numOptions; i++){
+        options[`${i}`] = document.querySelector(`input[name="option_${i}"]:checked`)?.value;
     }
 
-    const variantName = `${selectedColor} / ${selectedSize}`;
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
     try {
-        const response = await fetch(`/cart/variants?id=${productId}&variantName=${encodeURIComponent(variantName)}`);
+        const response = await fetch(`/cart/variants`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId: productId,
+                    options: options,
+                }),
+            });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
