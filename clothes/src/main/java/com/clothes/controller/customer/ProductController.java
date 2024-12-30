@@ -1,9 +1,6 @@
 package com.clothes.controller.customer;
 
-import com.clothes.dto.FilterSelectDto;
-import com.clothes.dto.FiltersDto;
-import com.clothes.dto.PaginationResultDto;
-import com.clothes.dto.PredictionsDto;
+import com.clothes.dto.*;
 import com.clothes.model.Category;
 import com.clothes.model.Group;
 import com.clothes.model.Product;
@@ -51,6 +48,17 @@ public class ProductController {
         model.addAttribute("pagination", paginationResult);
         model.addAttribute("currentPage", page);
         return "customer/searchByTitle";
+    }
+
+    @PostMapping(value = "/search", consumes = "application/json", produces = "text/html")
+    public String searchProducts(
+            @RequestBody SearchDto request,
+            Model model) {
+        var paginationResult = productsService.findProductsByTitle(request.getTitle(), request.getPage(), request.getSize());
+        model.addAttribute("products", paginationResult.getData());
+        model.addAttribute("pagination", paginationResult);
+        model.addAttribute("currentPage", request.getPage());
+        return "customer/products :: productsFragment";
     }
 
     @GetMapping(value = "/search-image", produces = "text/html")

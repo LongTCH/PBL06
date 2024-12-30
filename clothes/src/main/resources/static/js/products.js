@@ -6,7 +6,7 @@ function loadMoreProducts() {
     if (isLoading) return;
     isLoading = true;
     page++;
-    if(page <= size) filterProducts();
+    if (page <= size) filterProducts();
 }
 
 window.addEventListener('scroll', function () {
@@ -92,20 +92,25 @@ function filterProducts() {
         },
         body: JSON.stringify(filtersDto)
     })
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById('product-list').innerHTML += data;
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = data;
-        const newTotal = tempDiv.querySelector('input#totalProductFilter').value;
-        const totalProductElement = document.getElementById('totalProduct');
-        totalProductElement.innerHTML = 'Sản phẩm: ' + newTotal;
-        isLoading = false;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        isLoading = false;
-    });
+        .then(response => response.text())
+        .then(data => {
+            const productList = document.getElementById('product-list');
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data;
+            const newProducts = tempDiv.querySelectorAll('.card-product');
+            newProducts.forEach(product => {
+                productList.appendChild(product);
+            });
+            const newTotal = tempDiv.querySelector('input#totalProductFilter').value;
+            const totalProductElement = document.getElementById('totalProduct');
+            totalProductElement.innerHTML = 'Sản phẩm: ' + newTotal;
+            isLoading = false;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            isLoading = false;
+        });
 
     return false;
 }

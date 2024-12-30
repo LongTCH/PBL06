@@ -27,10 +27,20 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${product.title}">Product Title</h5>
-                    <p class="card-text" id="productPrice"
-                       th:text="${#numbers.formatDecimal(product.variants[0].price, 1, 'COMMA', 0, 'POINT')} + 'đ'">
-                        Price</p></div>
-                <span class="product-label sale-label" th:if="${product.variants[0].compareAtPrice != null && product.variants[0].compareAtPrice > 0 && product.variants[0].compareAtPrice != product.variants[0].price}">
+                    <div class="prices text-center">
+                        <p class="card-text price" id="productPrice"
+                           th:text="${#numbers.formatDecimal(product.variants[0].price, 1, 'COMMA', 0, 'POINT')} + 'đ'">
+                            Price
+                        </p>
+                        <p class="card-text strikethrough" id="productPrice"
+                           th:classappend="${product.variants[0].compareAtPrice != null && product.variants[0].compareAtPrice > 0 && product.variants[0].compareAtPrice != product.variants[0].price} ? 'strikethrough' : ''"
+                           th:text="${#numbers.formatDecimal(product.variants[0].compareAtPrice, 1, 'COMMA', 0, 'POINT')} + 'đ'">
+                            Price
+                        </p>
+                    </div>
+                </div>
+                <span class="product-label sale-label"
+                      th:if="${product.variants[0].compareAtPrice != null && product.variants[0].compareAtPrice > 0 && product.variants[0].compareAtPrice != product.variants[0].price}">
                     <span th:text="${T(java.lang.Math).round((((product.variants[0].compareAtPrice * 1.0) - product.variants[0].price) / product.variants[0].compareAtPrice) * 100)} + '%'"></span>
                 </span>
             </div>

@@ -113,10 +113,11 @@
     left: 5%;
 }
 
-.card-title {
-
+.product-title {
+    overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .sale-container {
     position: relative;
     width: 93%;

@@ -19,15 +19,6 @@
 <div>
     <div th:replace="~{layouts/customer/header}"></div>
     <div layout:fragment="body">
-        <nav aria-label="breadcrumb-shop" class="breadcrumb-shop">
-            <div class="container">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a href="/dam">Đầm</a></li>
-                    <li aria-current="page" class="breadcrumb-item active" th:text="${product.title}"></li>
-                </ol>
-            </div>
-        </nav>
         <div class="productDetail-information">
             <div class=" container">
                 <div class="productDetail-main">
