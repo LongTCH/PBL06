@@ -2,7 +2,7 @@ server {
     listen 80;
     server_name longtch.id.vn www.longtch.id.vn;
     location / {
-        proxy_pass clothes.private.pbl6.com:8080/;  # Public IP of your Spring service
+        proxy_pass http://clothes.private.pbl6.com:8080/;  # Public IP of your Spring service
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -10,7 +10,7 @@ server {
     }
 
     location /python/ {
-        proxy_pass ai.private.pbl6.com:8000/;  # Public IP of your Python service
+        proxy_pass http://ai.private.pbl6.com:8000/;  # Public IP of your Python service
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
