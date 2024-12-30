@@ -26,10 +26,6 @@
                 window.open('/customer/account');
             </script>
         </div>
-        <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'profile')">Thông tin tài khoản</button>
-            <button class="tablinks" onclick="openTab(event, 'orders')">Đơn hàng</button>
-        </div>
         <div id="profile" class="tabcontent">
             <div class="container">
                 <div class="row gutters">
@@ -92,22 +88,36 @@
                                             </div>
                                         </div>
                                         <div class="css_select_div">
-                                            <select class="css_select" id="tinh" th:field="*{address.city}"
-                                                    title="Chọn Tỉnh Thành">
-                                                <option value="" th:text="${session.account.address.city}">Tỉnh Thành
-                                                </option>
-                                            </select>
-                                            <select class="css_select" id="quan" th:field="*{address.district}"
-                                                    title="Chọn Quận Huyện">
-                                                <option value="" th:text="${session.account.address.district}">Quận
-                                                    Huyện
-                                                </option>
-                                            </select>
-                                            <select class="css_select" id="phuong" th:field="*{address.ward}"
-                                                    title="Chọn Phường Xã">
-                                                <option value="" th:text="${session.account.address.ward}">Phường Xã
-                                                </option>
-                                            </select>
+                                            <!-- Nhãn và Select cho Tỉnh Thành -->
+                                            <div class="form-group">
+                                                <label for="tinh" class="css_label">Tỉnh Thành</label>
+                                                <select class="css_select" id="tinh" th:field="*{address.city}"
+                                                        title="Chọn Tỉnh Thành">
+                                                    <option value="" th:text="${session.account.address.city}">Tỉnh
+                                                        Thành
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="quan" class="css_label">Quận Huyện</label>
+                                                <select class="css_select" id="quan" th:field="*{address.district}"
+                                                        title="Chọn Quận Huyện">
+                                                    <option value="" th:text="${session.account.address.district}">Quận
+                                                        Huyện
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="phuong" class="css_label">Phường Xã</label>
+                                                <select class="css_select" id="phuong" th:field="*{address.ward}"
+                                                        title="Chọn Phường Xã">
+                                                    <option value="" th:text="${session.account.address.ward}">Phường
+                                                        Xã
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -132,30 +142,5 @@
     </div>
 </div>
 <div th:replace="~{layouts/customer/footer}"></div>
-<script>
-    function openTab(evt, tabName) {
-
-        var tabcontent = document.getElementsByClassName("tabcontent");
-        for (var i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-
-        var tablinks = document.getElementsByClassName("tablinks");
-        for (var i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-
-        document.getElementById(tabName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById("profile").style.display = "block";
-        var defaultTab = document.querySelector('.tablinks');
-        if (defaultTab) {
-            defaultTab.className += " active";
-        }
-    });
-</script>
 </body>
 </html>
