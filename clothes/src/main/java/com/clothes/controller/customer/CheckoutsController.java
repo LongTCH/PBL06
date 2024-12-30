@@ -2,11 +2,13 @@ package com.clothes.controller.customer;
 
 import com.clothes.config.VNPayService;
 import com.clothes.constant.OrderStatusEnum;
+import com.clothes.model.Account;
 import com.clothes.model.Order;
 import com.clothes.model.embedded.Address;
 import com.clothes.model.embedded.OrderItem;
 import com.clothes.service.OrdersService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,7 +29,28 @@ public class CheckoutsController {
     private VNPayService vnPayService;
 
     @GetMapping
-    public String getCheckoutPage() {
+    public String getCheckoutPage(Model model, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        if(account != null){
+            model.addAttribute("fullName", account.getFirstName()+account.getLastName());
+            model.addAttribute("email", account.getEmail());
+            model.addAttribute("phone", account.getPhone());
+            model.addAttribute("address", account.getAddress().getStreet());
+            model.addAttribute("city", account.getAddress().getCity());
+            model.addAttribute("district", account.getAddress().getDistrict());
+            model.addAttribute("ward", account.getAddress().getWard());
+
+        }
+        else {
+            model.addAttribute("fullName", "");
+            model.addAttribute("email", "");
+            model.addAttribute("phone", "");
+            model.addAttribute("address", "");
+            model.addAttribute("city", "");
+            model.addAttribute("district", "");
+            model.addAttribute("ward", "");
+            
+        }
 
         return "customer/products/checkouts";
     }

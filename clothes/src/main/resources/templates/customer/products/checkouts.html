@@ -20,28 +20,32 @@
         <p>Bạn đã có tài khoản?<a th:href="@{/sessions/login}"> Đăng nhập</a></p>
         <form id="checkoutForm">
             <div class="row">
-                <div class="col-md-6" th:if="session.account != null">
+                <div class="col-md-6">
                     <div class="mb-3">
-                        <input class="form-control" id="fullName" placeholder="Họ và tên" required type="text" th:value="${session.account.firstName + session.account.lastName}">
+                        <input class="form-control" id="fullName" name="fullName" placeholder="Họ và tên" required
+                               type="text" th:value="${fullName}">
                     </div>
                     <div class="mb-3">
-                        <input class="form-control" id="email" placeholder="Email" required type="email" th:value="${session.account.email}">
+                        <input class="form-control" id="email" name="email" placeholder="Email" required type="email"
+                               th:value="${email}">
                     </div>
                     <div class="mb-3">
-                        <input class="form-control" id="phone" placeholder="Số điện thoại" required type="text" th:value="${session.account.phone}">
+                        <input class="form-control" id="phone" name="phone" placeholder="Số điện thoại" required
+                               type="text" th:value="${phone}">
                     </div>
                     <div class="mb-3">
-                        <input class="form-control" id="address" placeholder="Địa chỉ" required type="text" th:value="${session.account.address.street}">
+                        <input class="form-control" id="address" name="address" placeholder="Địa chỉ" required
+                               type="text" th:value="${address}">
                     </div>
                     <div class="css_select_div">
                         <select class="css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-                            <option value="0" th:text="${session.account.address.city}">Tỉnh Thành</option>
+                            <option value="0" th:text="${city != '' ? city : 'Tỉnh Thành'}">Tỉnh Thành</option>
                         </select>
                         <select class="css_select" id="quan" name="quan" title="Chọn Quận Huyện">
-                            <option value="0" th:text="${session.account.address.district}">Quận Huyện</option>
+                            <option value="0" th:text="${district != '' ? district : 'Quận Huyện'}">Quận Huyện</option>
                         </select>
                         <select class="css_select" id="phuong" name="phuong" title="Chọn Phường Xã">
-                            <option value="0" th:text="${session.account.address.ward}">Phường Xã</option>
+                            <option value="0" th:text="${ward != '' ? ward : 'Phường Xã'}">Phường Xã</option>
                         </select>
                     </div>
 
@@ -215,7 +219,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-6">
                     <div class="mb-3">
                         <h3>Đơn hàng của bạn</h3>
