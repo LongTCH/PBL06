@@ -19,7 +19,7 @@ public enum OrderStatusEnum {
             case PAID:
                 return "Đã thanh toán";
             case CONFIRMED:
-                return "Xác nhận";
+                return "Đã Xác nhận";
             case DELIVERING:
                 return "Đang giao hàng";
             case CANCELLED:

@@ -121,7 +121,7 @@
                                 <div id="note" class="font-bold"><i>Ghi chú</i></div>
                                 <textarea id="sellerNote" style="width: 100%" name="note" placeholder="Thông tin về việc xác nhận hoặc hủy đơn hàng"></textarea>
                                 <div id="button" class="gjs-row">
-                                    <div id="cancel" class="gjs-cell m-3" th:if="${orderStatus == 'CREATED' || orderStatus == 'PAID' || orderStatus == 'CONFIRMED'}">
+                                    <div id="cancel" class="gjs-cell m-3" th:if="${orderStatus == 'CREATED'}">
                                         <button type="button" name="action" onclick="handleOrderAction('cancel')" value="cancel" id="button_cancel"
                                                 class="btn btn-outline-danger">HỦY ĐƠN
                                         </button>

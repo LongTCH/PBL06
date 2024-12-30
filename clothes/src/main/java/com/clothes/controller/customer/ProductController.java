@@ -100,6 +100,8 @@ public class ProductController {
     public String productDetail(@PathVariable String id, Model model) {
         Product product = productsService.findProductById(id);
         model.addAttribute("product", product);
+        String categoryName = productsService.findCategoryNameById(product.getCategoryId());
+        model.addAttribute("categoryName", categoryName);
         List<Product> relatedProducts = productsService.findRelatedProductsByCategoryId(product.getCategoryId());
         model.addAttribute("relatedProducts", relatedProducts);
         return "customer/products/ProductDetail";

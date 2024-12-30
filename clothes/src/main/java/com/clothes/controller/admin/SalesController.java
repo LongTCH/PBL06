@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -91,14 +90,6 @@ public class SalesController {
         List<Product> conflictingProducts = products.stream()
                 .filter(product -> product.getSaleId() != null)
                 .toList();
-
-//        if (!conflictingProducts.isEmpty() && (saleRequest.getOverrideConflict() == null || !saleRequest.getOverrideConflict())) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT)
-//                    .body(Map.of(
-//                            "message", "Một số sản phẩm đang thuộc sale khác. Bạn có muốn chuyển chúng sang sale mới không?",
-//                            "conflictingProducts", conflictingProducts
-//                    ));
-//        }
 
         Sale sale = new Sale();
         sale.setName(saleRequest.getName());
