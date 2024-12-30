@@ -113,9 +113,13 @@ function filterProducts() {
     })
     .then(response => response.text())
     .then(data => {
-        document.getElementById('product-list').innerHTML += data;
+        const productList = document.getElementById('product-list');
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = data;
+        const newProducts = tempDiv.querySelectorAll('.card-product');
+        newProducts.forEach(product => {
+            productList.appendChild(product);
+        });
         const newTotal = tempDiv.querySelector('input#totalProductFilter').value;
         const totalProductElement = document.getElementById('totalProduct');
         totalProductElement.innerHTML = 'Sản phẩm: ' + newTotal;

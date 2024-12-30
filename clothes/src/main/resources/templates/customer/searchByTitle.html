@@ -25,16 +25,83 @@
             <h1>Tìm kiếm</h1>   
             <span class="fs-4" id="totalProduct" th:text="'Có '+${pagination.totalElements}+' kết quả' "></span>
         </div>
-        <div class="container mt-5">
-            <div id="productsContainer" th:fragment="productsFragment">
+        <div class="container mt-5" id="productsContainer" th:fragment="productsFragment">
+
                 <input class="d-none" id="totalProductFilter" th:value="${pagination.totalElements}">
-                <div class="row mx-5" id="product-list"/>
-                <div class="col-md-3 mb-4 product" th:each="product : ${products}">
+                <div class="row" id="product-list"/>
+                <div class="card-product col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-4" th:each="product : ${products}">
                     <div th:replace="~{components/product-card :: product-card(product=${product})}"></div>
                 </div>
-            </div>
+
         </div>
     </div>
+</div>
     <div th:replace="~{layouts/customer/footer}"></div>
+<script>
+    let page = 0;
+    const size = 24;
+    let isLoading = false;
+    const urlParams = new URLSearchParams(window.location.search);
+    const title = urlParams.get('title');
+    console.log(title);
+
+    function loadMoreProducts() {
+        if (isLoading) return;
+        isLoading = true;
+        page++;
+
+        filterProducts();
+    }
+
+    window.addEventListener('scroll', function () {
+        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 500) {
+            loadMoreProducts();
+        }
+    });
+
+    function filterProducts() {
+        const request = {
+            page: page,
+            size: size,
+            title: title
+        };
+
+        fetch('/products/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(request),
+        })
+            .then(response => response.text())
+            .then(data => {
+                const productList = document.getElementById('product-list');
+
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = data;
+
+                const newProducts = tempDiv.querySelectorAll('.card-product');
+                newProducts.forEach(product => {
+                    productList.appendChild(product);
+                });
+
+                isLoading = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                isLoading = false;
+            });
+
+        return false;
+    }
+</script>
+<style>
+    #productsContainer {
+        position: relative;
+        width: 95%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+</style>
 </body>
 </html>

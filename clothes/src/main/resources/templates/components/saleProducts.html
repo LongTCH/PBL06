@@ -33,8 +33,12 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <h5 class="card-title" th:text="${product.title}">Product Title</h5>
-                                       <div class="prices">
+                                        <h5 class="product-title"
+                                            th:title="${product.title}"
+                                            th:text="${#strings.length(product.title) > 20 ? #strings.substring(product.title, 0, 20) + '...' : product.title}">
+                                        </h5>
+
+                                        <div class="prices">
                                            <p class="card-text price" id="productPrice"
                                               th:text="${#numbers.formatDecimal(product.variants[0].price, 1, 'COMMA', 0, 'POINT')} + 'đ'">
                                                Price
@@ -72,10 +76,6 @@
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
             },
             breakpoints: {
                 640: {

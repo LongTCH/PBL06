@@ -179,6 +179,7 @@ select option:checked {
     }
     #productsContainer {
         position: relative;
+        width: 95%;
         left: 50%;
         transform: translateX(-48%);
     }
